@@ -1,3 +1,5 @@
+![TRACE Logo](/docs/images/logo-wide-sm.png)
+
 # CS 407 Product Backlog #
 
 **TRACE** — A Digital Footprint Finder — Team 6
