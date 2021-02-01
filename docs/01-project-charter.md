@@ -1,6 +1,6 @@
-# Team 6 Project Charter #
+# CS 407 Project Charter #
 
-**TRACE** — A Digital Footprint Finder
+**TRACE** — A Digital Footprint Finder — Team 6
 
 
 ## Members ##
@@ -23,6 +23,7 @@ With the increasing popularity of social media, e-commerce, and countless other 
 - Create a browser extension that prompts users to add accounts to their footprint as they log in
 - Provide analytics for interactions with this public-facing page such as link click counts
 - Include information security tools and notifications to help increase security awareness
+
 
 ## Stakeholders ##
 
