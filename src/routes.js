@@ -16,18 +16,18 @@
 
 */
 import Dashboard from "views/Dashboard.js";
-import Icons from "views/Icons.js";
-import Notifications from "views/Notifications.js";
-import Rtl from "views/Rtl.js";
-import Typography from "views/Typography.js";
+import Search from "views/Search.js";
+import Analytics from "views/Analytics.js";
 import UserProfile from "views/UserProfile.js";
+import Editor from "views/Editor.js";
+import Contact from "views/Contact.js";
 
 var routes = [
   {
     path: "/dashboard",
     name: "Dashboard",
     rtlName: "لوحة القيادة",
-    icon: "tim-icons icon-chart-pie-36",
+    icon: "tim-icons icon-laptop",
     component: Dashboard,
     layout: "/admin",
   },
@@ -36,16 +36,16 @@ var routes = [
     name: "Search",
     rtlName: "لوحة القيادة",
     icon: "tim-icons icon-zoom-split",
-    component: Dashboard,
-    layout: "/admin", // fix
+    component: Search,
+    layout: "/admin",
   },
   {
-    path: "/notifications", //fix
-    name: "Analytics", // fix
+    path: "/analytics",
+    name: "Analytics",
     rtlName: "إخطارات",
     icon: "tim-icons icon-chart-bar-32",
-    component: Notifications, // fix
-    layout: "/admin", // fix
+    component: Analytics,
+    layout: "/admin",
   },
   {
     path: "/user-profile",
@@ -56,19 +56,19 @@ var routes = [
     layout: "/admin",
   },
   {
-    path: "/user-profile",
+    path: "/profile-editor",
     name: "Profile Editor",
     rtlName: "ملف تعريفي للمستخدم",
-    icon: "tim-icons icon-single-02",
-    component: UserProfile,
+    icon: "tim-icons icon-pencil",
+    component: Editor,
     layout: "/admin",
   },
   {
-    path: "/icons",
-    name: "Icons",
-    rtlName: "الرموز",
-    icon: "tim-icons icon-atom",
-    component: Icons,
+    path: "/contact",
+    name: "Contact Us",
+    rtlName: "ملف تعريفي للمستخدم",
+    icon: "tim-icons icon-send",
+    component: Contact,
     layout: "/admin",
   }
 ];
