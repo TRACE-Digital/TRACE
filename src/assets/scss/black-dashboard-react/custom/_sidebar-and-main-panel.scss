@@ -313,17 +313,23 @@
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     }
 
+    a{
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
     .simple-text{
       text-transform: uppercase;
       padding: $padding-base-vertical 0;
       display: block;
       white-space: nowrap;
-      // font-size: $font-size-base;
+      font-size: $font-size-base;
       color: $white;
       text-decoration: none;
       font-weight: $font-weight-normal;
+      letter-spacing: 1px; // Maybe change this everywhere?
       line-height: 30px;
       overflow: hidden;
+      font-size: $font-size-xl;
     }
   }
 
