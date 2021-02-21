@@ -461,12 +461,18 @@
   > .content {
     padding: 78px 30px 30px 280px;
     min-height: calc(100vh - 70px);
+
+    > .editor-title {
+      text-align: center;
+      position:relative;
+      font-size: 50px;
+    }
+
   }
 
   > .navbar {
     margin-bottom: 0;
   }
-
 
   .header {
     margin-bottom: 50px;
