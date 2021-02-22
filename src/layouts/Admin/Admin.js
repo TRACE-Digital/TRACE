@@ -23,11 +23,10 @@ import PerfectScrollbar from "perfect-scrollbar";
 // core components
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
-import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
 import routes from "routes.js";
 
-import logo from "assets/img/logo-icon.png";
+import logo from "assets/img/print.svg";
 import { BackgroundColorContext } from "contexts/BackgroundColorContext";
 
 var ps;
@@ -126,7 +125,6 @@ function Admin(props) {
               </Switch>
             </div>
           </div>
-          <FixedPlugin bgColor={color} handleBgClick={changeColor} />
         </React.Fragment>
       )}
     </BackgroundColorContext.Consumer>

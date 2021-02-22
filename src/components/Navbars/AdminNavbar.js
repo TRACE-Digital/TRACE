@@ -145,10 +145,7 @@ function AdminNavbar(props) {
                   onClick={(e) => e.preventDefault()}
                 >
                   <div className="photo">
-                    <img
-                      alt="..."
-                      src={require("assets/img/anime3.png").default}
-                    />
+                    <i className="tim-icons icon-single-02" />
                   </div>
                   <b className="caret d-none d-lg-block d-xl-block" />
                   <p className="d-lg-none">Log out</p>
