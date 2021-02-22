@@ -26,7 +26,7 @@ import Sidebar from "components/Sidebar/Sidebar.js";
 
 import routes from "routes.js";
 
-import logo from "assets/img/print.svg";
+import logo from "assets/img/fingerprint.svg";
 import { BackgroundColorContext } from "contexts/BackgroundColorContext";
 
 var ps;
