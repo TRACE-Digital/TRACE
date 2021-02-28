@@ -1,25 +1,93 @@
 import React from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useState } from 'react';
 
 // reactstrap components
 import {
   Card,
-  CardHeader,
   CardBody,
-  CardTitle,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  UncontrolledDropdown,
   Row,
   Col,
 } from "reactstrap";
 
+var name = 'Isabel Battaglioli'
+
+var tempData = [
+  { 'title': 'Instagram', 'prettyUrl': 'www.instagram.com', 'profileUrl': 'www.instagram.com/userProfile', 'userName': '@INSTAGRAM HANDLE', 'iconClass': 'fab fa-instagram' },
+  { 'title': 'Snapchat', 'prettyUrl': 'www.snapchat.com', 'profileUrl': 'www.snapchat.com/userProfile', 'userName': '@SNAPCHAT HANDLE', 'iconClass': 'fab fa-snapchat' },
+  { 'title': 'Facebook', 'prettyUrl': 'www.facebook.com', 'profileUrl': 'www.facebook.com/userProfile', 'userName': '@FACEBOOK HANDLE', 'iconClass': 'fab fa-facebook-square' },
+  { 'title': 'Vine', 'prettyUrl': 'www.vine.com', 'profileUrl': 'www.vine.com/userProfile', 'userName': '@VINE HANDLE', 'iconClass': 'fab fa-vine' },
+  { 'title': 'Pinterest', 'prettyUrl': 'www.pinterest.com', 'profileUrl': 'www.pinterest.com/userProfile', 'userName': '@PINTEREST HANDLE', 'iconClass': 'fab fa-pinterest-square' },
+  { 'title': 'Twitter', 'prettyUrl': 'www.twitter.com', 'profileUrl': 'www.twitter.com/userProfile', 'userName': '@TWITTER HANDLE', 'iconClass': 'fab fa-twitter-square' },
+  { 'title': 'Skype', 'prettyUrl': 'www.skype.com', 'profileUrl': 'www.skype.com/userProfile', 'userName': '@SKYPE HANDLE', 'iconClass': 'fab fa-skype' },
+  { 'title': 'Apple', 'prettyUrl': 'www.apple.com', 'profileUrl': 'www.apple.com/userProfile', 'userName': '@APPLE HANDLE', 'iconClass': 'fab fa-apple' },
+];
+
+
+function sayHello(e) {
+  e.target.style.background = 'green';
+}
+
+
 function Editor() {
   return (
+    
     <>
     <div className="content">
 
-    <div className="editor-title">
-      ISABEL BATTAGLIOLI
+      <div className="editor-title">
+        {name}
+      </div>
+
+      <div>
+        <Row>
+          {tempData.map(site => (
+            <Col lg="4">
+            
+              <Card className="card-user"> 
+                <CardBody>
+                  <div>
+                
+                  <UncontrolledDropdown>
+                  <DropdownToggle
+                    caret
+                    className="btn-icon"
+                    color="link"
+                    data-toggle="dropdown"
+                    type="button"
+                  >
+                    <i className="tim-icons icon-settings-gear-63" />
+                  </DropdownToggle>
+                  <DropdownMenu aria-labelledby="dropdownMenuLink" left>
+                    <DropdownItem
+                      href="#pablo"
+                      onClick={(e) => e.preventDefault()}
+                 
+                    >
+                      REMOVE
+                    </DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+               
+                    <div className = "editor"> <i className={site.iconClass}></i></div>
+                    <div className = "editor-handle-name"> {site.userName}</div>
+                    <div className = "editor-link"> {site.prettyUrl} </div>
+                  </div>
+                </CardBody>
+              </Card>
+            
+            </Col>
+          ))}
+        </Row>
+      </div>
+
     </div>
-       <Row>
+    
+
+{/*        <Row>
           <Col lg="4">
             <Card className="card-user">
               <CardBody>
@@ -76,8 +144,8 @@ function Editor() {
               </CardBody>
             </Card>
           </Col>
-        </Row>
-    </div>
+        </Row> */}
+    {/*</div>*/}
   </>
   );
 }

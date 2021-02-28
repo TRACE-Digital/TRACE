@@ -463,6 +463,8 @@
     min-height: calc(100vh - 70px);
 
     > .editor-title {
+      color:$white;
+
       text-align: center;
       position:relative;
       font-size: 50px;

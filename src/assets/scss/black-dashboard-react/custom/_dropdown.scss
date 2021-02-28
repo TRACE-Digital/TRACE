@@ -4,6 +4,7 @@
     border-radius: $border-radius-xs;
     @include transitions($fast-transition-time, $transition-linear);
 
+
     &.dropdown-menu-right {
       &:before, &:after {
         left:auto;
@@ -159,9 +160,10 @@
     .dropdown-item,
     .bootstrap-select &.inner li a {
       font-size: $font-size-sm;
-      padding-top: .6rem;
-      padding-bottom: .6rem;
-      margin-top: 5px;
+      //padding-top: .6rem;
+      //padding-bottom: .6rem;
+      //margin-top: 5px;
+     
       @include transitions($fast-transition-time, $transition-linear);
 
       &:hover,
