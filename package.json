@@ -4,13 +4,12 @@
   "description": "A privacy-focused tool for discovering, tracking, and sharing your online accounts.",
   "author": "TRACE Digital",
   "license": "GPL-3.0+",
-  "homepage": "https://github.com/TRACE-digital/TRACE#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TRACE-digital/TRACE.git"
+    "url": "git+https://github.com/TRACE-Digital/TRACE.git"
   },
   "bugs": {
-    "url": "https://github.com/TRACE-digital/TRACE/issues"
+    "url": "https://github.com/TRACE-Digital/TRACE/issues"
   },
   "directories": {
     "doc": "docs"
