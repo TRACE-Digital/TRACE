@@ -45,7 +45,7 @@ function Editor() {
       <div>
         <Row>
           {tempData.map(site => (
-            <Col lg="4">
+            <Col lg="3">
             
               <Card className="card-user"> 
                 <CardBody>
@@ -54,24 +54,21 @@ function Editor() {
                   <UncontrolledDropdown>
                   <DropdownToggle
                     caret
-                    className="btn-icon"
+                    className="btn-icon dot"
                     color="link"
-                    data-toggle="dropdown"
                     type="button"
                   >
-                    <i className="tim-icons icon-settings-gear-63" />
+                  <i class="fas fa-ellipsis-h"></i>
                   </DropdownToggle>
-                  <DropdownMenu aria-labelledby="dropdownMenuLink" left>
+                  <DropdownMenu className="dropdown-menu-right">
                     <DropdownItem
                       href="#pablo"
                       onClick={(e) => e.preventDefault()}
-                 
                     >
                       REMOVE
                     </DropdownItem>
                   </DropdownMenu>
                 </UncontrolledDropdown>
-               
                     <div className = "editor"> <i className={site.iconClass}></i></div>
                     <div className = "editor-handle-name"> {site.userName}</div>
                     <div className = "editor-link"> {site.prettyUrl} </div>

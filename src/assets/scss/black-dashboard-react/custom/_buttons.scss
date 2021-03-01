@@ -36,6 +36,12 @@
         overflow: hidden;
         position: relative;
         line-height: normal;
+        
+        &.dot{
+          margin-left:90%;
+          margin-top: 1px, im !important;
+          margin-bottom:1px, im !important;
+        }
 
         &.btn-simple{
             padding: 0;
