@@ -4,9 +4,11 @@
     margin-top: 3rem;
 }
 
+
 @include media-breakpoint-up(lg) {
     .row.row-grid > [class*="col-lg-"] + [class*="col-lg-"] {
         margin-top: 0;
+
     }
 }
 @include media-breakpoint-up(md) {

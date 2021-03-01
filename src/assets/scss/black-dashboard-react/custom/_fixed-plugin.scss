@@ -26,7 +26,7 @@
         right: 80px;
         left: auto !important;
         top: -52px !important;
-        width: 290px;
+        width: 100px;
         border-radius: 0.1875rem;
         padding: 0 10px;
         background: linear-gradient($black, $black-states);
@@ -113,10 +113,7 @@
     }
 
     .dropdown-menu li{
-        display: block;
-        padding: 18px 2px;
-        width: 25%;
-        float: left;
+        //isabel
     }
 
     li.adjustments-line,
@@ -274,6 +271,8 @@
              transform: translateY(-15%);
              top: 27px;
              opacity: 0;
+             padding-top:5px;
+             padding-bottom:4px;
 
              transform-origin: 0 0;
 

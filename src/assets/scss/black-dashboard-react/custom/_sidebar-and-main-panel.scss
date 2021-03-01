@@ -470,12 +470,137 @@
   > .content {
     padding: 78px 30px 30px 280px;
     min-height: calc(100vh - 70px);
+
+    > .editor-title {
+      color:$white;
+
+      text-align: center;
+      position:relative;
+      font-size: 50px;
+    }
+
+    > .search-title{
+      color:$white;
+
+      text-align: center;
+      position:relative;
+      font-size: 180px;
+      font-weight: 200;
+
+    }
+
+
+    .one{
+      background-color:white;
+      width:1000px;
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      height:50px;
+    }
+
+    .two-search{
+      appearance: textfield;
+      word-spacing: normal;
+      text-transform: none;
+      text-indent: 0px;
+      border-radius: 15px;
+      text-shadow: none;
+      height:50px;
+      display: inline-block;
+      box-sizing: border-box;
+      text-align: start;
+      transition: none;
+      width:1000px;
+      text-overflow: ellipsis;
+      font-size: 20px;
+      background: none;
+      outline: none;
+      border: 0;
+      border-color: transparent!important;
+      border-radius: 0;
+    }
+    .two{
+      display:block;
+      flex: 1;
+      border-radius: 15px;
+      margin-left:5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .four{
+      padding:5px;
+      margin-right:2px;
+    }
+
+    .three{
+      display:flex;
+      max-width: 550px;
+      white-space: nowrap;
+      overflow: hidden;
+      margin-left:8px;
+      text-overflow: ellipsis;
+      overflow-x: scroll;
+
+      .entered{
+        border-color:#d3d3d3;
+        background-color:#d3d3d3;
+        color:#373737;
+        border-style: solid;
+        font-size: 15px;
+        padding:5px;
+        margin-right:5px;
+        border-radius: 25px;
+        border-width: thin;
+        font-weight: 100;
+        white-space: nowrap;
+
+        .icon{
+          padding-right:3px;
+          padding-top:4px;
+        }
+      }
+    }
+
+    .refine-search {
+      color:$white;
+      text-align: right; 
+      margin-bottom:5px;
+      margin-right:21.5%; //fix this later
+    }
+
+     .dropdownVis{
+        visibility: visible;
+        background: #27293d;
+        width: 60%;
+        position: relative;
+        border: 0;
+        margin-left: 20%;
+        //margin-top: 2%;
+        -webkit-font-smoothing: antialiased;
+        box-shadow: 0px 1px 20px 0px rgba(0,0,0,0.1);
+        padding:1%;
+
+        .checkbox-name {
+          margin-left:2.5%;
+          text-align:center;
+          color: #ffffff;
+          font-weight: 100;
+        }
+      }
+
+     .dropdownNotVis{
+        visibility: hidden;
+      }
   }
 
   > .navbar {
     margin-bottom: 0;
   }
-
 
   .header {
     margin-bottom: 50px;
