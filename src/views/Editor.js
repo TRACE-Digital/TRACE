@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from 'react';
+import Results from "views/Results.js";
 
 // reactstrap components
 import {
@@ -26,20 +27,20 @@ var tempData = [
   { 'title': 'Apple', 'prettyUrl': 'www.apple.com', 'profileUrl': 'www.apple.com/userProfile', 'userName': '@APPLE HANDLE', 'iconClass': 'fab fa-apple' },
 ];
 
-
-function sayHello(e) {
-  e.target.style.background = 'green';
-}
-
-
 function Editor() {
+
+const [isOpen, setIsOpen] = useState(false);
+ 
+const togglePopup = () => {
+  setIsOpen(!isOpen);
+}
   return (
     
     <>
     <div className="content">
 
       <div className="editor-title">
-        {name}
+        {name}<i class="tim-icons icon-pencil icon" onClick={togglePopup}></i>
       </div>
 
       <div>
@@ -75,75 +76,25 @@ function Editor() {
                   </div>
                 </CardBody>
               </Card>
-            
             </Col>
           ))}
+          <Col lg="3">
+            <Card className="card-user add-to-edit"> 
+                <CardBody>
+                  <div className= "edit-text">
+                  <span className="icon">
+                    <i class="fas fa-plus"></i>
+                  </span>
+                  </div>
+                </CardBody>
+              </Card>
+          </Col>
         </Row>
       </div>
-
-    </div>
+      {isOpen ?  <Results/>  : null  }  
+    </div>    
     
-
-{/*        <Row>
-          <Col lg="4">
-            <Card className="card-user">
-              <CardBody>
-              <div className = "editor"> <i className="fab fa-instagram"></i> </div>
-              <div className = "editor-handle-name"> @INSTAGRAM HANDLE</div>
-              <div className = "editor-link"> www.instagram.com </div>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col lg="4">
-            <Card className="card-user">
-              <CardBody>
-              <div className = "editor"> <i className="fab fa-facebook-square"></i> </div>
-              <div className = "editor-handle-name"> @FACEBOOK HANDLE</div>
-              <div className = "editor-link"> www.facebook.com </div>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col lg="4">
-            <Card className="card-user">
-              <CardBody>
-              <div className = "editor"> <i className="fab fa-snapchat"></i> </div>
-              <div className = "editor-handle-name"> @SNAPCHAT HANDLE</div>
-              <div className = "editor-link"> www.snapchat.com </div>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg="4">
-            <Card className="card-user">
-              <CardBody>
-              <div className = "editor"> <i className="fab fa-twitter-square"></i> </div>
-              <div className = "editor-handle-name"> @TWITTER HANDLE</div>
-              <div className = "editor-link"> www.twitter.com </div>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col lg="4">
-            <Card className="card-user">
-              <CardBody>
-              <div className = "editor"> <i className="fab fa-vine"></i> </div>
-              <div className = "editor-handle-name"> @VINE HANDLE</div>
-              <div className = "editor-link"> www.vine.com </div>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col lg="4">
-            <Card className="card-user">
-              <CardBody>
-              <div className = "editor"> <i className="fab fa-pinterest-square"></i> </div>
-              <div className = "editor-handle-name"> @PINTEREST HANDLE</div>
-              <div className = "editor-link"> www.pinterest.com </div>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row> */}
-    {/*</div>*/}
-  </>
+    </>
   );
 }
 

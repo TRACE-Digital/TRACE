@@ -71,5 +71,6 @@ var routes = [
     component: Contact,
     layout: "/admin",
   }
+
 ];
 export default routes;

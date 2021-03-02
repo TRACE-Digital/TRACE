@@ -458,28 +458,76 @@
     border-top: 2px solid $primary;
   }
 
+
   > .content {
     padding: 78px 30px 30px 280px;
     min-height: calc(100vh - 70px);
 
+    >.popup{
+      position: absolute;
+      max-width: 800px;
+      width:800px;
+      top: 50%;
+      left: 56.7%;
+      height:350px;
+      border-radius: 15px;
+      transform: translate(-50%, -50%);
+      background-color:whitesmoke;
+      
+      >.title{
+        font-size:40px;
+        color:black;
+        text-align:center;
+        font-weight: 300;
+        margin-top:10px;
+      }
+    }
+
     > .editor-title {
       color:$white;
-
       text-align: center;
       position:relative;
       font-size: 50px;
+
+      .icon{
+        font-size: 25px !important;
+        margin-left:11px;
+        text-align:center;
+        margin-bottom:8px;
+        cursor:pointer;
+      }
+
+      .icon:hover{
+        transform: translateY(-20%);
+        transition: transform ease-in-out 350ms;
+      }
+
     }
 
     > .search-title{
       color:$white;
-
       text-align: center;
       position:relative;
       font-size: 180px;
       font-weight: 200;
+      user-select:none;
+      margin-top:30px;
+      line-height: 1;
 
     }
 
+    >.search-info{
+      color: #ffffff;
+      text-align: center;
+      position: relative;
+      font-size: 15px;
+      user-select:none;
+      font-weight: 300;
+      margin-left:25%;
+      margin-bottom:20px;
+      margin-right:25%;
+  
+    }
 
     .one{
       background-color:white;
@@ -525,7 +573,8 @@
 
     .four{
       padding:5px;
-      margin-right:2px;
+      margin-right:4px;
+      cursor: pointer;
     }
 
     .three{
@@ -561,17 +610,25 @@
       color:$white;
       text-align: right; 
       margin-bottom:5px;
-      margin-right:21.5%; //fix this later
+      font-weight: 300;
+      margin-top:3px;
+      margin-right:20%; //fix this later
+      margin-left:73%;
+      .the-text{
+        cursor: pointer;
+        user-select:none;
+      }
     }
 
      .dropdownVis{
         visibility: visible;
         background: #27293d;
         width: 60%;
+        user-select:none;
         position: relative;
         border: 0;
+        margin-bottom:10px;
         margin-left: 20%;
-        //margin-top: 2%;
         -webkit-font-smoothing: antialiased;
         box-shadow: 0px 1px 20px 0px rgba(0,0,0,0.1);
         padding:1%;
@@ -586,6 +643,29 @@
 
      .dropdownNotVis{
         visibility: hidden;
+        width: 0px !important;
+        height: 0px !important;
+        padding:0px !important;
+        margin:0px !important;
+      }
+
+      .error-message-visible{
+        color:#ff4d4d;
+        font-size:17px;
+        border-radius: 15px;
+        margin-left: auto;
+        margin-right: auto;
+        padding-top:4px;
+        padding-bottom:5px;
+        text-shadow: none;
+        width:250px;
+        text-align:center;
+        background-color:#ffb3b3 ;
+        font-weight: 400;
+      }
+
+      .error-not-visible{
+        visibility:hidden;
       }
   }
 
@@ -864,6 +944,7 @@
   .main-panel .content {
     padding-left: 15px;
     padding-right: 15px;
+
   }
 
 }

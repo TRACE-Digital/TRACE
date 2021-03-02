@@ -4,6 +4,25 @@
         height: 120px;
     }
 
+  
+
+    .edit-text{
+      font-size: 1rem;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #ffffff;
+      text-align: center;
+      font-size:30px;
+      -webkit-font-smoothing: antialiased;
+      font-weight: 300;
+
+      .icon{
+        font-size: 50px;
+      }
+    }
+
     .editor {
       font-size: 5rem;
       color:#ffffff;
@@ -524,3 +543,5 @@
 .card-user.editing:hover {
     background-color:#ff9900;
 }
+
+
