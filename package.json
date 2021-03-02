@@ -19,7 +19,6 @@
     "npm": ">=6"
   },
   "dependencies": {
-    "trace-search": "git+https://trace-digi-bot:dea7cfe0d9c4a88290d7ab9c1676e3ccc44592d3@github.com/TRACE-Digital/trace-search.git",
     "@fortawesome/fontawesome-free": "5.15.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.34",
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
@@ -37,7 +36,8 @@
     "react-notification-alert": "0.0.13",
     "react-router-dom": "5.2.0",
     "react-scripts": "4.0.1",
-    "reactstrap": "8.7.1"
+    "reactstrap": "8.7.1",
+    "trace-search": "git+https://trace-digi-bot:dea7cfe0d9c4a88290d7ab9c1676e3ccc44592d3@github.com/TRACE-Digital/trace-search.git"
   },
   "devDependencies": {
     "gulp": "^4.0.2",
