@@ -11,7 +11,7 @@
       &:before, &:after {
         left:auto;
         right: 10px;
-        
+
       }
     }
 
@@ -53,7 +53,7 @@
           left: auto;
           right: 10px;
           //isabel change
-          
+
         }
 
       }
@@ -161,7 +161,7 @@
     &.dropdown-menu-right {
       right: 0 !important;
       left: auto !important;
-      width: 10px !important;
+      // width: 10px !important;
     }
 
     .dropdown-item,
@@ -170,7 +170,7 @@
       //padding-top: .6rem;
       //padding-bottom: .6rem;
       //margin-top: 5px;
-     
+
       @include transitions($fast-transition-time, $transition-linear);
 
       &:hover,
@@ -280,16 +280,16 @@
       &:before, &:after{
         left: auto;
         right: 17px;
-        
+
       }
     }
 
-    
+
 }
 
 .btn{
     cursor: pointer;
-   
+
     &.dropdown-toggle[data-toggle="dropdown"]{
         padding:10px;
         margin: 0;

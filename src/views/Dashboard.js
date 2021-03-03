@@ -50,14 +50,37 @@ import {
   chartExample4,
 } from "variables/charts.js";
 
+import { ThirdPartyAccount, accounts } from 'trace-search';
+import { useEffect } from "react";
+try {
+  // Load all accounts from the database into memory
+  ThirdPartyAccount.loadAll();
+} catch (e) {
+  console.error('Failed to load accounts from the database!');
+  console.error(e);
+}
+
 function Dashboard(props) {
   const [bigChartData, setbigChartData] = React.useState("data1");
   const setBgChartData = (name) => {
     setbigChartData(name);
   };
+
+  useEffect(() => {
+    console.log(accounts);
+  }, []);
+
   return (
     <>
       <div className="content">
+
+        <h3>Example Account Iteration</h3>
+        {Object.values(accounts).map(account => {
+          return <div key={account.id}>{account.site.name} - {account.userName}</div>
+        })}
+
+        <hr></hr>
+
         <Row>
           <Col xs="12">
             <Card className="card-chart">
