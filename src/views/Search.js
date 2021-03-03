@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 // reactstrap components
 import {Row, Col } from "reactstrap";
 
 function Search() {
   const [isVisible, setVisible] = useState(false);
+  const [keywordsEntered, setKeywordsEntered] = useState(false);
   const [searches, setSearches] = useState([]);
   const [categories, setCategories] = useState([]);
+  const history = useHistory();
+
   var tempData = [
     {Category:"Social Media"},
     {Category:"Clothing"},
@@ -30,19 +34,29 @@ function Search() {
         searches.push(e.target.value);
         console.log(searches);
         setSearches([...searches]);
+        setKeywordsEntered(false);
       }
     }
   }
 
   function submitSearch(e){
-    //add stuff here to submit later
-    console.log("Submit Searches");
+    if (searches.length == 0){
+      setKeywordsEntered(true);
+      console.log("working");
+    }else{
+      console.log("Submit Searches");
+      history.push('/admin/results');
+    }
   }
 
   function deleteEntry(e){
     searches.splice(searches.indexOf(e), 1);
     setSearches([...searches]);
     console.log(searches);
+  }
+
+  function typing(){
+    setKeywordsEntered(false);
   }
 
   function handleClickCheckbox(e){
@@ -64,8 +78,9 @@ function Search() {
   return (
     <div className="content">
       <div className="search-title">
-        SEARCH
+        TRACE
       </div>
+      <div className="search-info">Find your digital footpring. Manage your online presence. Our service allows you to increase your social media engagement while keeping your privacy a priority. Sync your information or work locally.</div>
 
         <div className="one">
           <div className="three">{searches.map(item => <div className="entered">
@@ -76,7 +91,8 @@ function Search() {
           <div className="two">
             <input
               className="two-search"
-              onKeyPress={onKeyUp}>
+              onKeyPress={onKeyUp}
+              onChange={typing}>
             </input>
           </div>
           <div className="four">
@@ -84,8 +100,7 @@ function Search() {
           </div>
         </div>
 
-
-        <div className="refine-search" onClick={handleClick}>refine search</div>
+        <div className="refine-search"><span className="the-text" onClick={handleClick}>refine search</span></div>
 
         <div className={isVisible ? "dropdownVis": "dropdownNotVis"} >
           <Row>
@@ -101,6 +116,8 @@ function Search() {
             ))}
           </Row>
         </div>
+
+        <div className={keywordsEntered ? "error-message-visible" : "error-not-visible"}>please enter a keyword before submitting search</div>
     </div>
   );
 }

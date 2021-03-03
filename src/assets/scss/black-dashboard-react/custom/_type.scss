@@ -159,8 +159,59 @@ p{
     }
 }
 
+ul {
+    &.editor{
+        margin-left:18%;
+        line-height: 50px;
+        margin-top:10px;
+    }
+}
+
 ul li, ol li{
   color: $white;
+
+  &.editor-popup{
+    color:black;
+    list-style-type: none;
+    font-size:18px;
+
+    .fas.fa-circle{
+        margin-left:10px;
+        cursor:pointer;
+        margin-right:10px;
+        border:solid;
+        border-radius: 100px;
+        font-size:22px;
+        border-color:black;
+
+        &.red{
+            color:#FFB1AF; 
+        }
+        &.orange{
+            color:#FFCBA5;
+        }
+        &.yellow{
+            color:#FFEEA5;
+        }
+        &.green{
+            color:#C8F69B;
+        }
+        &.blue{
+            color:#B3EEFF;
+        }
+        &.purple{
+            color:#D6D4FF;
+        }
+    }
+
+    .fas.fa-circle:hover{
+        font-size:25px;
+    }
+
+    .fas.fa-circle:active{
+        font-size:25px !important;
+    }
+  }
 }
 
 pre{
