@@ -37,7 +37,7 @@
     "react-router-dom": "5.2.0",
     "react-scripts": "4.0.1",
     "reactstrap": "8.7.1",
-    "trace-search": "git+https://trace-digi-bot:dea7cfe0d9c4a88290d7ab9c1676e3ccc44592d3@github.com/TRACE-Digital/trace-search.git"
+    "trace-search": "git+https://trace-digi-bot:dea7cfe0d9c4a88290d7ab9c1676e3ccc44592d3@github.com/TRACE-Digital/trace-search.git#jack/react-integration"
   },
   "devDependencies": {
     "gulp": "^4.0.2",
