@@ -2,26 +2,31 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 // reactstrap components
-import {Row, Col } from "reactstrap";
+import { Row, Col, Card, CardBody, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
 
-function Search() {
+import { SearchDefinition, AccountType, searchResults, allSites, tags, filterSitesByTags } from 'trace-search';
+
+const testSiteNames = [
+  'GitHub',
+  'Reddit',
+  'Apple Discussions',
+  'Facebook',
+  'BitBucket',
+  'GitLab',
+  'npm',
+  'Wikipedia',
+  'Gravatar',
+  'HackerNews',
+  'Keybase'
+];
+
+function SearchComponent() {
   const [isVisible, setVisible] = useState(false);
   const [keywordsEntered, setKeywordsEntered] = useState(false);
-  const [searches, setSearches] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [userNames, setUserNames] = useState([]);
+  const [resultIds, setResultsIds] = useState([]);
+  const [categories, setCategories] = useState(tags.slice());
   const history = useHistory();
-
-  var tempData = [
-    {Category:"Social Media"},
-    {Category:"Clothing"},
-    {Category:"Housing"},
-    {Category:"Vehicle"},
-    {Category:"Pet"},
-    {Category:"Insurance"},
-    {Category:"Sport"},
-    {Category:"Food"},
-    {Category:"Medical"},
-  ];
 
   const handleClick = () => {
     setVisible(!isVisible);
@@ -29,49 +34,125 @@ function Search() {
 
   function onKeyUp(e) {
     if (e.charCode === 13) {
-      if (!searches.includes(e.target.value)){
+      if (!userNames.includes(e.target.value)) {
         console.log(e.target.value);
-        searches.push(e.target.value);
-        console.log(searches);
-        setSearches([...searches]);
+        userNames.push(e.target.value);
+        console.log(userNames);
+        setUserNames([...userNames]);
         setKeywordsEntered(false);
       }
     }
   }
 
-  function submitSearch(e){
-    if (searches.length == 0){
+  async function submitSearch(e) {
+    if (userNames.length === 0) {
       setKeywordsEntered(true);
       console.log("working");
-    }else{
+    } else {
       console.log("Submit Searches");
-      history.push('/admin/results');
+
+      // Clear old results
+      setResultsIds([]);
+
+      // TODO: This should eventually move to SearchDefinition and
+      // shouldn't be this terribly confusing and inefficient
+      const testSites = testSiteNames.map(name => allSites[name]);
+      const taggedSites = filterSitesByTags(testSites, categories);
+      const taggedSiteNames = taggedSites.map(site => site.name);
+
+      console.log(taggedSiteNames);
+
+      const searchDef = new SearchDefinition(undefined, taggedSiteNames);
+      searchDef.userNames = userNames;
+      await searchDef.save();
+
+      const search = await searchDef.new();
+
+      search.events.on('result', (id) => {
+        setResultsIds(prev => prev.concat([id]));
+      });
+
+      await search.start();
     }
   }
 
-  function deleteEntry(e){
-    searches.splice(searches.indexOf(e), 1);
-    setSearches([...searches]);
-    console.log(searches);
+  function deleteEntry(e) {
+    userNames.splice(userNames.indexOf(e), 1);
+    setUserNames([...userNames]);
+    console.log(userNames);
   }
 
-  function typing(){
+  function typing() {
     setKeywordsEntered(false);
   }
 
-  function handleClickCheckbox(e){
+  function handleClickCheckbox(e) {
     console.log(e.target.value);
 
-    if (categories.includes(e.target.value)){
+    if (categories.includes(e.target.value)) {
       console.log("ITS IN THERE");
       categories.splice(categories.indexOf(e.target.value), 1);
       setCategories([...categories]);
       console.log(categories);
     }
-    else{
+    else {
       categories.push(e.target.value);
       setCategories([...categories]);
       console.log(categories);
+    }
+  }
+
+  // TODO: This should really move to a component
+  const discoveredHTML = [];
+  const unregisteredHTML = [];
+  for (const resultId of resultIds) {
+    const account = searchResults[resultId];
+
+    const htmlForDisplay = (
+      <Col lg="3" key={account.id}>
+        <Card className="card-user">
+          <CardBody>
+            <div>
+
+              <UncontrolledDropdown>
+                <DropdownToggle
+                  caret
+                  className="btn-icon dot"
+                  color="link"
+                  type="button"
+                >
+                  <i className="fas fa-ellipsis-h"></i>
+                </DropdownToggle>
+                <DropdownMenu className="dropdown-menu-right">
+                  <DropdownItem
+                    href="#pablo"
+                    onClick={(e) => e.preventDefault()}
+                  >
+                    REMOVE
+              </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
+              <div className="editor"> <i className={account.site.iconClass}></i></div>
+              <div className="editor-handle-name">
+                <a href={account.url} target="blank">
+                  @{account.userName}
+                </a>
+              </div>
+              <div className="editor-link">
+                <a href={account.site.urlMain} target="blank">
+                  {account.site.prettyUrl || account.site.urlMain || account.site.url}
+                </a>
+              </div>
+            </div>
+          </CardBody>
+        </Card>
+      </Col>
+    );
+
+    if (account.type === AccountType.UNREGISTERED) {
+      unregisteredHTML.push(htmlForDisplay);
+    } else {
+      discoveredHTML.push(htmlForDisplay);
     }
   }
 
@@ -80,48 +161,64 @@ function Search() {
       <div className="search-title">
         TRACE
       </div>
-      <div className="search-info">Find your digital footpring. Manage your online presence. Our service allows you to increase your social media engagement while keeping your privacy a priority. Sync your information or work locally.</div>
+      <div className="search-info">Find your digital footprint. Manage your online presence. Our service allows you to increase your social media engagement while keeping your privacy a priority. Sync your information or work locally.</div>
 
-        <div className="one">
-          <div className="three">{searches.map(item => <div className="entered">
-            <i className="icon fas fa-times" onClick={() => deleteEntry(item)}></i>
-              {item}
-            </div>)}
-          </div>
-          <div className="two">
-            <input
-              className="two-search"
-              onKeyPress={onKeyUp}
-              onChange={typing}>
-            </input>
-          </div>
-          <div className="four">
-            <i onClick={submitSearch} class="fas fa-search"></i>
-          </div>
+      <div className="one">
+        <div className="three">{userNames.map(item => <div className="entered">
+          <i className="icon fas fa-times" onClick={() => deleteEntry(item)}></i>
+          {item}
+        </div>)}
         </div>
-
-        <div className="refine-search"><span className="the-text" onClick={handleClick}>refine search</span></div>
-
-        <div className={isVisible ? "dropdownVis": "dropdownNotVis"} >
-          <Row>
-            {tempData.map(site => (
-               <Col lg="3">
-                 <input
-                    type="checkbox"
-                    value={site.Category}
-                    onClick={handleClickCheckbox}
-                  />
-                  <span className="checkbox-name">{site.Category}</span>
-               </Col>
-            ))}
-          </Row>
+        <div className="two">
+          <input
+            className="two-search"
+            onKeyPress={onKeyUp}
+            onChange={typing}>
+          </input>
         </div>
+        <div className="four">
+          <i onClick={submitSearch} className="fas fa-search"></i>
+        </div>
+      </div>
 
-        <div className={keywordsEntered ? "error-message-visible" : "error-not-visible"}>please enter a keyword before submitting search</div>
-    </div>
+      <div className="refine-search"><span className="the-text" onClick={handleClick}>refine search</span></div>
+
+      <div className={isVisible ? "dropdownVis" : "dropdownNotVis"} >
+        <Row>
+          {tags.map(tag => (
+            <Col lg="3" key={tag}>
+              <input
+                type="checkbox"
+                value={tag}
+                onClick={handleClickCheckbox}
+                defaultChecked={true}
+              />
+              <span className="checkbox-name">{tag}</span>
+            </Col>
+          ))}
+        </Row>
+      </div>
+
+      <div className={keywordsEntered ? "error-message-visible" : "error-not-visible"}>please enter a keyword before submitting search</div>
+
+      <div>
+        {resultIds.length > 0 ? <div><h2>Discovered Accounts</h2></div> : <div></div>}
+        <Row>
+          {discoveredHTML}
+        </Row>
+      </div>
+
+      <div>
+        {resultIds.length > 0 ? <div><h2>Unregistered Accounts</h2></div> : <div></div>}
+        <Row>
+          {unregisteredHTML}
+        </Row>
+      </div>
+
+    </div >
   );
 }
 
-export default Search;
+export default SearchComponent;
 
 // got visiblity toggle from https://stackoverflow.com/questions/42630473/react-toggle-class-onclick
