@@ -151,11 +151,7 @@ function AdminNavbar(props) {
                     <i className="tim-icons icon-single-02" />
                   </div>
                   <b className="caret d-none d-lg-block d-xl-block" />
-<<<<<<< HEAD
-                  <p className="d-lg-none">Log in</p>
-=======
                   <p className="d-lg-none"></p>
->>>>>>> ef42d44d46739a02e579cf53d3cd0e29b6aea859
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-navbar" right tag="ul">
                   <NavLink tag="li">
@@ -166,9 +162,6 @@ function AdminNavbar(props) {
                   </NavLink>
                   <DropdownItem divider tag="li" />
                   <NavLink tag="li">
-<<<<<<< HEAD
-                    <DropdownItem tag={Link} to="/login" className="nav-item">Log in</DropdownItem>
-=======
                     <DropdownItem className="nav-item" onClick={async () => {
                       try {
                         await clearDb();
@@ -180,7 +173,6 @@ function AdminNavbar(props) {
                   <DropdownItem divider tag="li" />
                   <NavLink tag="li">
                     <DropdownItem className="nav-item">Log out</DropdownItem>
->>>>>>> ef42d44d46739a02e579cf53d3cd0e29b6aea859
                   </NavLink>
                 </DropdownMenu>
               </UncontrolledDropdown>

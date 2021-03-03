@@ -74,14 +74,61 @@ function Dashboard(props) {
     <>
       <div className="content">
 
-        <h3>Example Account Iteration</h3>
-        {Object.values(accounts).map(account => {
+        <h3>Claimed Accounts</h3>
+        {/* {Object.values(accounts).map(account => {
           return <div key={account.id}>{account.site.name} - {account.userName}</div>
-        })}
+        })} */}
 
         <hr></hr>
 
         <Row>
+          {Object.values(accounts).map(account => (
+            <Col lg="3">
+            
+              <Card className="card-user"> 
+                <CardBody>
+                  <div>
+                
+                  <UncontrolledDropdown>
+                  <DropdownToggle
+                    caret
+                    className="btn-icon dot"
+                    color="link"
+                    type="button"
+                  >
+                  <i class="fas fa-ellipsis-h"></i>
+                  </DropdownToggle>
+                  <DropdownMenu className="dropdown-menu-right">
+                    <DropdownItem
+                      href="#pablo"
+                      onClick={(e) => e.preventDefault()}
+                    >
+                      REMOVE
+                    </DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+                    <div className = "editor"> <i className={account.iconClass}></i></div>
+                    <div className = "editor-handle-name"> {account.site.userName}</div>
+                    <div className = "editor-link"> {account.site.url} </div>
+                  </div>
+                </CardBody>
+              </Card>
+            </Col>
+          ))}
+          <Col lg="3">
+            <Card className="card-user add-to-edit"> 
+                <CardBody>
+                  <div className= "edit-text">
+                  <span className="icon">
+                    <i class="fas fa-plus"></i>
+                  </span>
+                  </div>
+                </CardBody>
+              </Card>
+          </Col>
+        </Row>
+
+        {/* <Row>
           <Col xs="12">
             <Card className="card-chart">
               <CardHeader>
@@ -549,7 +596,7 @@ function Dashboard(props) {
               </CardBody>
             </Card>
           </Col>
-        </Row>
+        </Row> */}
       </div>
     </>
   );
