@@ -467,9 +467,10 @@
       position: absolute;
       max-width: 800px;
       width:800px;
-      top: 50%;
+      top: 40%;
       left: 56.7%;
       height:350px;
+      padding-top:10px;
       border-radius: 15px;
       transform: translate(-50%, -50%);
       background-color:whitesmoke;
@@ -479,7 +480,14 @@
         color:black;
         text-align:center;
         font-weight: 300;
-        margin-top:10px;
+      }
+
+      >.x{
+        margin-left:96.5%;
+        color:black;
+        cursor:pointer;
+        font-size:18px;
+        
       }
     }
 

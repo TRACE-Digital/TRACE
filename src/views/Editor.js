@@ -43,6 +43,8 @@ const togglePopup = () => {
         {name}<i class="tim-icons icon-pencil icon" onClick={togglePopup}></i>
       </div>
 
+
+
       <div>
         <Row>
           {tempData.map(site => (
@@ -93,7 +95,6 @@ const togglePopup = () => {
       </div>
       {isOpen ?  <Results/>  : null  }  
     </div>    
-    
     </>
   );
 }

@@ -31,7 +31,7 @@ function Search() {
     if (e.charCode === 13) {
       if (!searches.includes(e.target.value)){
         console.log(e.target.value);
-        searches.push(e.target.value);
+        searches.push(e.target.value); 
         console.log(searches);
         setSearches([...searches]);
         setKeywordsEntered(false);
