@@ -25,6 +25,7 @@ function SearchComponent() {
   const [keywordsEntered, setKeywordsEntered] = useState(false);
   const [userNames, setUserNames] = useState([]);
   const [resultIds, setResultsIds] = useState([]);
+  const [progress, setProgress] = useState(-1);
   const [categories, setCategories] = useState(tags.slice());
   const history = useHistory();
 
@@ -53,6 +54,7 @@ function SearchComponent() {
 
       // Clear old results
       setResultsIds([]);
+      setProgress(0);
 
       // TODO: This should eventually move to SearchDefinition and
       // shouldn't be this terribly confusing and inefficient
@@ -70,6 +72,7 @@ function SearchComponent() {
 
       search.events.on('result', (id) => {
         setResultsIds(prev => prev.concat([id]));
+        setProgress(search.progress);
       });
 
       await search.start();
@@ -200,6 +203,17 @@ function SearchComponent() {
       </div>
 
       <div className={keywordsEntered ? "error-message-visible" : "error-not-visible"}>please enter a keyword before submitting search</div>
+
+      {progress >= 0 ?
+        <div style={{ width: '100%', textAlign: 'center' }}>
+          <div>{progress}%</div>
+          <div style={{ width: `${progress}%`, backgroundColor: '#5e72e4', borderRadius: 50 }}>&nbsp;</div>
+        </div>
+        :
+        <div></div>
+      }
+
+      <hr></hr>
 
       <div>
         {resultIds.length > 0 ? <div><h2>Discovered Accounts</h2></div> : <div></div>}
