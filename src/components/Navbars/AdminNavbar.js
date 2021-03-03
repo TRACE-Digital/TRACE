@@ -19,6 +19,8 @@ import React from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 
+import { clearDb } from 'trace-search';
+
 // reactstrap components
 import {
   Button,
@@ -148,7 +150,7 @@ function AdminNavbar(props) {
                     <i className="tim-icons icon-single-02" />
                   </div>
                   <b className="caret d-none d-lg-block d-xl-block" />
-                  <p className="d-lg-none">Log out</p>
+                  <p className="d-lg-none"></p>
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-navbar" right tag="ul">
                   <NavLink tag="li">
@@ -156,6 +158,16 @@ function AdminNavbar(props) {
                   </NavLink>
                   <NavLink tag="li">
                     <DropdownItem className="nav-item">Settings</DropdownItem>
+                  </NavLink>
+                  <DropdownItem divider tag="li" />
+                  <NavLink tag="li">
+                    <DropdownItem className="nav-item" onClick={async () => {
+                      try {
+                        await clearDb();
+                      } catch (e) {
+                        console.error(e);
+                      }
+                    }}>Delete my data</DropdownItem>
                   </NavLink>
                   <DropdownItem divider tag="li" />
                   <NavLink tag="li">
