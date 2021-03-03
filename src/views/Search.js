@@ -110,6 +110,7 @@ function SearchComponent() {
   const unregisteredHTML = [];
   for (const resultId of resultIds) {
     const account = searchResults[resultId];
+    const isUnregistered = account.type === AccountType.UNREGISTERED;
 
     const htmlForDisplay = (
       <Col lg="3" key={account.id}>
@@ -117,7 +118,7 @@ function SearchComponent() {
           <CardBody>
             <div>
 
-              <UncontrolledDropdown>
+              {/* <UncontrolledDropdown>
                 <DropdownToggle
                   caret
                   className="btn-icon dot"
@@ -134,7 +135,7 @@ function SearchComponent() {
                     REMOVE
               </DropdownItem>
                 </DropdownMenu>
-              </UncontrolledDropdown>
+              </UncontrolledDropdown> */}
               <div className="editor"> <i className={account.site.iconClass}></i></div>
               <div className="editor-handle-name">
                 <a href={account.url} target="blank">
@@ -146,13 +147,20 @@ function SearchComponent() {
                   {account.site.prettyUrl || account.site.urlMain || account.site.url}
                 </a>
               </div>
+              {isUnregistered ? <div></div> :
+                <div style={{ position: 'absolute', bottom: '20px', right: '20px' }}>
+                  <button onClick={account.claim.bind(account)}>✔️</button>
+                  &nbsp;
+                  <button>❌</button>
+                </div>
+              }
             </div>
           </CardBody>
         </Card>
       </Col>
     );
 
-    if (account.type === AccountType.UNREGISTERED) {
+    if (isUnregistered) {
       unregisteredHTML.push(htmlForDisplay);
     } else {
       discoveredHTML.push(htmlForDisplay);
