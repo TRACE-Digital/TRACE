@@ -174,12 +174,14 @@
       &:focus:not(.active) > a{
         p,i{
           color: $white;
+          margin-left: 5px;
         }
       }
 
       &:hover:not(.active) > a i,
       &:focus:not(.active) > a i{
         color: $white;
+        // margin-left: 5px;
       }
 
       &.active > a:not([data-toggle="collapse"]){
@@ -313,17 +315,24 @@
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     }
 
+    a{
+      // font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
     .simple-text{
+      // text-align: center;
       text-transform: uppercase;
       padding: $padding-base-vertical 0;
       display: block;
       white-space: nowrap;
-      // font-size: $font-size-base;
+      font-size: $font-size-xl;
       color: $white;
       text-decoration: none;
-      font-weight: $font-weight-normal;
+      font-weight: $font-weight-light;
+      letter-spacing: 1px; // Maybe change this everywhere?
       line-height: 30px;
       overflow: hidden;
+      font-size: $font-size-xl;
     }
   }
 

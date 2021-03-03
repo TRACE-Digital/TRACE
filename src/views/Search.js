@@ -89,7 +89,7 @@ function Search() {
             </div>)}
           </div>
           <div className="two">
-            <input 
+            <input
               className="two-search"
               onKeyPress={onKeyUp}
               onChange={typing}>
