@@ -1,0 +1,10 @@
+{
+  "auth": {
+    "trace3123d6bf": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
+  }
+}

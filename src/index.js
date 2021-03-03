@@ -26,6 +26,7 @@ import "assets/demo/demo.css";
 import "assets/css/nucleo-icons.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
+import Login from "views/Login.js";
 
 import ThemeContextWrapper from "./components/ThemeWrapper/ThemeWrapper";
 import BackgroundColorWrapper from "./components/BackgroundColorWrapper/BackgroundColorWrapper";
@@ -35,8 +36,10 @@ ReactDOM.render(
     <BackgroundColorWrapper>
       <BrowserRouter>
         <Switch>
-          <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
-          <Redirect from="/" to="/admin/dashboard" />
+          <Route exact path="/login" component={Login} />
+          <Route path="/" render={(props) => <AdminLayout {...props} />} />
+          {/* put exact routes here */}
+          <Redirect from="/" to="/dashboard" />
         </Switch>
       </BrowserRouter>
     </BackgroundColorWrapper>

@@ -227,3 +227,15 @@ code {
     }
 
 }
+
+.login{
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  .card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
