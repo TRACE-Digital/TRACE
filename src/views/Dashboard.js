@@ -52,22 +52,28 @@ import {
 
 import { ThirdPartyAccount, accounts } from 'trace-search';
 import { useEffect } from "react";
-try {
-  // Load all accounts from the database into memory
-  ThirdPartyAccount.loadAll();
-} catch (e) {
-  console.error('Failed to load accounts from the database!');
-  console.error(e);
-}
 
 function Dashboard(props) {
+  const [plsRender, setPlsRender] = React.useState(false);
   const [bigChartData, setbigChartData] = React.useState("data1");
   const setBgChartData = (name) => {
     setbigChartData(name);
   };
 
   useEffect(() => {
-    console.log(accounts);
+    async function loadAccounts() {
+      try {
+        // Load all accounts from the database into memory
+        await ThirdPartyAccount.loadAll();
+        setPlsRender(current => !current);
+      } catch (e) {
+        console.error('Failed to load accounts from the database!');
+        console.error(e);
+      }
+      console.log(accounts);
+    }
+
+    loadAccounts();
   }, []);
 
   return (
@@ -84,11 +90,11 @@ function Dashboard(props) {
         <Row>
           {Object.values(accounts).map(account => (
             <Col lg="3">
-            
-              <Card className="card-user"> 
+
+              <Card className="card-user">
                 <CardBody>
                   <div>
-                
+
                   <UncontrolledDropdown>
                   <DropdownToggle
                     caret
@@ -116,7 +122,7 @@ function Dashboard(props) {
             </Col>
           ))}
           <Col lg="3">
-            <Card className="card-user add-to-edit"> 
+            <Card className="card-user add-to-edit">
                 <CardBody>
                   <div className= "edit-text">
                   <span className="icon">
