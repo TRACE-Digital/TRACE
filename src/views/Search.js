@@ -105,6 +105,20 @@ function SearchComponent() {
     }
   }
 
+  async function claimAccount(account) {
+    console.log(account);
+    try {
+        await account.claim();
+        alert("Account successfully claimed!");
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  function deleteAccount(account) {
+    alert("Account successfully removed!");
+  }
+
   // TODO: This should really move to a component
   const discoveredHTML = [];
   const unregisteredHTML = [];
@@ -143,15 +157,18 @@ function SearchComponent() {
                 </a>
               </div>
               <div className="editor-link">
-                <a href={account.site.urlMain} target="blank">
+                <a href={account.site.url.replace("{}", account.userName)} target="blank">
                   {account.site.prettyUrl || account.site.urlMain || account.site.url}
                 </a>
               </div>
               {isUnregistered ? <div></div> :
                 <div style={{ position: 'absolute', bottom: '20px', right: '20px' }}>
-                  <button onClick={account.claim.bind(account)}>✔️</button>
+                  {/* <button onClick={account.claim.bind(account)}>✔️</button> */}
+                  <button onClick={() => claimAccount(account)}>
+                    ✔️
+                  </button>
                   &nbsp;
-                  <button>❌</button>
+                  <button onClick={() => deleteAccount(account)}>❌</button>
                 </div>
               }
             </div>

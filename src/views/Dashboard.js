@@ -106,23 +106,28 @@ function Dashboard(props) {
                   </DropdownToggle>
                   <DropdownMenu className="dropdown-menu-right">
                     <DropdownItem
-                      href="#pablo"
                       onClick={(e) => e.preventDefault()}
                     >
                       REMOVE
+                    </DropdownItem>
+                    <DropdownItem
+                      onClick={(e) => e.preventDefault()}
+                    >
+                      EDIT
                     </DropdownItem>
                   </DropdownMenu>
                 </UncontrolledDropdown>
                     <div className = "editor"> <i className={account.iconClass}></i></div>
                     <div className = "editor-handle-name">@{account.userName}</div>
                     <div className = "editor-link">
-                      <a href={account.site.url.replace("{}", account.userName)} target="_blank">{account.site.prettyUrl}</a>
+                      <a href={account.site.url.replace("{}", account.userName)} target="_blank">{account.site.prettyUrl || account.site.urlMain || account.site.url}</a>
                     </div>
                   </div>
                 </CardBody>
               </Card>
             </Col>
           ))}
+
           {/* <Col lg="3">
             <Card className="card-user add-to-edit"> 
                 <CardBody>
