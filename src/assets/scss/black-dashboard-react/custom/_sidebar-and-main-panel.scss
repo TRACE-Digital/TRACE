@@ -472,6 +472,10 @@
     padding: 78px 30px 30px 280px;
     min-height: calc(100vh - 70px);
 
+    &.blur{
+      opacity: 35%;
+    }
+
     >.header {
       >.add-site-button {
         width: 200px;
@@ -483,7 +487,8 @@
       position: absolute;
       max-width: 800px;
       width:800px;
-      top: 40%;
+      top: 20%;
+      opacity: 100% !important;
       left: 56.7%;
       height:350px;
       padding-top:10px;
@@ -505,6 +510,10 @@
         font-size:18px;
         
       }
+    }
+
+    >.popup-gone{
+      visibility: hidden;
     }
 
     > .editor-title {
@@ -537,7 +546,6 @@
       user-select:none;
       margin-top:30px;
       line-height: 1;
-
     }
 
     >.search-info{
