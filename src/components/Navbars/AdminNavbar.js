@@ -164,6 +164,7 @@ function AdminNavbar(props) {
                     <DropdownItem className="nav-item" onClick={async () => {
                       try {
                         await clearDb();
+                        window.location.reload();
                       } catch (e) {
                         console.error(e);
                       }
