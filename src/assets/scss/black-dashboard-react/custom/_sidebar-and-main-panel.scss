@@ -472,16 +472,17 @@
     padding: 78px 30px 30px 280px;
     min-height: calc(100vh - 70px);
 
+    &.blur{
+      opacity: 35%;
+    }
+
     &.landing{
       padding-left:30px !important;
       .start-button{
         width: 200px !important;
         margin: auto;
       }
-    &.blur{
-      opacity: 35%;
     }
-  }
     >.header {
       >.add-site-button {
         width: 200px;
@@ -540,7 +541,6 @@
         transform: translateY(-20%);
         transition: transform ease-in-out 350ms;
       }
-
     }
 
     > .search-title{
@@ -573,6 +573,8 @@
     }
 
     .one{
+     /* 
+      OLD SCROLL BAR SETTINGS:
       background-color:white;
       width:1000px;
       margin-left: auto;
@@ -580,7 +582,17 @@
       border-radius: 15px;
       display: flex;
       align-items: center;
-      height:50px;
+      height:50px;*/
+      
+      background-color:white;
+      width:1000px;
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      min-height:50px;
+      
     }
 
     .two-search{
@@ -616,18 +628,34 @@
 
     .four{
       padding:5px;
-      margin-right:4px;
+      margin-right:6px;
+      color:black;
+      font-size:20px;
       cursor: pointer;
     }
 
     .three{
+    /* 
+      OLD SCROLL BAR SETTINGS:
       display:flex;
       max-width: 550px;
       white-space: nowrap;
       overflow: hidden;
       margin-left:8px;
       text-overflow: ellipsis;
+      overflow-x: scroll;*/
+      
+      display: inline-flex;
+      max-width: 550px;
+      white-space: nowrap;
+      vertical-align: bottom;
+      flex-flow: wrap;
+      margin-top: 8px;
+      margin-left:8px;
+      margin-right:8px;
+      text-overflow: ellipsis;
       overflow-x: scroll;
+      overflow-y: scroll;
 
       .entered{
         border-color:#d3d3d3;
@@ -639,6 +667,7 @@
         margin-right:5px;
         border-radius: 25px;
         border-width: thin;
+        margin-bottom:8px;
         font-weight: 100;
         white-space: nowrap;
 
@@ -655,11 +684,19 @@
       margin-bottom:5px;
       font-weight: 300;
       margin-top:3px;
-      margin-right:20%; //fix this later
-      margin-left:73%;
+      width:950px;
+      margin-left:auto;
+      margin-right:auto;
+
       .the-text{
         cursor: pointer;
         user-select:none;
+        &.cancel{
+          display:inline-block;
+        }
+        &.refine{
+          display:inline-block;
+        }
       }
     }
 

@@ -193,13 +193,13 @@
         color: #333;
       }
       > .fa-github {
-        color: #333;
+        color: white;
       }
       > .fa-github-alt {
-        color: #333;
+        color: white;
       }
       > .fa-github-square {
-        color: #333;
+        color: white;
       }
       > .fa-gittip {
         color: #663300;
@@ -481,8 +481,9 @@
     }
 
     .test{
-      right: unset !important;
-      
+      text-align:center;
+      margin-top:10px;
+      position:unset !important;  
     }
 
     .author {

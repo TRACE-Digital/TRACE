@@ -150,26 +150,7 @@ function SearchComponent() {
         <Card className="card-user">
           <CardBody>
             <div class="card-details">
-
-              {/* <UncontrolledDropdown>
-                <DropdownToggle
-                  caret
-                  className="btn-icon dot"
-                  color="link"
-                  type="button"
-                >
-                  <i className="fas fa-ellipsis-h"></i>
-                </DropdownToggle>
-                <DropdownMenu className="dropdown-menu-right">
-                  <DropdownItem
-                    href="#pablo"
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    REMOVE
-              </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown> */}
-              <div className="editor"> <i className={account.site.iconClass}></i></div>
+              <div className="editor"> <i className={account.site.logoClass != "fa-question-circle" ? "fab "+account.site.logoClass : "fas "+account.site.logoClass}></i></div>
               <div className="editor-handle-name">
                   @{account.userName}
               </div>
@@ -220,6 +201,7 @@ function SearchComponent() {
           <input
             id="search-bar"
             className="two-search"
+            placeholder="enter keyword"
             onKeyDown={keyPress}
             onChange={typing}>
           </input>
@@ -229,8 +211,8 @@ function SearchComponent() {
         </div>
       </div>
 
-      <div className="refine-search"><span className="the-text" onClick={handleRefineClick}>refine search</span></div>
-      <div className="refine-search"><span className="the-text" onClick={handleCancelClick}>cancel</span></div>
+      <div className="refine-search"><span className="the-text refine" onClick={handleRefineClick}>refine search</span></div>
+      <div className="refine-search"><span className="the-text cancel" onClick={handleCancelClick}>cancel</span></div>
 
       <div className={isVisible ? "dropdownVis" : "dropdownNotVis"} >
         <Row>
