@@ -37,7 +37,7 @@ function Landing() {
       <div className="search-info">We would never tell your secrets. We promise. ;)</div>
       <div className="search-info heading">Getting Started</div>
       <div className="search-info">Follow these screenshots to get started...</div>
-      <NavLink to="/">
+      <NavLink to="/admin/dashboard">
         <Button
           className="start-button"
           block

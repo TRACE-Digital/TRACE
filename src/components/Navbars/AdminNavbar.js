@@ -171,8 +171,8 @@ function AdminNavbar(props) {
                     }}>Delete my data</DropdownItem>
                   </NavLink>
                   <DropdownItem divider tag="li" />
-                  <NavLink tag="li">
-                    <DropdownItem className="nav-item">Log out</DropdownItem>
+                  <NavLink to="/login" tag={Link}>
+                    <DropdownItem className="nav-item">Log In</DropdownItem>
                   </NavLink>
                 </DropdownMenu>
               </UncontrolledDropdown>
