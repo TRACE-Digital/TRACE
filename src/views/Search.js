@@ -176,13 +176,15 @@ function SearchComponent() {
                 </a>
               </div>
               {isUnregistered ? <div></div> :
-                <div style={{ position: 'absolute', bottom: '20px', right: '20px' }}>
+                <div className="test" style={{ position: 'absolute', bottom: '20px', right: '20px' }}>
                   {/* <button onClick={account.claim.bind(account)}>✔️</button> */}
-                  <button onClick={() => claimAccount(account)}>
-                    ✔️
-                  </button>
+                  <Button onClick={() => claimAccount(account)} className="claim-button">
+                    <i className="tim-icons icon-check-2" />
+                  </Button>
                   &nbsp;
-                  <button onClick={() => deleteAccount(account)}>❌</button>
+                  <Button onClick={() => deleteAccount(account)} className="claim-button">
+                    <i className="tim-icons icon-simple-remove" />
+                  </Button>
                 </div>
               }
             </div>

@@ -468,6 +468,11 @@
       text-align: center;
     }
 
+    .test{
+      margin-top: 90% !important;
+      position: unset !important;
+    }
+
     .author {
         text-align: center;
         text-transform: none;
@@ -524,6 +529,9 @@
 
     .card-body {
         min-height: 240px;
+        margin: 5px 5px;
+        display: flex;
+        justify-content: center;
     }
 
     hr {
