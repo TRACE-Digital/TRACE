@@ -480,6 +480,11 @@
       text-align: center;
     }
 
+    .test{
+      right: unset !important;
+      
+    }
+
     .author {
         text-align: center;
         text-transform: none;
@@ -536,6 +541,9 @@
 
     .card-body {
         min-height: 240px;
+        >.card-details {
+          margin: auto;
+        }
     }
 
     hr {

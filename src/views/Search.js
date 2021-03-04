@@ -42,7 +42,7 @@ function SearchComponent() {
   function keyPress(e) {
     console.log(e.keyCode);
     if (e.keyCode === 13) {
-      if (!userNames.includes(e.target.value)) {
+      if (!userNames.includes(e.target.value) && e.target.value != '') {
         console.log(e.target.value);
         userNames.push(e.target.value);
         console.log(userNames);
@@ -129,8 +129,13 @@ function SearchComponent() {
     }
   }
 
-  function deleteAccount(account) {
-    alert("Account successfully removed!");
+  async function deleteAccount(account) {
+    try {
+        await account.reject();
+        alert("Account successfully removed!");
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   // TODO: This should really move to a component
@@ -144,7 +149,7 @@ function SearchComponent() {
       <Col lg="3" key={account.id}>
         <Card className="card-user">
           <CardBody>
-            <div>
+            <div class="card-details">
 
               {/* <UncontrolledDropdown>
                 <DropdownToggle
@@ -166,9 +171,7 @@ function SearchComponent() {
               </UncontrolledDropdown> */}
               <div className="editor"> <i className={account.site.iconClass}></i></div>
               <div className="editor-handle-name">
-                <a href={account.url} target="blank">
                   @{account.userName}
-                </a>
               </div>
               <div className="editor-link">
                 <a href={account.site.url.replace("{}", account.userName)} target="blank">
@@ -176,13 +179,15 @@ function SearchComponent() {
                 </a>
               </div>
               {isUnregistered ? <div></div> :
-                <div style={{ position: 'absolute', bottom: '20px', right: '20px' }}>
+                <div className="test" style={{ position: 'absolute', bottom: '20px', right: '20px' }}>
                   {/* <button onClick={account.claim.bind(account)}>✔️</button> */}
-                  <button onClick={() => claimAccount(account)}>
-                    ✔️
-                  </button>
+                  <Button onClick={() => claimAccount(account)} className="claim-button">
+                    <i className="tim-icons icon-check-2" />
+                  </Button>
                   &nbsp;
-                  <button onClick={() => deleteAccount(account)}>❌</button>
+                  <Button onClick={() => deleteAccount(account)} className="claim-button">
+                    <i className="tim-icons icon-simple-remove" />
+                  </Button>
                 </div>
               }
             </div>

@@ -482,6 +482,12 @@
       opacity: 35%;
     }
   }
+    >.header {
+      >.add-site-button {
+        width: 200px;
+        float: right;
+      }
+    }
 
     >.popup{
       position: absolute;

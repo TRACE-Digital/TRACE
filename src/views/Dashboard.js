@@ -81,10 +81,20 @@ function Dashboard(props) {
     <>
       <div className="content">
 
-        <h3>Claimed Accounts</h3>
-        {/* {Object.values(accounts).map(account => {
-          return <div key={account.id}>{account.site.name} - {account.userName}</div>
-        })} */}
+        <div className="header">
+          <h3 className="header-title">Claimed Accounts</h3>
+          {/* {Object.values(accounts).map(account => {
+            return <div key={account.id}>{account.site.name} - {account.userName}</div>
+          })} */}
+
+          <Button
+            className="add-site-button"
+            block
+            color="primary"
+          >
+            Add New Site
+          </Button>
+        </div>
 
         <hr></hr>
 
@@ -145,13 +155,6 @@ function Dashboard(props) {
               </Card>
           </Col> */}
         </Row>
-
-        <Button
-          block
-          color="primary"
-        >
-          Add New Site
-        </Button>
 
         {/* <Row>
           <Col xs="12">
