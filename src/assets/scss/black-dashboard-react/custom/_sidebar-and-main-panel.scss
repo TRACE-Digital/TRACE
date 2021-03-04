@@ -478,13 +478,17 @@
         width: 200px !important;
         margin: auto;
       }
+    &.blur{
+      opacity: 35%;
     }
+  }
 
     >.popup{
       position: absolute;
       max-width: 800px;
       width:800px;
-      top: 40%;
+      top: 20%;
+      opacity: 100% !important;
       left: 56.7%;
       height:350px;
       padding-top:10px;
@@ -506,6 +510,10 @@
         font-size:18px;
 
       }
+    }
+
+    >.popup-gone{
+      visibility: hidden;
     }
 
     > .editor-title {
@@ -538,7 +546,6 @@
       user-select:none;
       margin-top:30px;
       line-height: 1;
-
     }
 
     >.search-info{

@@ -31,7 +31,7 @@ function SearchComponent() {
 
   const handleRefineClick = () => {
     setVisible(!isVisible);
-  };
+  }
 
   const handleCancelClick = () => {
     // refresh window
