@@ -52,6 +52,7 @@ import {
 
 import { ThirdPartyAccount, accounts } from 'trace-search';
 import { useEffect } from "react";
+import PrivacyBadge from "../components/PrivacyBadge/PrivacyBadge";
 
 function Dashboard(props) {
   const [plsRender, setPlsRender] = React.useState(false);
@@ -104,7 +105,10 @@ function Dashboard(props) {
               <Card className="card-user">
                 <CardBody>
                   <div>
-
+                  <div className="dashboard-parent">
+                    <div className="badge" >
+                      <PrivacyBadge service={account.site.name}></PrivacyBadge>
+                    </div>
                   <UncontrolledDropdown>
                   <DropdownToggle
                     caret
@@ -127,6 +131,7 @@ function Dashboard(props) {
                     </DropdownItem>
                   </DropdownMenu>
                 </UncontrolledDropdown>
+                </div>
                     <div className = "editor"> <i className={account.iconClass}></i></div>
                     <div className = "editor-handle-name">@{account.userName}</div>
                     <div className = "editor-link">
@@ -139,7 +144,7 @@ function Dashboard(props) {
           ))}
 
           {/* <Col lg="3">
-            <Card className="card-user add-to-edit"> 
+            <Card className="card-user add-to-edit">
                 <CardBody>
                   <div className= "edit-text">
                   <span className="icon">

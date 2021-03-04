@@ -38,6 +38,10 @@ a{
     &:focus{
         color: $primary;
     }
+
+    &.badge{
+        display: inline-block;
+      }
 }
 h1, .h1 {
     line-height: 1.05;
@@ -187,7 +191,7 @@ ul li, ol li{
         border-color:black;
 
         &.red{
-            color:#FFB1AF; 
+            color:#FFB1AF;
         }
         &.orange{
             color:#FFCBA5;

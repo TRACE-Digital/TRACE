@@ -476,6 +476,13 @@
       opacity: 35%;
     }
 
+    &.landing{
+      padding-left:30px !important;
+      .start-button{
+        width: 200px !important;
+        margin: auto;
+      }
+    }
     >.header {
       >.add-site-button {
         width: 200px;
@@ -495,7 +502,7 @@
       border-radius: 15px;
       transform: translate(-50%, -50%);
       background-color:whitesmoke;
-      
+
       >.title{
         font-size:40px;
         color:black;
@@ -508,7 +515,7 @@
         color:black;
         cursor:pointer;
         font-size:18px;
-        
+
       }
     }
 
@@ -558,7 +565,12 @@
       margin-left:25%;
       margin-bottom:20px;
       margin-right:25%;
-  
+      &.landing{
+        margin: 0px !important;
+      }
+      &.heading{
+        font-size: 30px !important;
+      }
     }
 
     .one{
@@ -640,7 +652,7 @@
 
     .refine-search {
       color:$white;
-      text-align: right; 
+      text-align: right;
       margin-bottom:5px;
       font-weight: 300;
       margin-top:3px;
@@ -817,6 +829,7 @@
     .main-panel{
       > .content{
         padding-left: 130px;
+
       }
     }
 

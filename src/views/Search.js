@@ -28,27 +28,10 @@ function SearchComponent() {
   const [progress, setProgress] = useState(-1);
   const [categories, setCategories] = useState(tags.slice());
   const history = useHistory();
-  
-  var tempData = [
-    {Category:"Code"},
-    {Category:"Education"},
-    {Category:"Entertainment"},
-    {Category:"Forum"},
-    {Category:"Gaming"},
-    {Category:"Messaging"},
-    {Category:"Money"},
-    {Category:"Music"},
-    {Category:"News"},
-    {Category:"Organization"},
-    {Category:"Shopping"},
-    {Category:"Social Media"},
-    {Category:"Sport"},
-    {Category:"Travel"}
-  ];
 
   const handleRefineClick = () => {
     setVisible(!isVisible);
-  };
+  }
 
   const handleCancelClick = () => {
     // refresh window

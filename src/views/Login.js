@@ -63,7 +63,6 @@ function Login() {
                   />
                 </FormGroup>
               </Form>
-              {/* <Button color="primary" type="submit" onSubmit={signUp(email, "hello", "password")}>Sign Up</Button> */}
               <Button color="primary" type="submit" form='sign-up-form' >Sign Up</Button>
           </CardBody>
       </Card>
