@@ -129,8 +129,13 @@ function SearchComponent() {
     }
   }
 
-  function deleteAccount(account) {
-    alert("Account successfully removed!");
+  async function deleteAccount(account) {
+    try {
+        await account.reject();
+        alert("Account successfully removed!");
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   // TODO: This should really move to a component
@@ -144,7 +149,7 @@ function SearchComponent() {
       <Col lg="3" key={account.id}>
         <Card className="card-user">
           <CardBody>
-            <div>
+            <div class="card-details">
 
               {/* <UncontrolledDropdown>
                 <DropdownToggle
@@ -166,9 +171,7 @@ function SearchComponent() {
               </UncontrolledDropdown> */}
               <div className="editor"> <i className={account.site.iconClass}></i></div>
               <div className="editor-handle-name">
-                <a href={account.url} target="blank">
                   @{account.userName}
-                </a>
               </div>
               <div className="editor-link">
                 <a href={account.site.url.replace("{}", account.userName)} target="blank">
