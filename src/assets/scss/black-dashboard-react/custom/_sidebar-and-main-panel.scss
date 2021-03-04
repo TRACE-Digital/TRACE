@@ -573,7 +573,7 @@
     }
 
     .one{
-     /* 
+     /*
       OLD SCROLL BAR SETTINGS:
       background-color:white;
       width:1000px;
@@ -583,7 +583,7 @@
       display: flex;
       align-items: center;
       height:50px;*/
-      
+
       background-color:white;
       width:1000px;
       margin-left: auto;
@@ -592,7 +592,7 @@
       display: flex;
       align-items: center;
       min-height:50px;
-      
+
     }
 
     .two-search{
@@ -635,7 +635,7 @@
     }
 
     .three{
-    /* 
+    /*
       OLD SCROLL BAR SETTINGS:
       display:flex;
       max-width: 550px;
@@ -644,7 +644,7 @@
       margin-left:8px;
       text-overflow: ellipsis;
       overflow-x: scroll;*/
-      
+
       display: inline-flex;
       max-width: 550px;
       white-space: nowrap;
@@ -654,8 +654,6 @@
       margin-left:8px;
       margin-right:8px;
       text-overflow: ellipsis;
-      overflow-x: scroll;
-      overflow-y: scroll;
 
       .entered{
         border-color:#d3d3d3;
