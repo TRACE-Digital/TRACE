@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 // reactstrap components
-import { Row, Col, Card, CardBody, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
+import { Row, Col, Card, CardBody, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button } from "reactstrap";
 
 import { SearchDefinition, AccountType, searchResults, allSites, tags, filterSitesByTags } from 'trace-search';
 
@@ -29,12 +29,19 @@ function SearchComponent() {
   const [categories, setCategories] = useState(tags.slice());
   const history = useHistory();
 
-  const handleClick = () => {
+  const handleRefineClick = () => {
     setVisible(!isVisible);
   };
 
-  function onKeyUp(e) {
-    if (e.charCode === 13) {
+  const handleCancelClick = () => {
+    // refresh window
+    window.location.reload();
+    console.log("Cancel search");
+  }
+
+  function keyPress(e) {
+    console.log(e.keyCode);
+    if (e.keyCode === 13) {
       if (!userNames.includes(e.target.value)) {
         console.log(e.target.value);
         userNames.push(e.target.value);
@@ -42,6 +49,13 @@ function SearchComponent() {
         setUserNames([...userNames]);
         setKeywordsEntered(false);
       }
+      document.getElementById('search-bar').value = '';
+    }
+    else if (e.keyCode === 8 && e.target.value === '') {
+      console.log("BACKSPACEEEE");
+      userNames.splice(userNames.length - 1, 1);
+      setUserNames([...userNames]);
+      console.log(userNames);
     }
   }
 
@@ -199,8 +213,9 @@ function SearchComponent() {
         </div>
         <div className="two">
           <input
+            id="search-bar"
             className="two-search"
-            onKeyPress={onKeyUp}
+            onKeyDown={keyPress}
             onChange={typing}>
           </input>
         </div>
@@ -209,7 +224,8 @@ function SearchComponent() {
         </div>
       </div>
 
-      <div className="refine-search"><span className="the-text" onClick={handleClick}>refine search</span></div>
+      <div className="refine-search"><span className="the-text" onClick={handleRefineClick}>refine search</span></div>
+      <div className="refine-search"><span className="the-text" onClick={handleCancelClick}>cancel</span></div>
 
       <div className={isVisible ? "dropdownVis" : "dropdownNotVis"} >
         <Row>

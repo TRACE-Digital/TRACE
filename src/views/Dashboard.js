@@ -141,6 +141,13 @@ function Dashboard(props) {
           </Col> */}
         </Row>
 
+        <Button
+          block
+          color="primary"
+        >
+          Add New Site
+        </Button>
+
         {/* <Row>
           <Col xs="12">
             <Card className="card-chart">
