@@ -8,6 +8,37 @@
     border-radius: $border-radius-lg;
     cursor: pointer;
 
+    &.categories-button{
+      margin-top:15px;
+      height:25px;
+      background:#d3d3d3;
+      text-align:center !important;
+      padding-left:10px !important;
+      padding-right:10px !important;
+      padding-top:0px !important;
+      padding-bottom:0px !important;
+      color:#303030;
+
+      &:hover, &:visited, &:link{
+        background:#d3d3d3 !important;
+        color:#303030;
+      }
+
+      &:focus{
+        background:#d3d3d3 !important;
+        color:#303030;
+      }
+
+      &:active{
+        background:#d3d3d3 !important;
+      }
+      &.active{
+        background:#d3d3d3 !important;
+      }
+    }
+
+    
+
     &.claim-button {
       padding: 15px !important;
       max-width: 125px !important;

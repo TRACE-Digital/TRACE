@@ -228,6 +228,8 @@ function SearchComponent() {
             </Col>
           ))}
         </Row>
+        <Button className="categories-button">Select All</Button>
+        <Button className="categories-button">Unselect All</Button>
       </div>
 
       <div className={keywordsEntered ? "error-message-visible" : "error-not-visible"}>please enter a keyword before submitting search</div>
