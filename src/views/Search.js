@@ -42,7 +42,7 @@ function SearchComponent() {
   function keyPress(e) {
     console.log(e.keyCode);
     if (e.keyCode === 13) {
-      if (!userNames.includes(e.target.value)) {
+      if (!userNames.includes(e.target.value) && e.target.value != '') {
         console.log(e.target.value);
         userNames.push(e.target.value);
         console.log(userNames);

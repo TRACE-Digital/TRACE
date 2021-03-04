@@ -472,6 +472,13 @@
     padding: 78px 30px 30px 280px;
     min-height: calc(100vh - 70px);
 
+    >.header {
+      >.add-site-button {
+        width: 200px;
+        float: right;
+      }
+    }
+
     >.popup{
       position: absolute;
       max-width: 800px;
