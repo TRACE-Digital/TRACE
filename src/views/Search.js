@@ -12,15 +12,20 @@ function Search() {
   const history = useHistory();
   
   var tempData = [
+    {Category:"Code"},
+    {Category:"Education"},
+    {Category:"Entertainment"},
+    {Category:"Forum"},
+    {Category:"Gaming"},
+    {Category:"Messaging"},
+    {Category:"Money"},
+    {Category:"Music"},
+    {Category:"News"},
+    {Category:"Organization"},
+    {Category:"Shopping"},
     {Category:"Social Media"},
-    {Category:"Clothing"},
-    {Category:"Housing"},
-    {Category:"Vehicle"},
-    {Category:"Pet"},
-    {Category:"Insurance"},
     {Category:"Sport"},
-    {Category:"Food"},
-    {Category:"Medical"},
+    {Category:"Travel"}
   ];
 
   const handleClick = () => {
@@ -92,6 +97,7 @@ function Search() {
             <input 
               className="two-search"
               onKeyPress={onKeyUp}
+              
               onChange={typing}>
             </input>
           </div>
