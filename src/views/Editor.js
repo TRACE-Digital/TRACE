@@ -30,12 +30,12 @@ var tempData = [
 function Editor() {
 
 const [isOpen, setIsOpen] = useState(false);
- 
+
 const togglePopup = () => {
   setIsOpen(!isOpen);
 }
   return (
-    
+
     <>
     <div className="content">
 
@@ -49,11 +49,11 @@ const togglePopup = () => {
         <Row>
           {tempData.map(site => (
             <Col lg="3">
-            
-              <Card className="card-user"> 
+
+              <Card className="card-user">
                 <CardBody>
                   <div>
-                
+
                   <UncontrolledDropdown>
                   <DropdownToggle
                     caret
@@ -81,20 +81,22 @@ const togglePopup = () => {
             </Col>
           ))}
           <Col lg="3">
-            <Card className="card-user add-to-edit"> 
-                <CardBody>
-                  <div className= "edit-text">
-                  <span className="icon">
-                    <i class="fas fa-plus"></i>
-                  </span>
-                  </div>
-                </CardBody>
-              </Card>
+            <a id="new" href="#new">
+              <Card className="card-user add-to-edit">
+                  <CardBody>
+                    <div className= "edit-text">
+                    <span className="icon">
+                      <i class="fas fa-plus"></i>
+                    </span>
+                    </div>
+                  </CardBody>
+                </Card>
+            </a>
           </Col>
         </Row>
       </div>
-      {isOpen ?  <Results/>  : null  }  
-    </div>    
+      {isOpen ?  <Results/>  : null  }
+    </div>
     </>
   );
 }
