@@ -15,6 +15,7 @@ async function signUp(username, email, password) {
           }
       });
       console.log(user);
+      localStorage.setItem('user', user);
       return null;
   } catch (error) {
       console.log('error signing up:', error);
