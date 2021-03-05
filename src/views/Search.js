@@ -53,7 +53,7 @@ function SearchComponent() {
   function keyPress(e) {
     console.log(e.keyCode);
     if (e.keyCode === 13) {
-      if (!userNames.includes(e.target.value) && e.target.value != '') {
+      if (!userNames.includes(e.target.value) && e.target.value !== '') {
         console.log(e.target.value);
         userNames.push(e.target.value);
         console.log(userNames);
@@ -74,7 +74,7 @@ function SearchComponent() {
     if (userNames.length === 0) {
       setKeywordsEntered(true);
       console.log("no keywords entered");
-    } 
+    }
     else if (categories.length === 0){
       setTagsEntered(true);
       console.log("no tags entered");
@@ -238,7 +238,6 @@ function SearchComponent() {
                 type="checkbox"
                 value={tag}
                 onClick={handleClickCheckbox}
-                defaultChecked={true}
                 checked={categories.includes(tag) ? true : false}
               />
               <span className="checkbox-name">{tag}</span>
@@ -246,7 +245,7 @@ function SearchComponent() {
           ))}
         </Row>
         <Button className="categories-button" onClick={selectAll}>Select All</Button>
-        <Button className="categories-button" onClick={unselectAll}>Unselect All</Button>
+        <Button className="categories-button" onClick={unselectAll}>Deselect All</Button>
       </div>
       <div className={keywordsEntered ? "error-message-visible" : (tagsEntered ? "error-message-visible" : "error-not-visible")}>
         {keywordsEntered ? "please enter at least one keyword" : (tagsEntered ? "please enter at least one tag" : "")}
