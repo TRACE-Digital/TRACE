@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
 
 // reactstrap components
-import { Row, Col, Card, CardBody, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button } from "reactstrap";
+import { Row, Col, Card, CardBody, Button } from "reactstrap";
 
 import { SearchDefinition, AccountType, searchResults, allSites, tags, filterSitesByTags } from 'trace-search';
 
@@ -31,7 +30,6 @@ function SearchComponent() {
   const [resultIds, setResultsIds] = useState([]);
   const [progress, setProgress] = useState(-1);
   const [categories, setCategories] = useState(tags.slice());
-  const history = useHistory();
 
   const handleRefineClick = () => {
     setVisible(!isVisible);
@@ -54,7 +52,7 @@ function SearchComponent() {
 
   function keyPress(e) {
     if (e.keyCode === 13) {
-      if (!userNames.includes(e.target.value) && e.target.value != '') {
+      if (!userNames.includes(e.target.value) && e.target.value !== '') {
         userNames.push(e.target.value);
         setUserNames([...userNames]);
         setKeywordsEntered(false);
@@ -130,6 +128,7 @@ function SearchComponent() {
         await account.claim();
         alert("Account successfully claimed!");
     } catch (e) {
+      alert('Account has already been claimed!');
       console.error(e);
     }
   }
@@ -155,7 +154,7 @@ function SearchComponent() {
         <Card className="card-user">
           <CardBody>
             <div class="card-details">
-              <div className="editor"> <i className={account.site.logoClass != "fa-question-circle" ? "fab "+account.site.logoClass : "fas "+account.site.logoClass}></i></div>
+              <div className="editor"> <i className={account.site.logoClass !== "fa-question-circle" ? "fab "+account.site.logoClass : "fas "+account.site.logoClass}></i></div>
               <div className="editor-handle-name">
                   @{account.userName}
               </div>
@@ -197,7 +196,7 @@ function SearchComponent() {
       <div className="search-info">Find your digital footprint. Manage your online presence. Our service allows you to increase your social media engagement while keeping your privacy a priority. Sync your information or work locally.</div>
 
       <div className="one">
-        <div className="three">{userNames.map(item => <div className="entered">
+        <div className="three">{userNames.map(item => <div className="entered" key={item}>
           <i className="icon fas fa-times" onClick={() => deleteEntry(item)}></i>
           {item}
         </div>)}
@@ -271,4 +270,4 @@ function SearchComponent() {
 
 export default SearchComponent;
 
-// got visiblity toggle from https://stackoverflow.com/questions/42630473/react-toggle-class-onclick
+// got visibility toggle from https://stackoverflow.com/questions/42630473/react-toggle-class-onclick

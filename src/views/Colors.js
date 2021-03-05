@@ -1,5 +1,3 @@
-import React, { useState } from 'react';
-
 function Colors() {
 
 
@@ -23,7 +21,7 @@ function handleClick() {
                             <i class="fas fa-circle blue" onClick={handleClick}></i>
                             <i class="fas fa-circle purple" onClick={handleClick}></i>
                         </li>
-                        <li className="editor-popup"> 
+                        <li className="editor-popup">
                             box colors:
                             <i class="fas fa-circle red" onClick={handleClick}></i>
                             <i class="fas fa-circle orange" onClick={handleClick}></i>
@@ -50,7 +48,7 @@ function handleClick() {
                             <i class="fas fa-circle blue" onClick={handleClick}></i>
                             <i class="fas fa-circle purple" onClick={handleClick}></i>
                         </li>
-                    </ul>  
+                    </ul>
                 </div>
             </div>
         </>

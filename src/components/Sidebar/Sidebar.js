@@ -66,7 +66,7 @@ function Sidebar(props) {
         <a
           href={logo.outterLink}
           className="simple-text logo-mini"
-          target="_blank"
+          target="blank"
           onClick={props.toggleSidebar}
         >
           <div className="logo-img">
@@ -78,7 +78,7 @@ function Sidebar(props) {
         <a
           href={logo.outterLink}
           className="simple-text logo-normal"
-          target="_blank"
+          target="blank"
           onClick={props.toggleSidebar}
         >
           {logo.text}
