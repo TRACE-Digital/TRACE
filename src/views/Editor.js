@@ -43,7 +43,7 @@ const togglePopup = (e) => {
 useEffect(() => {
  async function isLoggedIn () {
   if (!(localStorage.getItem('user'))) {
-    window.location.href = '/login';
+    window.location.href = '/#/login';
   }
  }
  isLoggedIn();
