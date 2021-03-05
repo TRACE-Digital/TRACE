@@ -42,10 +42,12 @@ function SearchComponent() {
 
   const selectAll = () => {
     setCategories(tags.slice());
+    setTagsEntered(false);
   }
 
   const unselectAll = () => {
     setCategories([]);
+    
   }
 
   function keyPress(e) {
