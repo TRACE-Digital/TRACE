@@ -473,7 +473,7 @@
     min-height: calc(100vh - 70px);
 
     &.blur{
-      opacity: 35%;
+      opacity: .3 !important;
     }
 
     &.landing{
@@ -495,7 +495,7 @@
       max-width: 800px;
       width:800px;
       top: 40vh;
-      opacity: 100% !important;
+      opacity: 10.0 !important;
       left: 56.7%;
       height:350px;
       padding-top:10px;
