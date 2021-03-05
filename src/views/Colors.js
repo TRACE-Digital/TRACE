@@ -1,19 +1,16 @@
-import React from "react";
+import React, { useState } from 'react';
 
-function Results() {
+function Colors() {
 
-function close(){
-    return null;
-}
 
-const handleClick = (e) => {
-    console.log("A setting would be saved here");
+
+function handleClick() {
+    //do this when a color is clicked
 };
 
   return (
     <>
       <div className="popup">
-        <span className="x" onClick={close}><i className="icon fas fa-times"></i></span>
             <div className="title">themes</div>
                 <div>
                     <ul className="editor">
@@ -60,4 +57,4 @@ const handleClick = (e) => {
     );
 }
 
-export default Results;
+export default Colors;

@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from 'react';
-import Results from "views/Results.js";
+import Colors from "views/Colors.js";
 
 // reactstrap components
 import {
@@ -31,20 +31,23 @@ function Editor() {
 
 const [isOpen, setIsOpen] = useState(false);
 
-const togglePopup = () => {
-  setIsOpen(!isOpen);
+const togglePopup = (e) => {
+  if (e.target.className === "tim-icons icon-pencil icon"){
+    setIsOpen(!isOpen);
+  }
+  else {
+    setIsOpen(false);
+  }
 }
+
   return (
 
     <>
-    <div className="content">
+    <div onClick={togglePopup} className={isOpen ? "content blur" : "content"}>
 
       <div className="editor-title">
-        {name}<i class="tim-icons icon-pencil icon" onClick={togglePopup}></i>
+        {name}<i class="tim-icons icon-pencil icon"></i>
       </div>
-
-
-
       <div>
         <Row>
           {tempData.map(site => (
@@ -95,8 +98,8 @@ const togglePopup = () => {
           </Col>
         </Row>
       </div>
-      {isOpen ?  <Results/>  : null  }
     </div>
+    <div className="content">{isOpen ?  <Colors/>  : null}  </div>
     </>
   );
 }

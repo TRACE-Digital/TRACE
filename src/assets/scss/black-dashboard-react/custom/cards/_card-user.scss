@@ -4,7 +4,7 @@
         height: 120px;
     }
 
-  
+
 
     .edit-text{
       font-size: 1rem;
@@ -23,12 +23,24 @@
       }
     }
 
+    .dashboard-parent{
+      display: inline;
+      margin-bottom: 15px;
+      >.badge{
+        display: inline-block;
+      }
+      >.dropdown{
+        padding-right: 25px;
+        float: right;
+      }
+    }
+
     .editor {
       font-size: 5rem;
       color:#ffffff;
       text-align: center;
-    
-      // colors from https://www.huratips.com/design-tips/font-awesome-icons-with-brand-color-variables.html 
+
+      // colors from https://www.huratips.com/design-tips/font-awesome-icons-with-brand-color-variables.html
 
       > .fa-amazon {
         color: #ff9900;
@@ -181,13 +193,13 @@
         color: #333;
       }
       > .fa-github {
-        color: #333;
+        color: white;
       }
       > .fa-github-alt {
-        color: #333;
+        color: white;
       }
       > .fa-github-square {
-        color: #333;
+        color: white;
       }
       > .fa-gittip {
         color: #663300;
@@ -468,6 +480,12 @@
       text-align: center;
     }
 
+    .test{
+      text-align:center;
+      margin-top:10px;
+      position:unset !important;  
+    }
+
     .author {
         text-align: center;
         text-transform: none;
@@ -524,6 +542,9 @@
 
     .card-body {
         min-height: 240px;
+        >.card-details {
+          margin: auto;
+        }
     }
 
     hr {
