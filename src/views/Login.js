@@ -4,6 +4,7 @@ import { Auth } from 'aws-amplify';
 
 // reactstrap components
 import { Alert, Card, CardImg, CardBody, CardTitle, Button, Form, FormGroup, Input } from 'reactstrap';
+import { useHistory } from 'react-router-dom';
 
 async function signUp(username, email, password) {
   try {
@@ -48,6 +49,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [isLogin, setisLogin] = useState(true);
   const [error, setError] = useState(null);
+  const history = useHistory();
 
   return (
     <div className="login">
@@ -56,10 +58,19 @@ function Login() {
           <CardBody>
               <CardTitle className='welcome'>Welcome to TRACE</CardTitle>
               {error && <Alert color="danger">{error}</Alert>}
-              <Form id='sign-up-form' onSubmit={async (e) => {
+              <Form id='sign-up-form'  onSubmit={async (e) => {
                 e.preventDefault();
-                isLogin ? setError(await signIn(email, password)) : setError(await signUp(email, email, password));
-                console.log(error);
+                const localError = false;
+                if (isLogin) {
+                  localError = await signIn(email, password);
+                } else {
+                  localError = await signUp(email, email, password)
+                }
+                setError(localError);
+
+                if (!localError) {
+                  window.location.href = '/admin/dashboard';
+                }
               }}>
               <FormGroup>
                   <Input
@@ -69,15 +80,6 @@ function Login() {
                     onChange={e => setEmail(e.target.value)}
                   />
                 </FormGroup>
-                {/* <FormGroup>
-                  <label>Username</label>
-                  <Input
-                    placeholder="Username"
-                    type="text"
-                    value={username}
-                    onChange={e => setUsername(e.target.value)}
-                  />
-                </FormGroup> */}
                 <FormGroup>
                   <Input
                     placeholder="Password"
