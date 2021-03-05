@@ -15,9 +15,12 @@ const testSiteNames = [
   'GitLab',
   'npm',
   'Wikipedia',
-  'Gravatar',
+  'TripAdvisor',
   'HackerNews',
-  'Keybase'
+  'Steam',
+  'Keybase',
+  'last.fm',
+  'Twitch'
 ];
 
 function SearchComponent() {
@@ -235,8 +238,8 @@ function SearchComponent() {
               <input
                 type="checkbox"
                 value={tag}
-                onClick={handleClickCheckbox}
-                checked={categories.includes(tag) ? true : false}
+                onChange={handleClickCheckbox}
+                checked={categories.includes(tag)}
               />
               <span className="checkbox-name">{tag}</span>
             </Col>
