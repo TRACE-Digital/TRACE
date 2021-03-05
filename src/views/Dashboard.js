@@ -50,7 +50,7 @@ import {
   chartExample4,
 } from "variables/charts.js";
 
-import { ThirdPartyAccount, accounts } from 'trace-search';
+import { ThirdPartyAccount, accounts, AccountType } from 'trace-search';
 import { useEffect } from "react";
 import PrivacyBadge from "../components/PrivacyBadge/PrivacyBadge";
 
@@ -99,8 +99,10 @@ function Dashboard(props) {
         <hr></hr>
 
         <Row>
-          {Object.values(accounts).map(account => (
-            <Col lg="3">
+          {Object.values(accounts)
+            .filter(account => account.type === AccountType.CLAIMED)
+            .map(account => (
+            <Col lg="3" key={account.id}>
 
               <Card className="card-user">
                 <CardBody>
@@ -132,10 +134,10 @@ function Dashboard(props) {
                   </DropdownMenu>
                 </UncontrolledDropdown>
                 </div>
-                    <div className = "editor"> <i className={account.site.logoClass != "fa-question-circle" ? "fab "+account.site.logoClass : "fas "+account.site.logoClass}></i></div>
+                    <div className = "editor"> <i className={account.site.logoClass !== "fa-question-circle" ? "fab "+account.site.logoClass : "fas "+account.site.logoClass}></i></div>
                     <div className = "editor-handle-name">@{account.userName}</div>
                     <div className = "editor-link">
-                      <a href={account.site.url.replace("{}", account.userName)} target="_blank">{account.site.prettyUrl || account.site.urlMain || account.site.url}</a>
+                      <a href={account.url} target="blank">{account.site.prettyUrl || account.site.urlMain || account.site.url}</a>
                     </div>
                   </div>
                 </CardBody>

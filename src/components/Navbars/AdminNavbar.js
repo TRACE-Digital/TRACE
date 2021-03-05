@@ -19,7 +19,7 @@ import React from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 
-import { clearDb } from 'trace-search';
+import { clearDb, setupReplication, teardownReplication } from 'trace-search';
 
 // reactstrap components
 import {
@@ -46,6 +46,37 @@ function AdminNavbar(props) {
   const [modalSearch, setmodalSearch] = React.useState(false);
   const [color, setcolor] = React.useState("navbar-transparent");
   const [replicate, setReplicate] = React.useState(false);
+
+  // Setup replication
+  React.useEffect(() => {
+    async function handleReplication() {
+      if (replicate) {
+        try {
+          const obj = await setupReplication();
+          const replicator = obj.TODO_replication;
+
+          replicator.on('error', (e) => {
+            alert(`Replication error!\n\n${e}`);
+            console.error(e);
+            setReplicate(false);
+          });
+        } catch(e) {
+          alert(`Replication error!\n\n${e}`);
+          console.error(e);
+          setReplicate(false);
+          return;
+        }
+      } else {
+        try {
+          await teardownReplication();
+        } catch (e) {
+          console.error(e);
+          return;
+        }
+      }
+    }
+    handleReplication();
+  }, [replicate]);
 
   React.useEffect(() => {
     window.addEventListener("resize", updateColor);
@@ -109,10 +140,7 @@ function AdminNavbar(props) {
                     inactiveLabel={<span>Off</span>}
                     activeLabel={<span>On</span>}
                     value={replicate || false}
-                    onToggle={() => setReplicate(prev => !prev)}
-                    onClick={(e) => {
-                      e.preventDefault();
-                    }}
+                    onToggle={() => setReplicate(prev => !prev) }
                   />
                 </div>
               </UncontrolledDropdown>
@@ -121,7 +149,7 @@ function AdminNavbar(props) {
                   caret
                   color="default"
                   nav
-                  onClick={(e) => e.preventDefault()}
+                  onClick={async (e) => { e.preventDefault() }}
                 >
                   <div className="photo">
                     <i className="tim-icons icon-single-02" />
