@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Auth } from 'aws-amplify';
 
-
 // reactstrap components
 import { Alert, Card, CardImg, CardBody, CardTitle, Button, Form, FormGroup, Input } from 'reactstrap';
 import { useHistory } from 'react-router-dom';
@@ -36,6 +35,7 @@ async function signIn(username, password) {
     try {
         const user = await Auth.signIn(username, password);
         console.log(user)
+        localStorage.setItem('user', user);
         return null;
     } catch (error) {
       Auth.error = error;
