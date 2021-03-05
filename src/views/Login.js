@@ -3,7 +3,6 @@ import { Auth } from 'aws-amplify';
 
 // reactstrap components
 import { Alert, Card, CardImg, CardBody, CardTitle, Button, Form, FormGroup, Input } from 'reactstrap';
-import { useHistory } from 'react-router-dom';
 
 async function signUp(username, email, password) {
   try {
@@ -50,7 +49,6 @@ function Login() {
   const [password, setPassword] = useState("");
   const [isLogin, setisLogin] = useState(true);
   const [error, setError] = useState(null);
-  const history = useHistory();
 
   return (
     <div className="login">
@@ -61,7 +59,7 @@ function Login() {
               {error && <Alert color="danger">{error}</Alert>}
               <Form id='sign-up-form'  onSubmit={async (e) => {
                 e.preventDefault();
-                const localError = false;
+                let localError = false;
                 if (isLogin) {
                   localError = await signIn(email, password);
                 } else {
