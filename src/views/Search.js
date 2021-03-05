@@ -36,35 +36,27 @@ function SearchComponent() {
   const handleCancelClick = () => {
     // refresh window
     window.location.reload();
-    console.log("Cancel search");
   }
 
   function keyPress(e) {
-    console.log(e.keyCode);
     if (e.keyCode === 13) {
       if (!userNames.includes(e.target.value) && e.target.value != '') {
-        console.log(e.target.value);
         userNames.push(e.target.value);
-        console.log(userNames);
         setUserNames([...userNames]);
         setKeywordsEntered(false);
       }
       document.getElementById('search-bar').value = '';
     }
     else if (e.keyCode === 8 && e.target.value === '') {
-      console.log("BACKSPACEEEE");
       userNames.splice(userNames.length - 1, 1);
       setUserNames([...userNames]);
-      console.log(userNames);
     }
   }
 
   async function submitSearch(e) {
     if (userNames.length === 0) {
       setKeywordsEntered(true);
-      console.log("working");
     } else {
-      console.log("Submit Searches");
 
       // Clear old results
       setResultsIds([]);
@@ -75,8 +67,6 @@ function SearchComponent() {
       const testSites = testSiteNames.map(name => allSites[name]);
       const taggedSites = filterSitesByTags(testSites, categories);
       const taggedSiteNames = taggedSites.map(site => site.name);
-
-      console.log(taggedSiteNames);
 
       const searchDef = new SearchDefinition(undefined, taggedSiteNames);
       searchDef.userNames = userNames;
@@ -96,7 +86,6 @@ function SearchComponent() {
   function deleteEntry(e) {
     userNames.splice(userNames.indexOf(e), 1);
     setUserNames([...userNames]);
-    console.log(userNames);
   }
 
   function typing() {
@@ -104,23 +93,18 @@ function SearchComponent() {
   }
 
   function handleClickCheckbox(e) {
-    console.log(e.target.value);
 
     if (categories.includes(e.target.value)) {
-      console.log("ITS IN THERE");
       categories.splice(categories.indexOf(e.target.value), 1);
       setCategories([...categories]);
-      console.log(categories);
     }
     else {
       categories.push(e.target.value);
       setCategories([...categories]);
-      console.log(categories);
     }
   }
 
   async function claimAccount(account) {
-    console.log(account);
     try {
         await account.claim();
         alert("Account successfully claimed!");
