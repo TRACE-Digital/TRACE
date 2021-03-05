@@ -473,7 +473,7 @@
     min-height: calc(100vh - 70px);
 
     &.blur{
-      opacity: 35%;
+      opacity: .3 !important;
     }
 
     &.landing{
@@ -495,7 +495,7 @@
       max-width: 800px;
       width:800px;
       top: 40vh;
-      opacity: 100% !important;
+      opacity: 10.0 !important;
       left: 56.7%;
       height:350px;
       padding-top:10px;
@@ -572,7 +572,7 @@
     }
 
     .one{
-     /* 
+     /*
       OLD SCROLL BAR SETTINGS:
       background-color:white;
       width:1000px;
@@ -582,7 +582,7 @@
       display: flex;
       align-items: center;
       height:50px;*/
-      
+
       background-color:white;
       width:1000px;
       margin-left: auto;
@@ -591,7 +591,7 @@
       display: flex;
       align-items: center;
       min-height:50px;
-      
+
     }
 
     .two-search{
@@ -634,7 +634,7 @@
     }
 
     .three{
-    /* 
+    /*
       OLD SCROLL BAR SETTINGS:
       display:flex;
       max-width: 550px;
@@ -643,7 +643,7 @@
       margin-left:8px;
       text-overflow: ellipsis;
       overflow-x: scroll;*/
-      
+
       display: inline-flex;
       max-width: 550px;
       white-space: nowrap;

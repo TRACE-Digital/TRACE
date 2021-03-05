@@ -1,6 +1,6 @@
-import React from "react";
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Colors from "views/Colors.js";
+import { Auth } from 'aws-amplify';
 
 // reactstrap components
 import {
@@ -39,6 +39,15 @@ const togglePopup = (e) => {
     setIsOpen(false);
   }
 }
+
+useEffect(() => {
+ async function isLoggedIn () {
+  if (!(localStorage.getItem('user'))) {
+    window.location.href = '/#/login';
+  }
+ }
+ isLoggedIn();
+}, []);
 
   return (
 

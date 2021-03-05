@@ -41,10 +41,30 @@ import {
 import ToggleButton from 'react-toggle-button';
 import { Link } from "react-router-dom";
 
+import { Auth } from 'aws-amplify';
+
+async function signOut() {
+  console.log('before')
+  console.log(await Auth.currentAuthenticatedUser())
+  try {
+    const currentUser = Auth.userPool.getCurrentUser();
+    await currentUser.signOut();
+    console.log('after');
+    console.log(await Auth.currentAuthenticatedUser());
+    localStorage.removeItem('user');
+    window.location.href = '/#/login';
+    } catch (error) {
+      console.log('error signing out: ', error);
+      localStorage.removeItem('user');
+      window.location.href = '/#/login';
+    }
+}
+
 function AdminNavbar(props) {
   const [collapseOpen, setcollapseOpen] = React.useState(false);
   const [modalSearch, setmodalSearch] = React.useState(false);
   const [color, setcolor] = React.useState("navbar-transparent");
+  const [isLoggedIn, setIsLoggedIn] = React.useState((localStorage.getItem('user')));
   const [replicate, setReplicate] = React.useState(false);
 
   // Setup replication
@@ -179,9 +199,17 @@ function AdminNavbar(props) {
                     }}>Delete my data</DropdownItem>
                   </NavLink>
                   <DropdownItem divider tag="li" />
-                  <NavLink tag="li">
-                    <DropdownItem className="nav-item">Log out</DropdownItem>
-                  </NavLink>
+                  {!isLoggedIn &&
+                  <NavLink to="/login" tag={Link}>
+                    <DropdownItem className="nav-item">Log In</DropdownItem>
+                  </NavLink>}
+                  {isLoggedIn &&
+                  <NavLink onClick={() => {
+                    signOut();
+                    setIsLoggedIn(!isLoggedIn);
+                    }} tag="li">)
+                    <DropdownItem className="nav-item">Log Out</DropdownItem>
+                  </NavLink>}
                 </DropdownMenu>
               </UncontrolledDropdown>
               <li className="separator d-lg-none" />
