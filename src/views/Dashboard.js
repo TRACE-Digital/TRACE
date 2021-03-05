@@ -17,42 +17,24 @@
 */
 import React from "react";
 // nodejs library that concatenates classes
-import classNames from "classnames";
-// react plugin used to create charts
-import { Line, Bar } from "react-chartjs-2";
 
 // reactstrap components
 import {
   Button,
-  ButtonGroup,
   Card,
-  CardHeader,
   CardBody,
-  CardTitle,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
   UncontrolledDropdown,
-  Label,
-  FormGroup,
-  Input,
-  Table,
   Row,
   Col,
-  UncontrolledTooltip,
 } from "reactstrap";
 
-// core components
-import {
-  chartExample1,
-  chartExample2,
-  chartExample3,
-  chartExample4,
-} from "variables/charts.js";
-
-import { ThirdPartyAccount, accounts } from 'trace-search';
+import { ThirdPartyAccount, accounts, AccountType } from 'trace-search';
 import { useEffect } from "react";
 import PrivacyBadge from "../components/PrivacyBadge/PrivacyBadge";
+import { Link } from "react-router-dom";
 
 function Dashboard(props) {
   const [plsRender, setPlsRender] = React.useState(false);
@@ -87,20 +69,22 @@ function Dashboard(props) {
             return <div key={account.id}>{account.site.name} - {account.userName}</div>
           })} */}
 
-          <Button
-            className="add-site-button"
-            block
+          <Link
+            className="btn btn-primary add-site-button"
             color="primary"
+            to="/admin/search"
           >
             Add New Site
-          </Button>
+          </Link>
         </div>
 
         <hr></hr>
 
         <Row>
-          {Object.values(accounts).map(account => (
-            <Col lg="3">
+          {Object.values(accounts)
+            .filter(account => account.type === AccountType.CLAIMED)
+            .map(account => (
+            <Col lg="3" key={account.id}>
 
               <Card className="card-user">
                 <CardBody>
@@ -116,7 +100,7 @@ function Dashboard(props) {
                     color="link"
                     type="button"
                   >
-                  <i class="fas fa-ellipsis-h"></i>
+                  <i className="fas fa-ellipsis-h"></i>
                   </DropdownToggle>
                   <DropdownMenu className="dropdown-menu-right">
                     <DropdownItem
@@ -132,10 +116,10 @@ function Dashboard(props) {
                   </DropdownMenu>
                 </UncontrolledDropdown>
                 </div>
-                    <div className = "editor"> <i className={account.site.logoClass != "fa-question-circle" ? "fab "+account.site.logoClass : "fas "+account.site.logoClass}></i></div>
+                    <div className = "editor"> <i className={account.site.logoClass !== "fa-question-circle" ? "fab "+account.site.logoClass : "fas "+account.site.logoClass}></i></div>
                     <div className = "editor-handle-name">@{account.userName}</div>
                     <div className = "editor-link">
-                      <a href={account.site.url.replace("{}", account.userName)} target="_blank">{account.site.prettyUrl || account.site.urlMain || account.site.url}</a>
+                      <a href={account.url} target="blank">{account.site.prettyUrl || account.site.urlMain || account.site.url}</a>
                     </div>
                   </div>
                 </CardBody>
@@ -532,7 +516,7 @@ function Dashboard(props) {
                           </FormGroup>
                         </td>
                         <td>
-                          <p className="title">Arival at export process</p>
+                          <p className="title">Arrival at export process</p>
                           <p className="text-muted">
                             Capitol Hill, Seattle, WA 12:34 AM
                           </p>

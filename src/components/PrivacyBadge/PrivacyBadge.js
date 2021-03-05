@@ -20,8 +20,8 @@ function PrivacyBadge(props) {
   let badge = "https://tosdr.org/api/badge/en_" + id + ".svg"
 
   return (
-      <a href={service_url} target="_blank" >
-        <img src={badge}/>
+      <a href={service_url} target="blank" >
+        <img src={badge} alt="Privacy Badge"/>
       </a>
   );
 }
