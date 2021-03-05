@@ -23,6 +23,7 @@ const testSiteNames = [
 function SearchComponent() {
   const [isVisible, setVisible] = useState(false);
   const [keywordsEntered, setKeywordsEntered] = useState(false);
+  const [tagsEntered, setTagsEntered] = useState(false);
   const [userNames, setUserNames] = useState([]);
   const [resultIds, setResultsIds] = useState([]);
   const [progress, setProgress] = useState(-1);
@@ -36,6 +37,16 @@ function SearchComponent() {
   const handleCancelClick = () => {
     // refresh window
     window.location.reload();
+  }
+
+  const selectAll = () => {
+    setCategories(tags.slice());
+    setTagsEntered(false);
+  }
+
+  const unselectAll = () => {
+    setCategories([]);
+
   }
 
   function keyPress(e) {
@@ -56,7 +67,13 @@ function SearchComponent() {
   async function submitSearch(e) {
     if (userNames.length === 0) {
       setKeywordsEntered(true);
-    } else {
+      console.log("no keywords entered");
+    }
+    else if (categories.length === 0){
+      setTagsEntered(true);
+      console.log("no tags entered");
+    }else {
+      console.log("Submit Searches");
 
       // Clear old results
       setResultsIds([]);
@@ -99,6 +116,7 @@ function SearchComponent() {
       setCategories([...categories]);
     }
     else {
+      setTagsEntered(false);
       categories.push(e.target.value);
       setCategories([...categories]);
     }
@@ -206,15 +224,18 @@ function SearchComponent() {
                 type="checkbox"
                 value={tag}
                 onClick={handleClickCheckbox}
-                defaultChecked={true}
+                checked={categories.includes(tag) ? true : false}
               />
               <span className="checkbox-name">{tag}</span>
             </Col>
           ))}
         </Row>
+        <Button className="categories-button" onClick={selectAll}>Select All</Button>
+        <Button className="categories-button" onClick={unselectAll}>Deselect All</Button>
       </div>
-
-      <div className={keywordsEntered ? "error-message-visible" : "error-not-visible"}>please enter a keyword before submitting search</div>
+      <div className={keywordsEntered ? "error-message-visible" : (tagsEntered ? "error-message-visible" : "error-not-visible")}>
+        {keywordsEntered ? "please enter at least one keyword" : (tagsEntered ? "please enter at least one tag" : "")}
+      </div>
 
       {progress >= 0 ?
         <div style={{ width: '100%', textAlign: 'center' }}>

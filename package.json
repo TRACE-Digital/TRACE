@@ -37,6 +37,7 @@
     "react-notification-alert": "0.0.13",
     "react-router-dom": "5.2.0",
     "react-scripts": "4.0.1",
+    "react-toggle-button": "^2.2.0",
     "reactstrap": "8.7.1",
     "trace-search": "git+https://trace-digi-bot:dea7cfe0d9c4a88290d7ab9c1676e3ccc44592d3@github.com/TRACE-Digital/trace-search.git#jack/react-integration"
   },

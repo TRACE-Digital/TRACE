@@ -32,7 +32,7 @@ function Editor() {
 const [isOpen, setIsOpen] = useState(false);
 
 const togglePopup = (e) => {
-  if (e.target.className == "tim-icons icon-pencil icon"){
+  if (e.target.className === "tim-icons icon-pencil icon"){
     setIsOpen(!isOpen);
   }
   else {
