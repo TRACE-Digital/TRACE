@@ -132,7 +132,7 @@ function Dashboard(props) {
                   </DropdownMenu>
                 </UncontrolledDropdown>
                 </div>
-                    <div className = "editor"> <i className={account.iconClass}></i></div>
+                    <div className = "editor"> <i className={account.site.logoClass != "fa-question-circle" ? "fab "+account.site.logoClass : "fas "+account.site.logoClass}></i></div>
                     <div className = "editor-handle-name">@{account.userName}</div>
                     <div className = "editor-link">
                       <a href={account.site.url.replace("{}", account.userName)} target="_blank">{account.site.prettyUrl || account.site.urlMain || account.site.url}</a>

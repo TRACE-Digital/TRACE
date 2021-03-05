@@ -23,6 +23,7 @@ const testSiteNames = [
 function SearchComponent() {
   const [isVisible, setVisible] = useState(false);
   const [keywordsEntered, setKeywordsEntered] = useState(false);
+  const [tagsEntered, setTagsEntered] = useState(false);
   const [userNames, setUserNames] = useState([]);
   const [resultIds, setResultsIds] = useState([]);
   const [progress, setProgress] = useState(-1);
@@ -37,6 +38,14 @@ function SearchComponent() {
     // refresh window
     window.location.reload();
     console.log("Cancel search");
+  }
+
+  const selectAll = () => {
+    setCategories(tags.slice());
+  }
+
+  const unselectAll = () => {
+    setCategories([]);
   }
 
   function keyPress(e) {
@@ -62,8 +71,12 @@ function SearchComponent() {
   async function submitSearch(e) {
     if (userNames.length === 0) {
       setKeywordsEntered(true);
-      console.log("working");
-    } else {
+      console.log("no keywords entered");
+    } 
+    else if (categories.length === 0){
+      setTagsEntered(true);
+      console.log("no tags entered");
+    }else {
       console.log("Submit Searches");
 
       // Clear old results
@@ -113,6 +126,7 @@ function SearchComponent() {
       console.log(categories);
     }
     else {
+      setTagsEntered(false);
       categories.push(e.target.value);
       setCategories([...categories]);
       console.log(categories);
@@ -150,26 +164,7 @@ function SearchComponent() {
         <Card className="card-user">
           <CardBody>
             <div class="card-details">
-
-              {/* <UncontrolledDropdown>
-                <DropdownToggle
-                  caret
-                  className="btn-icon dot"
-                  color="link"
-                  type="button"
-                >
-                  <i className="fas fa-ellipsis-h"></i>
-                </DropdownToggle>
-                <DropdownMenu className="dropdown-menu-right">
-                  <DropdownItem
-                    href="#pablo"
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    REMOVE
-              </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown> */}
-              <div className="editor"> <i className={account.site.iconClass}></i></div>
+              <div className="editor"> <i className={account.site.logoClass != "fa-question-circle" ? "fab "+account.site.logoClass : "fas "+account.site.logoClass}></i></div>
               <div className="editor-handle-name">
                   @{account.userName}
               </div>
@@ -220,6 +215,7 @@ function SearchComponent() {
           <input
             id="search-bar"
             className="two-search"
+            placeholder="enter keyword"
             onKeyDown={keyPress}
             onChange={typing}>
           </input>
@@ -229,8 +225,8 @@ function SearchComponent() {
         </div>
       </div>
 
-      <div className="refine-search"><span className="the-text" onClick={handleRefineClick}>refine search</span></div>
-      <div className="refine-search"><span className="the-text" onClick={handleCancelClick}>cancel</span></div>
+      <div className="refine-search"><span className="the-text refine" onClick={handleRefineClick}>refine search</span></div>
+      <div className="refine-search"><span className="the-text cancel" onClick={handleCancelClick}>cancel</span></div>
 
       <div className={isVisible ? "dropdownVis" : "dropdownNotVis"} >
         <Row>
@@ -241,14 +237,18 @@ function SearchComponent() {
                 value={tag}
                 onClick={handleClickCheckbox}
                 defaultChecked={true}
+                checked={categories.includes(tag) ? true : false}
               />
               <span className="checkbox-name">{tag}</span>
             </Col>
           ))}
         </Row>
+        <Button className="categories-button" onClick={selectAll}>Select All</Button>
+        <Button className="categories-button" onClick={unselectAll}>Unselect All</Button>
       </div>
-
-      <div className={keywordsEntered ? "error-message-visible" : "error-not-visible"}>please enter a keyword before submitting search</div>
+      <div className={keywordsEntered ? "error-message-visible" : (tagsEntered ? "error-message-visible" : "error-not-visible")}>
+        {keywordsEntered ? "please enter at least one keyword" : (tagsEntered ? "please enter at least one tag" : "")}
+      </div>
 
       {progress >= 0 ?
         <div style={{ width: '100%', textAlign: 'center' }}>
