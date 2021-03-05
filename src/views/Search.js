@@ -247,7 +247,7 @@ function SearchComponent() {
         <Button className="categories-button" onClick={unselectAll}>Unselect All</Button>
       </div>
       <div className={keywordsEntered ? "error-message-visible" : (tagsEntered ? "error-message-visible" : "error-not-visible")}>
-        {keywordsEntered ? "please enter atleast one keyword" : (tagsEntered ? "please enter atleast one tag" : "")}
+        {keywordsEntered ? "please enter at least one keyword" : (tagsEntered ? "please enter at least one tag" : "")}
       </div>
 
       {progress >= 0 ?
