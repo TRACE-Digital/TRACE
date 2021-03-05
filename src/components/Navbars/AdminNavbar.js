@@ -54,7 +54,9 @@ async function signOut() {
     localStorage.removeItem('user');
     window.location.href = '/#/login';
     } catch (error) {
-        console.log('error signing out: ', error);
+      console.log('error signing out: ', error);
+      localStorage.removeItem('user');
+      window.location.href = '/#/login';
     }
 }
 

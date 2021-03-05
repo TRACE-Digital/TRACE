@@ -91,7 +91,7 @@ function Login() {
               </Form>
               <Button color="primary" block type="submit" form='sign-up-form' >{isLogin ? "Log In" : "Sign Up"}</Button>
               <br/>
-              <a block href="#signup" onClick={() => {setisLogin(!isLogin)}}>{isLogin ? "Don't have an account? Sign Up" : "Already have an account? Log In"}</a>
+              <a block href="javascript:void(0)" onClick={() => {setisLogin(!isLogin)}}>{isLogin ? "Don't have an account? Sign Up" : "Already have an account? Log In"}</a>
 
           </CardBody>
       </Card>
