@@ -50,6 +50,11 @@ function SearchComponent() {
 
   }
 
+  // Function to handle keypresses for first and last name refine search functionality
+  function nameKeyPress(e) {
+    // TODO
+  }
+
   function keyPress(e) {
     if (e.keyCode === 13) {
       if (!userNames.includes(e.target.value) && e.target.value !== '') {
@@ -189,6 +194,7 @@ function SearchComponent() {
   }
 
   return (
+    // TITLE AND SEARCH BAR
     <div className="content">
       <div className="search-title">
         TRACE
@@ -215,10 +221,15 @@ function SearchComponent() {
         </div>
       </div>
 
+      {/* REFINE AND CANCEL BUTTONS */}
+
       <div className="refine-search"><span className="the-text refine" onClick={handleRefineClick}>refine search</span></div>
       <div className="refine-search"><span className="the-text cancel" onClick={handleCancelClick}>cancel</span></div>
 
+      {/* REFINE SEARCH */}
       <div className={isVisible ? "dropdownVis" : "dropdownNotVis"} >
+        {/* Search categories section of refine dropdown goes here */}
+        <h1>CATEGORIES</h1>
         <Row>
           {tags.map(tag => (
             <Col lg="3" key={tag}>
@@ -234,6 +245,54 @@ function SearchComponent() {
         </Row>
         <Button className="categories-button" onClick={selectAll}>Select All</Button>
         <Button className="categories-button" onClick={unselectAll}>Deselect All</Button>
+        <br/>
+        <br/>
+        <br/>
+        {/* First Name section of refine search dropdown goes here*/}
+        <h1>NAMES</h1>
+        {/* 
+        <div className="one">
+        <div className="three">{userNames.map(item => <div className="entered" key={item}>
+          <i className="icon fas fa-times" onClick={() => deleteEntry(item)}></i>
+          {item}
+        </div>)}
+        </div>
+        <div className="two">
+          <input
+            id="search-bar"
+            className="two-search"
+            placeholder="enter keyword"
+            onKeyDown={keyPress}
+            onChange={typing}>
+          </input>
+        </div>
+        <div className="four">
+          <i onClick={submitSearch} className="fas fa-search"></i>
+        </div>
+      </div> 
+      */}
+      {/* X BUTTON -           <i className="icon fas fa-times" onClick={() => deleteEntry(item)}></i> */}
+      {/* HANDLE KEYPRESS - nameKeyPress */}
+      <div className="">
+        <div className="">{userNames.map(item => <div className="entered" key={item}>
+          <i className="icon fas fa-times" onClick={() => deleteEntry(item)}></i>
+          {item}
+        </div>)}
+        </div>
+        <div className="">
+          <input
+            id=""
+            className=""
+            placeholder="enter first name / nickname"
+            onKeyDown={nameKeyPress}>
+            {/* onChange={typing}> TODO: what does this do??*/}
+          </input>
+        </div>
+      </div> 
+
+      {/* Last Name section of refine search dropdown goes here*/}
+
+
       </div>
       <div className={keywordsEntered ? "error-message-visible" : (tagsEntered ? "error-message-visible" : "error-not-visible")}>
         {keywordsEntered ? "please enter at least one keyword" : (tagsEntered ? "please enter at least one tag" : "")}
