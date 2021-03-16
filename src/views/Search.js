@@ -187,6 +187,11 @@ function SearchComponent() {
   const unregisteredHTML = [];
   for (const resultId of resultIds) {
     const account = searchResults[resultId];
+
+    // Array of first and last names! To use later
+    // console.log(account.matchedFirstNames)
+    // console.log(account.matchedLastNames)
+
     const isUnregistered = account.type === AccountType.UNREGISTERED;
 
     const htmlForDisplay = (
