@@ -31,7 +31,7 @@ import {
   Col,
 } from "reactstrap";
 
-import { ThirdPartyAccount, accounts, AccountType } from 'trace-search';
+import { ThirdPartyAccount, accounts, AccountType } from "trace-search";
 import { useEffect } from "react";
 import PrivacyBadge from "../components/PrivacyBadge/PrivacyBadge";
 import { Link } from "react-router-dom";
@@ -48,9 +48,9 @@ function Dashboard(props) {
       try {
         // Load all accounts from the database into memory
         await ThirdPartyAccount.loadAll();
-        setPlsRender(current => !current);
+        setPlsRender((current) => !current);
       } catch (e) {
-        console.error('Failed to load accounts from the database!');
+        console.error("Failed to load accounts from the database!");
         console.error(e);
       }
       console.log(accounts);
@@ -62,7 +62,6 @@ function Dashboard(props) {
   return (
     <>
       <div className="content">
-
         <div className="header">
           <h3 className="header-title">Claimed Accounts</h3>
           {/* {Object.values(accounts).map(account => {
@@ -82,50 +81,62 @@ function Dashboard(props) {
 
         <Row>
           {Object.values(accounts)
-            .filter(account => account.type === AccountType.CLAIMED)
-            .map(account => (
-            <Col lg="3" key={account.id}>
-
-              <Card className="card-user">
-                <CardBody>
-                  <div>
-                  <div className="dashboard-parent">
-                    <div className="badge" >
-                      <PrivacyBadge service={account.site.name}></PrivacyBadge>
+            .filter((account) => account.type === AccountType.CLAIMED)
+            .map((account) => (
+              <Col lg="3" key={account.id}>
+                <Card className="card-user">
+                  <CardBody>
+                    <div>
+                      <div className="dashboard-parent">
+                        <div className="badge">
+                          <PrivacyBadge
+                            service={account.site.name}
+                          ></PrivacyBadge>
+                        </div>
+                        <UncontrolledDropdown>
+                          <DropdownToggle
+                            caret
+                            className="btn-icon dot"
+                            color="link"
+                            type="button"
+                          >
+                            <i className="fas fa-ellipsis-h"></i>
+                          </DropdownToggle>
+                          <DropdownMenu className="dropdown-menu-right">
+                            <DropdownItem onClick={(e) => e.preventDefault()}>
+                              REMOVE
+                            </DropdownItem>
+                            <DropdownItem onClick={(e) => e.preventDefault()}>
+                              EDIT
+                            </DropdownItem>
+                          </DropdownMenu>
+                        </UncontrolledDropdown>
+                      </div>
+                      <div className="editor">
+                        {" "}
+                        <i
+                          className={
+                            account.site.logoClass !== "fa-question-circle"
+                              ? "fab " + account.site.logoClass
+                              : "fas " + account.site.logoClass
+                          }
+                        ></i>
+                      </div>
+                      <div className="editor-handle-name">
+                        @{account.userName}
+                      </div>
+                      <div className="editor-link">
+                        <a href={account.url} target="blank">
+                          {account.site.prettyUrl ||
+                            account.site.urlMain ||
+                            account.site.url}
+                        </a>
+                      </div>
                     </div>
-                  <UncontrolledDropdown>
-                  <DropdownToggle
-                    caret
-                    className="btn-icon dot"
-                    color="link"
-                    type="button"
-                  >
-                  <i className="fas fa-ellipsis-h"></i>
-                  </DropdownToggle>
-                  <DropdownMenu className="dropdown-menu-right">
-                    <DropdownItem
-                      onClick={(e) => e.preventDefault()}
-                    >
-                      REMOVE
-                    </DropdownItem>
-                    <DropdownItem
-                      onClick={(e) => e.preventDefault()}
-                    >
-                      EDIT
-                    </DropdownItem>
-                  </DropdownMenu>
-                </UncontrolledDropdown>
-                </div>
-                    <div className = "editor"> <i className={account.site.logoClass !== "fa-question-circle" ? "fab "+account.site.logoClass : "fas "+account.site.logoClass}></i></div>
-                    <div className = "editor-handle-name">@{account.userName}</div>
-                    <div className = "editor-link">
-                      <a href={account.url} target="blank">{account.site.prettyUrl || account.site.urlMain || account.site.url}</a>
-                    </div>
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-          ))}
+                  </CardBody>
+                </Card>
+              </Col>
+            ))}
 
           {/* <Col lg="3">
             <Card className="card-user add-to-edit">

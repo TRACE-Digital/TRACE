@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 
 // reactstrap components
 import { Row, Col, Card, CardBody, Button } from "reactstrap";
+import SiteCard from "./SiteCard.js"
 
-import { SearchDefinition, AccountType, searchResults, allSites, tags, filterSitesByTags } from 'trace-search';
+import { SearchDefinition, AccountType, searchResults, allSites, tags, filterSitesByTags, Site } from 'trace-search';
 
 const testSiteNames = [
   'GitHub',
@@ -96,7 +97,7 @@ function SearchComponent() {
     else if (categories.length === 0){
       setTagsEntered(true);
       console.log("no tags entered");
-    }else {
+    } else {
       console.log("Submit Searches");
 
       // Clear old results
@@ -111,9 +112,9 @@ function SearchComponent() {
 
       const searchDef = new SearchDefinition(undefined, taggedSiteNames);
       searchDef.userNames = userNames;
-      // TODO: add firstNames and lastNames
       searchDef.firstNames = firstNames;
       searchDef.lastNames = lastNames;
+
       await searchDef.save();
 
       // TODO: deal with firstName and lastName stuff received?
@@ -163,73 +164,18 @@ function SearchComponent() {
     }
   }
 
-  async function claimAccount(account) {
-    try {
-        await account.claim();
-        alert("Account successfully claimed!");
-    } catch (e) {
-      alert('Account has already been claimed!');
-      console.error(e);
-    }
-  }
-
-  async function deleteAccount(account) {
-    try {
-        await account.reject();
-        alert("Account successfully removed!");
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  // TODO: This should really move to a component
-  const discoveredHTML = [];
-  const unregisteredHTML = [];
+  // Add accounts to discovered/unregistered arrays in order to render later
+  const discovered = [];
+  const unregistered = [];
   for (const resultId of resultIds) {
     const account = searchResults[resultId];
-
-    // Array of first and last names! To use later
-    // console.log(account.matchedFirstNames)
-    // console.log(account.matchedLastNames)
-
-    const isUnregistered = account.type === AccountType.UNREGISTERED;
-
-    const htmlForDisplay = (
-      <Col lg="3" key={account.id}>
-        <Card className="card-user">
-          <CardBody>
-            <div class="card-details">
-              <div className="editor"> <i className={account.site.logoClass !== "fa-question-circle" ? "fab "+account.site.logoClass : "fas "+account.site.logoClass}></i></div>
-              <div className="editor-handle-name">
-                  @{account.userName}
-              </div>
-              <div className="editor-link">
-                <a href={account.site.url.replace("{}", account.userName)} target="blank">
-                  {account.site.prettyUrl || account.site.urlMain || account.site.url}
-                </a>
-              </div>
-              {isUnregistered ? <div></div> :
-                <div className="test" style={{ position: 'absolute', bottom: '20px', right: '20px' }}>
-                  {/* <button onClick={account.claim.bind(account)}>✔️</button> */}
-                  <Button onClick={() => claimAccount(account)} className="claim-button">
-                    <i className="tim-icons icon-check-2" />
-                  </Button>
-                  &nbsp;
-                  <Button onClick={() => deleteAccount(account)} className="claim-button">
-                    <i className="tim-icons icon-simple-remove" />
-                  </Button>
-                </div>
-              }
-            </div>
-          </CardBody>
-        </Card>
-      </Col>
-    );
-
-    if (isUnregistered) {
-      unregisteredHTML.push(htmlForDisplay);
-    } else {
-      discoveredHTML.push(htmlForDisplay);
+    console.log("ADDING ACCOUNT")
+    console.log(account)
+    if (account.type === AccountType.UNREGISTERED) {
+      unregistered.push(account)
+    }
+    else {
+      discovered.push(account)
     }
   }
 
@@ -348,14 +294,14 @@ function SearchComponent() {
       <div>
         {resultIds.length > 0 ? <div><h2>Discovered Accounts</h2></div> : <div></div>}
         <Row>
-          {discoveredHTML}
+          {discovered.map((account) => <SiteCard account={account}></SiteCard>)}
         </Row>
       </div>
 
       <div>
         {resultIds.length > 0 ? <div><h2>Unregistered Accounts</h2></div> : <div></div>}
         <Row>
-          {unregisteredHTML}
+          {unregistered.map((account) => <SiteCard account={account}></SiteCard>)}
         </Row>
       </div>
 
