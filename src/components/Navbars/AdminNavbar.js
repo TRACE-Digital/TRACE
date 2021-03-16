@@ -19,7 +19,7 @@ import React from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 
-import { clearDb, setupReplication, teardownReplication } from 'trace-search';
+import { clearDb, setupReplication, teardownReplication, EXTENSION_VERSION } from 'trace-search';
 
 // reactstrap components
 import {
@@ -188,6 +188,11 @@ function AdminNavbar(props) {
 
                   </DropdownItem>
                   <DropdownItem divider tag="li" />
+                  <NavLink tag="li">
+                    <DropdownItem className="nav-item">
+                      Extension version: { EXTENSION_VERSION || 'Not installed' }
+                    </DropdownItem>
+                  </NavLink>
                   <NavLink tag="li">
                     <DropdownItem className="nav-item" onClick={async () => {
                       try {
