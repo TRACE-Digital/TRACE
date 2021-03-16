@@ -1,3 +1,4 @@
+import PrivacyBadge from "components/PrivacyBadge/PrivacyBadge";
 import React, { useState } from "react";
 import ReactCardFlip from "react-card-flip";
 import { Card, CardBody, Button, Col } from "reactstrap";
@@ -17,21 +18,16 @@ const SiteCard = (props) => {
   const account = props.account;
   const isUnregistered = account.type === AccountType.UNREGISTERED;
 
-  let firstNames = ""
-  let lastNames = ""
+  console.log(account.site.name);
+
+  let firstNames = "";
+  let lastNames = "";
   if (account.matchedFirstNames) {
-      firstNames = account.matchedFirstNames.join(", ")
+    firstNames = account.matchedFirstNames.join(", ");
   }
   if (account.matchedLastNames) {
-    lastNames = account.matchedLastNames.join(", ")
+    lastNames = account.matchedLastNames.join(", ");
   }
-
-  console.log("SITE CARD")
-  console.log(account)
-
-  const handleCardHover = () => {
-    setFlipped(!flipped);
-  }; // onHover flipper handler for ReactCardFlip
 
   /**
    * Claim account for the current user
@@ -63,81 +59,104 @@ const SiteCard = (props) => {
   return (
     <Col lg="3" key={account.id}>
       <ReactCardFlip
-        isFlipped={flipped}
-        flipSpeedBackToFront=".5"
-        flipSpeedFrontToBack=".5"
-        className="card-user"
+        isFlipped={false}
+        flipSpeedBackToFront=".8"
+        flipSpeedFrontToBack="1"
       >
         {/* FRONT OF CARD */}
-        <Card className="card-user" onClick={() => setFlipped(!flipped)}>
-            <CardBody>
+        <Card
+          className="card-user"
+          onMouseEnter={() => setFlipped(true)}
+          onMouseLeave={() => setFlipped(false)}
+        >
+          <CardBody>
             <div class="card-details">
-                {/* ICON */}
-                <div className="editor">
+              {/* ICON */}
+              <div className="editor">
                 {" "}
                 <i
-                    className={
+                  className={
                     account.site.logoClass !== "fa-question-circle"
-                        ? "fab " + account.site.logoClass
-                        : "fas " + account.site.logoClass
-                    }
+                      ? "fab " + account.site.logoClass
+                      : "fas " + account.site.logoClass
+                  }
                 ></i>
-                </div>
+              </div>
 
-                {/* USERNAME */}
-                <div className="editor-handle-name">@{account.userName}</div>
+              {/* USERNAME */}
+              <div className="editor-handle-name">@{account.userName}</div>
 
-                {/* SITE URL */}
-                <div className="editor-link">
+              {/* SITE URL */}
+              <div className="editor-link">
                 <a
-                    href={account.site.url.replace("{}", account.userName)}
-                    target="blank"
+                  href={account.site.url.replace("{}", account.userName)}
+                  target="blank"
                 >
-                    {account.site.prettyUrl ||
+                  {account.site.prettyUrl ||
                     account.site.urlMain ||
                     account.site.url}
                 </a>
-                </div>
+              </div>
 
-                {/* CLAIM BUTTONS (IF APPLICABLE) */}
-                {isUnregistered ? (
+              {/* CLAIM BUTTONS (IF APPLICABLE) */}
+              {isUnregistered ? (
                 <div></div>
-                ) : (
+              ) : (
                 <div
-                    className="test"
-                    style={{ position: "absolute", bottom: "20px", right: "20px" }}
+                  className="test"
+                  style={{
+                    position: "absolute",
+                    bottom: "20px",
+                    right: "20px",
+                  }}
                 >
-                    <Button
+                  <Button
                     onClick={() => claimAccount(account)}
                     className="claim-button"
-                    >
+                  >
                     <i className="tim-icons icon-check-2" />
-                    </Button>
-                    &nbsp;
-                    <Button
+                  </Button>
+                  &nbsp;
+                  <Button
                     onClick={() => deleteAccount(account)}
                     className="claim-button"
-                    >
+                  >
                     <i className="tim-icons icon-simple-remove" />
-                    </Button>
+                  </Button>
                 </div>
-                )}
-
+              )}
             </div>
-            </CardBody>
+          </CardBody>
         </Card>
 
         {/* BACK OF CARD */}
-        <Card className="card-user" onClick={() => setFlipped(!flipped)}>
-            <CardBody>
+        <Card
+          className="card-user"
+          onMouseEnter={() => setFlipped(true)}
+          onMouseLeave={() => setFlipped(false)}
+        >
+          <CardBody>
             <h3>More Information...</h3>
-            <div className="editor-names">First names found: {firstNames}</div>
-            <div className="editor-names">Last names found: {lastNames}</div>
-            {/* TODO:               
-                - Privacy rating
-                -  */}
-            
-            </CardBody>
+            <div className="additional-info">
+              Privacy Rating: <PrivacyBadge service={account.site.name}></PrivacyBadge>
+            </div>
+            {firstNames.length != 0 && (
+              <div className="additional-info">
+                First names found: {firstNames}
+              </div>
+            )}
+            {lastNames.length != 0 && (
+              <div className="additional-info">
+                Last names found: {lastNames}
+              </div>
+            )}
+            {/* REMOVE THIS LATER - SORT */}
+            {!isUnregistered && (
+              <div className="additional-info">
+                Confidence Level: {account.confidence}
+              </div>
+            )}
+          </CardBody>
         </Card>
       </ReactCardFlip>
     </Col>
