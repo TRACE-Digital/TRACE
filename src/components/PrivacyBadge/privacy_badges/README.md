@@ -1,0 +1,1 @@
+These badges are taken from https://github.com/tosdr/browser-extensions/tree/master/src/icons/class
