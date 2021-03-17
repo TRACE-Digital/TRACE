@@ -11,15 +11,19 @@ const SiteCard = (props) => {
   const account = props.account;
   const isUnregistered = account.type === AccountType.UNREGISTERED;
 
-  console.log(account.site.name);
+  console.log(account);
 
   let firstNames = "";
   let lastNames = "";
+  let tags = "";
   if (account.matchedFirstNames) {
     firstNames = account.matchedFirstNames.join(", ");
   }
   if (account.matchedLastNames) {
     lastNames = account.matchedLastNames.join(", ");
+  }
+  if (account.site.tags) {
+    tags = account.site.tags.join(", ")
   }
 
   /**
@@ -120,19 +124,24 @@ const SiteCard = (props) => {
           <CardBody className="card-body">
             <h3>More on {account.site.name}...</h3>
             <div className="additional-info">
-              Privacy Rating - {" "}
+              TAGS - {tags}
+            </div>
+            <br/>
+            <div className="additional-info">
+              PRIVACY RATING - {" "}
               <PrivacyBadge service={account.site.name}></PrivacyBadge>
             </div>
             <br/>
+
             {firstNames.length !== 0 && (
               <div className="additional-info">
-                First name(s) found: {firstNames}
+                FIRST NAME(S) FOUND - {firstNames}
               </div>
             )}
             <br/>
             {lastNames.length !== 0 && (
               <div className="additional-info">
-                Last name(s) found: {lastNames}
+                LAST NAME(S) FOUND - {lastNames}
               </div>
             )}
             <br/>
