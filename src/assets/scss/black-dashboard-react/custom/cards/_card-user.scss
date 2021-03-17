@@ -541,7 +541,7 @@
     }
 
     .card-body {
-        min-height: 240px;
+      min-height: 314.9px;
         >.card-details {
           margin: auto;
         }
@@ -572,4 +572,13 @@
     background-color:#ff9900;
 }
 
+.flip-button {
+  float: right;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
 
+#flip-icon {
+  color: #ffffff;
+}

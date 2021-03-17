@@ -2,15 +2,8 @@ import PrivacyBadge from "components/PrivacyBadge/PrivacyBadge";
 import React, { useState } from "react";
 import ReactCardFlip from "react-card-flip";
 import { Card, CardBody, Button, Col } from "reactstrap";
-import {
-  SearchDefinition,
-  AccountType,
-  searchResults,
-  allSites,
-  tags,
-  filterSitesByTags,
-  Site,
-} from "trace-search";
+import { IconButton } from "@material-ui/core";
+import { AccountType } from "trace-search";
 
 const SiteCard = (props) => {
   const [flipped, setFlipped] = useState(false);
@@ -59,18 +52,13 @@ const SiteCard = (props) => {
   return (
     <Col lg="3" key={account.id}>
       <ReactCardFlip
-        isFlipped={false}
+        isFlipped={flipped}
         flipSpeedBackToFront=".8"
         flipSpeedFrontToBack="1"
       >
         {/* FRONT OF CARD */}
-        <Card
-          className="card-user"
-          onMouseEnter={() => setFlipped(true)}
-          onMouseLeave={() => setFlipped(false)}
-        >
-          <CardBody>
-            <div class="card-details">
+        <Card className="card-user">
+          <CardBody className="card-body">
               {/* ICON */}
               <div className="editor">
                 {" "}
@@ -102,14 +90,7 @@ const SiteCard = (props) => {
               {isUnregistered ? (
                 <div></div>
               ) : (
-                <div
-                  className="test"
-                  style={{
-                    position: "absolute",
-                    bottom: "20px",
-                    right: "20px",
-                  }}
-                >
+                <div className="test">
                   <Button
                     onClick={() => claimAccount(account)}
                     className="claim-button"
@@ -125,37 +106,48 @@ const SiteCard = (props) => {
                   </Button>
                 </div>
               )}
+            {/* Flip Button */}
+            <div className="flip-button">
+              <IconButton
+                onClick={() => setFlipped(true)}
+              >
+                <i className="fas fa-redo" id="flip-icon"></i>
+              </IconButton>
             </div>
           </CardBody>
         </Card>
 
         {/* BACK OF CARD */}
-        <Card
-          className="card-user"
-          onMouseEnter={() => setFlipped(true)}
-          onMouseLeave={() => setFlipped(false)}
-        >
-          <CardBody>
-            <h3>More Information...</h3>
-            <div className="additional-info">
-              Privacy Rating: <PrivacyBadge service={account.site.name}></PrivacyBadge>
+        <Card className="card-user">
+          <CardBody className="card-body">
+              <h3>More Information...</h3>
+              <div className="additional-info">
+                Privacy Rating:{" "}
+                <PrivacyBadge service={account.site.name}></PrivacyBadge>
+              </div>
+              {firstNames.length !== 0 && (
+                <div className="additional-info">
+                  First names found: {firstNames}
+                </div>
+              )}
+              {lastNames.length !== 0 && (
+                <div className="additional-info">
+                  Last names found: {lastNames}
+                </div>
+              )}
+              {!isUnregistered && (
+                <div className="additional-info">
+                  Confidence Level: {account.confidence}
+                </div>
+              )}
+
+            <div className="flip-button">
+              <IconButton
+                onClick={() => setFlipped(false)}
+              >
+                <i className="fas fa-redo" id="flip-icon"></i>
+              </IconButton>
             </div>
-            {firstNames.length != 0 && (
-              <div className="additional-info">
-                First names found: {firstNames}
-              </div>
-            )}
-            {lastNames.length != 0 && (
-              <div className="additional-info">
-                Last names found: {lastNames}
-              </div>
-            )}
-            {/* REMOVE THIS LATER - SORT */}
-            {!isUnregistered && (
-              <div className="additional-info">
-                Confidence Level: {account.confidence}
-              </div>
-            )}
           </CardBody>
         </Card>
       </ReactCardFlip>
