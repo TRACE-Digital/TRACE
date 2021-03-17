@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 // reactstrap components
 import { Row, Col, Card, CardBody, Button } from "reactstrap";
 import SiteCard from "./SiteCard.js"
-import FilterDropDown from "./FilterDropDown.js"
+import FilterDropDown from "../components/FilterDropDown/FilterDropDown.js"
 
 import { SearchDefinition, AccountType, searchResults, allSites, tags, filterSitesByTags, Site } from 'trace-search';
 
@@ -166,12 +166,12 @@ function SearchComponent() {
   }
 
   // Add accounts to discovered/unregistered arrays in order to render later
-  const discovered = [];
-  const unregistered = [];
+  const discovered = []
+  const unregistered = []
+
   for (const resultId of resultIds) {
     const account = searchResults[resultId];
-    console.log("ADDING ACCOUNT")
-    console.log(account)
+
     if (account.type === AccountType.UNREGISTERED) {
       unregistered.push(account)
     }
@@ -294,7 +294,7 @@ function SearchComponent() {
       <hr></hr>
 
       <div>
-        {resultIds.length > 0 ? <div><h2>Discovered Accounts</h2></div> : <div></div>}
+        {resultIds.length > 0 ? <div><h2>Discovered Accounts</h2><FilterDropDown array={discovered} /></div> : <div></div>}
         <Row>
           {discovered.map((account) => <SiteCard account={account}></SiteCard>)}
         </Row>

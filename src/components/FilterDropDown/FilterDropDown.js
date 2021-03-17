@@ -6,11 +6,44 @@ const FilterDropDown = (props) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const toggleDropDown = () => setDropdownOpen(prevState => !prevState);
+
+    const sortMe = props.array
   
+const sortAlphabetical = (normal) => {
+  if (normal) {  // sort array from A-Z
+      console.log("sortAlphabetical")
+      sortMe.sort((a, b) => {
+        return ( a.site.name.toUpperCase() < b.site.name.toUpperCase() ) ? -1 : ( a.site.name.toUpperCase() > b.site.name.toUpperCase() ) ? 1 : 0
+      })
+
+      console.log(sortMe)
+  }
+  else {  // sort array from Z-A
+      console.log("sortAlphabetical reverse")
+  }
+}
+
+const sortConfidence = () => {
+  // Sort array by highest confidence level
+  console.log("sortConfidence")
+}
+
+const sortAge = (newest) => {
+  if (newest) {
+      // Sort array by newest found
+      console.log("sortAge")
+  }
+  else {
+      // Sort array by oldest found
+      console.log("sortAge oldest")
+  }
+}
+
+
     return (
       <Dropdown isOpen={dropdownOpen} toggle={toggleDropDown}>
         <DropdownToggle caret>
-          Dropdown
+          Filter
         </DropdownToggle>
         <DropdownMenu>
           <DropdownItem header>Sort By</DropdownItem>
@@ -24,29 +57,5 @@ const FilterDropDown = (props) => {
     );
 }
 
-const sortAlphabetical = (normal) => {
-    if (normal) {  // sort array from A-Z
-        console.log("sortAlphabetical")
-    }
-    else {  // sort array from Z-A
-        console.log("sortAlphabetical reverse")
-    }
-}
-
-const sortConfidence = () => {
-    // Sort array by highest confidence level
-    console.log("sortConfidence")
-}
-
-const sortAge = (newest) => {
-    if (newest) {
-        // Sort array by newest found
-        console.log("sortAge")
-    }
-    else {
-        // Sort array by oldest found
-        console.log("sortAge oldest")
-    }
-}
 
 export default FilterDropDown;
