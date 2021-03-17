@@ -17,8 +17,7 @@ export default function PrivacyBadge(props) {
 
   const serviceUrl = "https://tosdr.org/en/service/" + props.service
 
-  // let url = "https://tosdr.org/api/v1/service/" + props.service
-  let url = ""
+  let url = "https://tosdr.org/api/v1/service/" + props.service
 
   axios.get(url)
     .then(data => {
@@ -35,21 +34,21 @@ export default function PrivacyBadge(props) {
 
 const getLogo = (serviceUrl, grade) => {
   if (grade === "a") {
-    return <a href={serviceUrl} title="Privacy Rating A" target="_blank"><img src={a} alt="Privacy Rating A" /></a>
+    return <a href={serviceUrl} title="Privacy Rating A" target="_blank" rel="noreferrer"><img src={a} alt="Privacy Rating A" /></a>
   }
   else if (grade === "b") {
-    return <a href={serviceUrl} title="Privacy Rating B" target="_blank"><img src={b} alt="Privacy Rating B" /></a>
+    return <a href={serviceUrl} title="Privacy Rating B" target="_blank" rel="noreferrer"><img src={b} alt="Privacy Rating B" /></a>
   }
   else if (grade === "c") {
-    return <a href={serviceUrl} title="Privacy Rating C" target="_blank"><img src={c} alt="Privacy Rating C" /></a>
+    return <a href={serviceUrl} title="Privacy Rating C" target="_blank" rel="noreferrer"><img src={c} alt="Privacy Rating C" /></a>
   }
   else if (grade === "d") {
-    return <a href={serviceUrl} title="Privacy Rating D" target="_blank"><img src={d} alt="Privacy Rating D" /></a>
+    return <a href={serviceUrl} title="Privacy Rating D" target="_blank" rel="noreferrer"><img src={d} alt="Privacy Rating D" /></a>
   }
   else if (grade === "e") {
-    return <a href={serviceUrl} title="Privacy Rating E" target="_blank"><img src={e} alt="Privacy Rating E" /></a>
+    return <a href={serviceUrl} title="Privacy Rating E" target="_blank" rel="noreferrer"><img src={e} alt="Privacy Rating E" /></a>
   }
   else {
-    return <a title="No Privacy Rating Yet"><img src={none} alt="No Privacy Rating Yet" /></a>
+    return <img src={none} alt="No Privacy Rating Yet" title="No Privacy Rating Yet"/>
   }
 }

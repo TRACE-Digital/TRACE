@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 
 // reactstrap components
-import { Row, Col, Card, CardBody, Button } from "reactstrap";
-import SiteCard from "./SiteCard.js";
-// import FilterDropDown from "../components/FilterDropDown/FilterDropDown.js"
+import { Row, Col, Button } from "reactstrap";
+import SiteCard from "../components/SiteCard/SiteCard.js";
 
 import {
   SearchDefinition,
@@ -12,7 +11,6 @@ import {
   allSites,
   tags,
   filterSitesByTags,
-  Site,
 } from "trace-search";
 import {
   Dropdown,
@@ -50,8 +48,8 @@ function SearchComponent() {
   const [categories, setCategories] = useState(tags.slice());
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [sortMethod, setSortMethod] = useState("new");
-  const [discoveredSites, setDiscoveredSites] = useState([])
-  const [unregisteredSites, setUnregisteredSites] = useState([])
+  const [discoveredSites, setDiscoveredSites] = useState([]);
+  const [unregisteredSites, setUnregisteredSites] = useState([]);
 
   let discovered = [];
   let unregistered = [];
@@ -186,7 +184,10 @@ function SearchComponent() {
   }
 
   /**
-   * Sort the discovered and unregistered arrays when a new sort method is selected
+   * This useEffect monitors sortMethod, which changes whenever a new sort method is selected.
+   * It also monitors the resultIds array, which changes every time a new result is added.
+   *
+   * If either of these things happen, the displayed data is re-sorted and re-rendered with the current sortMethod.
    */
   useEffect(() => {
     // Sort an array passed in
@@ -199,7 +200,7 @@ function SearchComponent() {
       } else if (sortMethod === "old") {
         // sort by age, oldest found first
         // since array is sorted by new by default, just reverse the array
-        sorted.reverse()
+        sorted.reverse();
       } else if (sortMethod === "az") {
         // sort alphabetically by site name, A-Z
         sorted.sort((a, b) => {
@@ -235,12 +236,11 @@ function SearchComponent() {
       return sorted;
     };
 
-    // Every time the sort method is changed, re-sort discovered and unregistered arrays
+    // Re-sort discovered and unregistered arrays based on sortMethod
     setDiscoveredSites(sortArray(discovered));
     setUnregisteredSites(sortArray(unregistered));
-    // console.log(sortArray(discovered));
-    // console.log(sortArray(unregistered));
-  }, [sortMethod, resultIds]);
+    // TODO: is this ok?
+  }, [sortMethod, resultIds]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Add accounts to discovered/unregistered arrays in order to render later
   for (const resultId of resultIds) {
@@ -422,23 +422,22 @@ function SearchComponent() {
       {resultIds.length > 0 && (
         <div>
           <Dropdown isOpen={dropdownOpen} toggle={toggleDropDown}>
-            <DropdownToggle caret>Filter</DropdownToggle>
+            <DropdownToggle caret>Sort By</DropdownToggle>
             <DropdownMenu>
-              <DropdownItem header>Sort By</DropdownItem>
               <DropdownItem onClick={() => setSortMethod("az")}>
-                Alphabetical A-Z
+                <strong>Alphabetical A-Z</strong>
               </DropdownItem>
               <DropdownItem onClick={() => setSortMethod("za")}>
-                Alphabetical Z-A
+                <strong>Alphabetical Z-A</strong>
               </DropdownItem>
               <DropdownItem onClick={() => setSortMethod("confidence")}>
-                Confidence
+              <strong>Confidence</strong>
               </DropdownItem>
               <DropdownItem onClick={() => setSortMethod("new")}>
-                Newest
+              <strong>Newest</strong>
               </DropdownItem>
               <DropdownItem onClick={() => setSortMethod("old")}>
-                Oldest
+              <strong>Oldest</strong>
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
@@ -447,27 +446,23 @@ function SearchComponent() {
       )}
 
       <div>
-        {resultIds.length > 0 ? (
+        {resultIds.length > 0 && (
           <div>
             <h2>Discovered Accounts</h2>
           </div>
-        ) : (
-          <div></div>
         )}
         <Row>
           {discoveredSites.map((account) => (
-            <SiteCard account={account}></SiteCard>
+            <SiteCard account={account} />
           ))}
         </Row>
       </div>
 
       <div>
-        {resultIds.length > 0 ? (
+        {resultIds.length > 0 && (
           <div>
             <h2>Unregistered Accounts</h2>
           </div>
-        ) : (
-          <div></div>
         )}
         <Row>
           {unregisteredSites.map((account) => (
