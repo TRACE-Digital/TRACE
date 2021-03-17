@@ -1,44 +1,35 @@
 import React, { useState } from 'react';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
-
 const FilterDropDown = (props) => {
-    const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [sortMethod, setSortMethod] = useState("new")
 
-    const toggleDropDown = () => setDropdownOpen(prevState => !prevState);
+  const toggleDropDown = () => setDropdownOpen(prevState => !prevState);
 
-    const sortMe = props.array
-  
-const sortAlphabetical = (normal) => {
-  if (normal) {  // sort array from A-Z
-      console.log("sortAlphabetical")
-      sortMe.sort((a, b) => {
-        return ( a.site.name.toUpperCase() < b.site.name.toUpperCase() ) ? -1 : ( a.site.name.toUpperCase() > b.site.name.toUpperCase() ) ? 1 : 0
-      })
+  console.log("DROPDOWN")
+  const sortArray = (method) => {
+    if (method === "new") { // sort by age, newest found first
 
-      console.log(sortMe)
+    }
+    else if (method === "old") {  // sort by age, oldest found first
+
+    }
+    else if (method === "az") { // sort alphabetically by site name, A-Z
+      // sortMe.sort((a, b) => {
+      //   return ( a.site.name.toUpperCase() < b.site.name.toUpperCase() ) ? -1 : ( a.site.name.toUpperCase() > b.site.name.toUpperCase() ) ? 1 : 0
+      // })
+    }
+    else if (method === "za") { // sort alphabetically by site name, Z-A
+
+    }
+    else if (method === "confidence") { // sort by confidence level, highest first
+
+    }
+    else {  // invalid sort method  
+      console.error(`Invalid sort method called: '${method}'`)
+    }
   }
-  else {  // sort array from Z-A
-      console.log("sortAlphabetical reverse")
-  }
-}
-
-const sortConfidence = () => {
-  // Sort array by highest confidence level
-  console.log("sortConfidence")
-}
-
-const sortAge = (newest) => {
-  if (newest) {
-      // Sort array by newest found
-      console.log("sortAge")
-  }
-  else {
-      // Sort array by oldest found
-      console.log("sortAge oldest")
-  }
-}
-
 
     return (
       <Dropdown isOpen={dropdownOpen} toggle={toggleDropDown}>
@@ -47,11 +38,11 @@ const sortAge = (newest) => {
         </DropdownToggle>
         <DropdownMenu>
           <DropdownItem header>Sort By</DropdownItem>
-          <DropdownItem onClick={() => { sortAlphabetical(true) } }>Alphabetical A-Z</DropdownItem>
-          <DropdownItem onClick={() => { sortAlphabetical(false) } }>Alphabetical Z-A</DropdownItem>
-          <DropdownItem onClick={() => { sortConfidence() } }>Confidence</DropdownItem>
-          <DropdownItem onClick={() => { sortAge(true) } }>Newest</DropdownItem>
-          <DropdownItem onClick={() => { sortAge(false) } }>Oldest</DropdownItem>
+          <DropdownItem onClick={() => { setSortMethod("az") } }>Alphabetical A-Z</DropdownItem>
+          <DropdownItem onClick={() => { setSortMethod("za") } }>Alphabetical Z-A</DropdownItem>
+          <DropdownItem onClick={() => { setSortMethod("confidence") } }>Confidence</DropdownItem>
+          <DropdownItem onClick={() => { setSortMethod("newest") } }>Newest</DropdownItem>
+          <DropdownItem onClick={() => { setSortMethod("oldest") } }>Oldest</DropdownItem>
         </DropdownMenu>
       </Dropdown>
     );

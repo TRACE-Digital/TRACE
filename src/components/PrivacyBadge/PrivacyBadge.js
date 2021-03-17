@@ -17,7 +17,8 @@ export default function PrivacyBadge(props) {
 
   const serviceUrl = "https://tosdr.org/en/service/" + props.service
 
-  let url = "https://tosdr.org/api/v1/service/" + props.service
+  // let url = "https://tosdr.org/api/v1/service/" + props.service
+  let url = ""
 
   axios.get(url)
     .then(data => {
