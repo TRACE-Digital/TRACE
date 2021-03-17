@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 // reactstrap components
 import { Row, Col, Card, CardBody, Button } from "reactstrap";
 import SiteCard from "./SiteCard.js"
+import FilterDropDown from "./FilterDropDown.js"
 
 import { SearchDefinition, AccountType, searchResults, allSites, tags, filterSitesByTags, Site } from 'trace-search';
 
@@ -231,6 +232,7 @@ function SearchComponent() {
         </Row>
         <Button className="categories-button" onClick={selectAll}>Select All</Button>
         <Button className="categories-button" onClick={unselectAll}>Deselect All</Button>
+
         <br/>
         <br/>
         <br/>
