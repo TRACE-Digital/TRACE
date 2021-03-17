@@ -120,24 +120,27 @@ const SiteCard = (props) => {
           <CardBody className="card-body">
             <h3>More on {account.site.name}...</h3>
             <div className="additional-info">
-              Privacy Rating:{" "}
+              Privacy Rating - {" "}
               <PrivacyBadge service={account.site.name}></PrivacyBadge>
             </div>
+            <br/>
             {firstNames.length !== 0 && (
               <div className="additional-info">
-                First names found: {firstNames}
+                First name(s) found: {firstNames}
               </div>
             )}
+            <br/>
             {lastNames.length !== 0 && (
               <div className="additional-info">
-                Last names found: {lastNames}
+                Last name(s) found: {lastNames}
               </div>
             )}
-            {!isUnregistered && (
+            <br/>
+            {/* {!isUnregistered && (
               <div className="additional-info">
                 Confidence Level: {account.confidence}
               </div>
-            )}
+            )} */}
 
             <div className="flip-button">
               <IconButton onClick={() => setFlipped(false)}>
