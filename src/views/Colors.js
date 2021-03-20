@@ -12,42 +12,10 @@ function handleClick() {
             <div className="title">themes</div>
                 <div>
                     <ul className="editor">
-                        <li className="editor-popup">
-                            name color:
-                            <i class="fas fa-circle red" onClick={handleClick}></i>
-                            <i class="fas fa-circle orange" onClick={handleClick}></i>
-                            <i class="fas fa-circle yellow" onClick={handleClick}></i>
-                            <i class="fas fa-circle green" onClick={handleClick}></i>
-                            <i class="fas fa-circle blue" onClick={handleClick}></i>
-                            <i class="fas fa-circle purple" onClick={handleClick}></i>
-                        </li>
-                        <li className="editor-popup">
-                            box colors:
-                            <i class="fas fa-circle red" onClick={handleClick}></i>
-                            <i class="fas fa-circle orange" onClick={handleClick}></i>
-                            <i class="fas fa-circle yellow" onClick={handleClick}></i>
-                            <i class="fas fa-circle green" onClick={handleClick}></i>
-                            <i class="fas fa-circle blue" onClick={handleClick}></i>
-                            <i class="fas fa-circle purple" onClick={handleClick}></i>
-                        </li>
-                        <li className="editor-popup">
-                            background color:
-                            <i class="fas fa-circle red" onClick={handleClick}></i>
-                            <i class="fas fa-circle orange" onClick={handleClick}></i>
-                            <i class="fas fa-circle yellow" onClick={handleClick}></i>
-                            <i class="fas fa-circle green" onClick={handleClick}></i>
-                            <i class="fas fa-circle blue" onClick={handleClick}></i>
-                            <i class="fas fa-circle purple" onClick={handleClick}></i>
-                        </li>
-                        <li className="editor-popup">
-                            other styles etc:
-                            <i class="fas fa-circle red" onClick={handleClick}></i>
-                            <i class="fas fa-circle orange" onClick={handleClick}></i>
-                            <i class="fas fa-circle yellow" onClick={handleClick}></i>
-                            <i class="fas fa-circle green" onClick={handleClick}></i>
-                            <i class="fas fa-circle blue" onClick={handleClick}></i>
-                            <i class="fas fa-circle purple" onClick={handleClick}></i>
-                        </li>
+                        <img className = "color-choices" src={require("assets/img/Coffee.png").default}/>
+                        <img className = "color-choices" src={require("assets/img/Blue.png").default}/>
+                        <img className = "color-choices" src={require("assets/img/Green.png").default}/>
+                        <img className = "color-choices" src={require("assets/img/Pink.png").default}/>
                     </ul>
                 </div>
             </div>

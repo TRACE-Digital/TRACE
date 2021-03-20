@@ -522,6 +522,13 @@
       visibility: hidden;
     }
 
+    >.drag-wrapper{
+      padding: 30px;
+      background: #ccc;
+      width: 100px;
+      cursor: move;
+    }
+
     > .editor-title {
       color:$white;
       text-align: center;

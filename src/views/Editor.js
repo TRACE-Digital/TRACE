@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Colors from "views/Colors.js";
 import { Auth } from 'aws-amplify';
+import Draggable from 'react-draggable';
+
 
 // reactstrap components
 import {
@@ -49,17 +51,23 @@ useEffect(() => {
  isLoggedIn();
 }, []);
 
-  return (
 
+  return (
+    
     <>
     <div onClick={togglePopup} className={isOpen ? "content blur" : "content"}>
 
+  
       <div className="editor-title">
         {name}<i class="tim-icons icon-pencil icon"></i>
       </div>
       <div>
+       
         <Row>
+          
+
           {tempData.map(site => (
+            <Draggable grid={[4, 14 ]}>
             <Col lg="3">
 
               <Card className="card-user">
@@ -91,6 +99,7 @@ useEffect(() => {
                 </CardBody>
               </Card>
             </Col>
+            </Draggable>
           ))}
           <Col lg="3">
             <a id="new" href="#new">
@@ -105,7 +114,9 @@ useEffect(() => {
                 </Card>
             </a>
           </Col>
+          
         </Row>
+      
       </div>
     </div>
     <div className="content">{isOpen ?  <Colors/>  : null}  </div>
