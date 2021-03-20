@@ -154,7 +154,7 @@ function Dashboard(props) {
       <div className="content">
         {showPopup ?  
                 <Popup
-                          text=''  
+                          text='Create New Site'  
                           closePopup={handleAddClick}  
                 />  
                 : null  
