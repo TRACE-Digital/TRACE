@@ -5,13 +5,26 @@ import { Card, CardBody, Button, Col } from "reactstrap";
 import { IconButton } from "@material-ui/core";
 import { AccountType } from "trace-search";
 
+
+/**
+ * Displays a Card with information about the account passed in
+ * @param props.account An Account object with relevant data for the account that it represents
+ * @param props.page A string denoting one of three pages where this is used - "search", "dashboard", or "editor"
+ * @returns 
+ */
 const SiteCard = (props) => {
   const [flipped, setFlipped] = useState(false);
 
   const account = props.account;
   const isUnregistered = account.type === AccountType.UNREGISTERED;
 
-  console.log(account);
+  const search = (props.page === "search")
+  const dashboard = (props.page === "dashboard")
+  const editor = (props.page === "editor")
+
+  if (!search && !dashboard && !editor) {
+    console.warn('WARNING - invalid type passed to SiteCard component. Needs to be "search", "dashboard", or "editor"')
+  }
 
   let firstNames = "";
   let lastNames = "";
@@ -110,41 +123,54 @@ const SiteCard = (props) => {
                 </Button>
               </div>
             )}
-            {/* Flip Button */}
+
+            {/* Flip Button - don't show if on the editor */}
+            { !editor && (
             <div className="flip-button">
               <IconButton onClick={() => setFlipped(true)}>
                 <i className="fas fa-redo" id="flip-icon"></i>
               </IconButton>
-            </div>
+            </div>)}
+
           </CardBody>
         </Card>
 
-        {/* BACK OF CARD */}
+        {/* BACK OF CARD - don't show if on the editor */}
+        { !editor ? (
         <Card className="card-user">
           <CardBody className="card-body">
             <h3>More on {account.site.name}...</h3>
+
+            {/* TAGS (CATEGORIES) */}
             <div className="additional-info">
               TAGS - {tags}
+              <br/>
             </div>
-            <br/>
+
+            {/* PRIVACY RATING FROM HIBP */}
             <div className="additional-info">
               PRIVACY RATING - {" "}
               <PrivacyBadge service={account.site.name}></PrivacyBadge>
+              <br/>
             </div>
-            <br/>
 
-            {firstNames.length !== 0 && (
+            {/* FIRST NAMES */}
+            {firstNames.length !== 0 && !dashboard && (
               <div className="additional-info">
                 FIRST NAME(S) FOUND - {firstNames}
+                <br/>
               </div>
             )}
-            <br/>
-            {lastNames.length !== 0 && (
+
+            {/* LAST NAMES */}
+            {lastNames.length !== 0 && !dashboard && (
               <div className="additional-info">
                 LAST NAME(S) FOUND - {lastNames}
+                <br/>
               </div>
             )}
-            <br/>
+
+            {/* CONFIDENCE LEVEL */}
             {/* {!isUnregistered && (
               <div className="additional-info">
                 Confidence Level: {account.confidence}
@@ -158,6 +184,7 @@ const SiteCard = (props) => {
             </div>
           </CardBody>
         </Card>
+        ) : <div/>}
       </ReactCardFlip>
     </Col>
   );

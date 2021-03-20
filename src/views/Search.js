@@ -138,8 +138,6 @@ function SearchComponent() {
 
       await searchDef.save();
 
-      // TODO: deal with firstName and lastName stuff received?
-
       const search = await searchDef.new();
 
       search.events.on("result", (id) => {
@@ -453,7 +451,7 @@ function SearchComponent() {
         )}
         <Row>
           {discoveredSites.map((account) => (
-            <SiteCard account={account} />
+            <SiteCard account={account} page="search" />
           ))}
         </Row>
       </div>
