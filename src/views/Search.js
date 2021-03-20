@@ -464,7 +464,7 @@ function SearchComponent() {
         )}
         <Row>
           {unregisteredSites.map((account) => (
-            <SiteCard account={account}></SiteCard>
+            <SiteCard account={account} page="search"></SiteCard>
           ))}
         </Row>
       </div>

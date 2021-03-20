@@ -18,6 +18,8 @@ const SiteCard = (props) => {
   const account = props.account;
   const isUnregistered = account.type === AccountType.UNREGISTERED;
 
+  console.log(account)
+
   const search = (props.page === "search")
   const dashboard = (props.page === "dashboard")
   const editor = (props.page === "editor")
@@ -104,7 +106,7 @@ const SiteCard = (props) => {
             </div>
 
             {/* CLAIM BUTTONS (IF APPLICABLE) */}
-            {isUnregistered ? (
+            {(isUnregistered || !search) ? (
               <div></div>
             ) : (
               <div className="test">
