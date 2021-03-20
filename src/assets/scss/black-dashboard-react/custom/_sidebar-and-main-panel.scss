@@ -473,8 +473,8 @@
     min-height: calc(100vh - 70px);
 
     &.blur{
-      opacity: 35%;
       pointer-events: none;
+      opacity: .3 !important;
     }
 
     &.landing{
@@ -562,8 +562,8 @@
       position: absolute;
       max-width: 800px;
       width:800px;
-      top: 20%;
-      opacity: 100% !important;
+      top: 40vh;
+      opacity: 10.0 !important;
       left: 56.7%;
       height:auto;
       padding-top:10px;
@@ -590,7 +590,6 @@
         color:black;
         cursor:pointer;
         font-size:18px;
-
       }
     }
 
@@ -616,7 +615,6 @@
         transform: translateY(-20%);
         transition: transform ease-in-out 350ms;
       }
-
     }
 
     > .search-title{
@@ -649,6 +647,8 @@
     }
 
     .one{
+     /*
+      OLD SCROLL BAR SETTINGS:
       background-color:white;
       width:1000px;
       margin-left: auto;
@@ -656,7 +656,16 @@
       border-radius: 15px;
       display: flex;
       align-items: center;
-      height:50px;
+      height:50px;*/
+
+      background-color:white;
+      width:1000px;
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      min-height:50px;
     }
 
     .two-search{
@@ -692,18 +701,32 @@
 
     .four{
       padding:5px;
-      margin-right:4px;
+      margin-right:6px;
+      color:black;
+      font-size:20px;
       cursor: pointer;
     }
 
     .three{
+    /*
+      OLD SCROLL BAR SETTINGS:
       display:flex;
       max-width: 550px;
       white-space: nowrap;
       overflow: hidden;
       margin-left:8px;
       text-overflow: ellipsis;
-      overflow-x: scroll;
+      overflow-x: scroll;*/
+
+      display: inline-flex;
+      max-width: 550px;
+      white-space: nowrap;
+      vertical-align: bottom;
+      flex-flow: wrap;
+      margin-top: 8px;
+      margin-left:8px;
+      margin-right:8px;
+      text-overflow: ellipsis;
 
       .entered{
         border-color:#d3d3d3;
@@ -715,6 +738,7 @@
         margin-right:5px;
         border-radius: 25px;
         border-width: thin;
+        margin-bottom:8px;
         font-weight: 100;
         white-space: nowrap;
 
@@ -731,11 +755,19 @@
       margin-bottom:5px;
       font-weight: 300;
       margin-top:3px;
-      margin-right:20%; //fix this later
-      margin-left:73%;
+      width:950px;
+      margin-left:auto;
+      margin-right:auto;
+
       .the-text{
         cursor: pointer;
         user-select:none;
+        &.cancel{
+          display:inline-block;
+        }
+        &.refine{
+          display:inline-block;
+        }
       }
     }
 
@@ -1068,3 +1100,56 @@
   }
 
 }
+
+// First and last name stuff
+// .name {
+//   background-color:white;
+//   width: auto;
+//   margin-left: auto;
+//   margin-right: auto;
+//   border-radius: 15px;
+//   display: flex;
+//   align-items: center;
+//   min-height: 50px;
+// }
+
+.nameEntryInput input { // Input box
+  background-color:white;
+  width: 200px;
+  margin-right: auto;
+  border-radius: 10px;
+  display: flex;
+  align-items: left;
+  margin-left: 12px;
+  min-height: 30px;
+  text-indent: 10px;
+  // margin-bottom: 8px;
+}
+
+.nameList {
+    display: inline-flex;
+    white-space: nowrap;
+    vertical-align: bottom;
+    flex-flow: wrap;
+    margin-left: 8px;
+    margin-right: 8px;
+    text-overflow: ellipsis;
+
+    .entered {
+      border-color:#d3d3d3;
+      background-color:#d3d3d3;
+      color:#373737;
+      border-style: solid;
+      padding: 2px;
+      margin-right: 5px;
+      margin-bottom: 5px;
+      border-radius: 10px;
+      border-width: thin;
+      white-space: nowrap;
+
+      .icon{
+        padding-right:3px;
+        padding-top:4px;
+      }
+    }
+  }

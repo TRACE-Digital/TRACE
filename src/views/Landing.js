@@ -1,9 +1,8 @@
-import React, { useState } from "react";
 import { Auth } from 'aws-amplify';
 
 
 // reactstrap components
-import { Card, CardImg, CardBody, CardTitle, Button, Form, FormGroup, Input } from 'reactstrap';
+import { Button } from 'reactstrap';
 import { NavLink } from "react-router-dom";
 
 async function signUp(email, username, password) {
@@ -36,8 +35,8 @@ function Landing() {
       <div className="search-info heading">Privacy</div>
       <div className="search-info">We would never tell your secrets. We promise. ;)</div>
       <div className="search-info heading">Getting Started</div>
-      <div className="search-info">Follow these screenshots to get started...</div>
-      <NavLink to="/">
+      <div className="search-info">Click the button below to get started...</div>
+      <NavLink to="/admin/dashboard">
         <Button
           className="start-button"
           block

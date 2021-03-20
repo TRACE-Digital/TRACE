@@ -19,18 +19,16 @@ import React from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 
-import { clearDb } from 'trace-search';
+import { clearDb, setupReplication, teardownReplication } from 'trace-search';
 
 // reactstrap components
 import {
-  Button,
   Collapse,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
   UncontrolledDropdown,
   Input,
-  InputGroup,
   NavbarBrand,
   Navbar,
   NavLink,
@@ -40,12 +38,66 @@ import {
   NavbarToggler,
   ModalHeader,
 } from "reactstrap";
+import ToggleButton from 'react-toggle-button';
 import { Link } from "react-router-dom";
+
+import { Auth } from 'aws-amplify';
+
+async function signOut() {
+  console.log('before')
+  console.log(await Auth.currentAuthenticatedUser())
+  try {
+    const currentUser = Auth.userPool.getCurrentUser();
+    await currentUser.signOut();
+    console.log('after');
+    console.log(await Auth.currentAuthenticatedUser());
+    localStorage.removeItem('user');
+    window.location.href = '/#/login';
+    } catch (error) {
+      console.log('error signing out: ', error);
+      localStorage.removeItem('user');
+      window.location.href = '/#/login';
+    }
+}
 
 function AdminNavbar(props) {
   const [collapseOpen, setcollapseOpen] = React.useState(false);
   const [modalSearch, setmodalSearch] = React.useState(false);
   const [color, setcolor] = React.useState("navbar-transparent");
+  const [isLoggedIn, setIsLoggedIn] = React.useState((localStorage.getItem('user')));
+  const [replicate, setReplicate] = React.useState(false);
+
+  // Setup replication
+  React.useEffect(() => {
+    async function handleReplication() {
+      if (replicate) {
+        try {
+          const obj = await setupReplication();
+          const replicator = obj.TODO_replication;
+
+          replicator.on('error', (e) => {
+            alert(`Replication error!\n\n${e}`);
+            console.error(e);
+            setReplicate(false);
+          });
+        } catch(e) {
+          alert(`Replication error!\n\n${e}`);
+          console.error(e);
+          setReplicate(false);
+          return;
+        }
+      } else {
+        try {
+          await teardownReplication();
+        } catch (e) {
+          console.error(e);
+          return;
+        }
+      }
+    }
+    handleReplication();
+  }, [replicate]);
+
   React.useEffect(() => {
     window.addEventListener("resize", updateColor);
     // Specify how to clean up after this effect:
@@ -102,50 +154,22 @@ function AdminNavbar(props) {
           <Collapse navbar isOpen={collapseOpen}>
             <Nav className="ml-auto" navbar>
               <UncontrolledDropdown nav>
-                <DropdownToggle
-                  caret
-                  color="default"
-                  data-toggle="dropdown"
-                  nav
-                >
-                  <div className="notification d-none d-lg-block d-xl-block" />
-                  <i className="tim-icons icon-sound-wave" />
-                  <p className="d-lg-none">Notifications</p>
-                </DropdownToggle>
-                <DropdownMenu className="dropdown-navbar" right tag="ul">
-                  <NavLink tag="li">
-                    <DropdownItem className="nav-item">
-                      Mike John responded to your email
-                    </DropdownItem>
-                  </NavLink>
-                  <NavLink tag="li">
-                    <DropdownItem className="nav-item">
-                      You have 5 more tasks
-                    </DropdownItem>
-                  </NavLink>
-                  <NavLink tag="li">
-                    <DropdownItem className="nav-item">
-                      Your friend Michael is in town
-                    </DropdownItem>
-                  </NavLink>
-                  <NavLink tag="li">
-                    <DropdownItem className="nav-item">
-                      Another notification
-                    </DropdownItem>
-                  </NavLink>
-                  <NavLink tag="li">
-                    <DropdownItem className="nav-item">
-                      Another one
-                    </DropdownItem>
-                  </NavLink>
-                </DropdownMenu>
+                <div style={{ textAlign: 'center' }}>
+                  Sync
+                <ToggleButton
+                    inactiveLabel={<span>Off</span>}
+                    activeLabel={<span>On</span>}
+                    value={replicate || false}
+                    onToggle={() => setReplicate(prev => !prev) }
+                  />
+                </div>
               </UncontrolledDropdown>
               <UncontrolledDropdown nav>
                 <DropdownToggle
                   caret
                   color="default"
                   nav
-                  onClick={(e) => e.preventDefault()}
+                  onClick={async (e) => { e.preventDefault() }}
                 >
                   <div className="photo">
                     <i className="tim-icons icon-single-02" />
@@ -160,20 +184,32 @@ function AdminNavbar(props) {
                   <NavLink tag="li">
                     <DropdownItem className="nav-item">Settings</DropdownItem>
                   </NavLink>
+                  <DropdownItem tag="li" className="">
+
+                  </DropdownItem>
                   <DropdownItem divider tag="li" />
                   <NavLink tag="li">
                     <DropdownItem className="nav-item" onClick={async () => {
                       try {
                         await clearDb();
+                        window.location.reload();
                       } catch (e) {
                         console.error(e);
                       }
                     }}>Delete my data</DropdownItem>
                   </NavLink>
                   <DropdownItem divider tag="li" />
-                  <NavLink tag="li">
-                    <DropdownItem className="nav-item">Log out</DropdownItem>
-                  </NavLink>
+                  {!isLoggedIn &&
+                  <NavLink to="/login" tag={Link}>
+                    <DropdownItem className="nav-item">Log In</DropdownItem>
+                  </NavLink>}
+                  {isLoggedIn &&
+                  <NavLink onClick={() => {
+                    signOut();
+                    setIsLoggedIn(!isLoggedIn);
+                    }} tag="li">)
+                    <DropdownItem className="nav-item">Log Out</DropdownItem>
+                  </NavLink>}
                 </DropdownMenu>
               </UncontrolledDropdown>
               <li className="separator d-lg-none" />

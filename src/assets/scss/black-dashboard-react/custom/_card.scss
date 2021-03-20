@@ -18,6 +18,10 @@
     .card-body{
       padding: 15px;
 
+      .a{
+        text-align: center;
+      }
+
       &.table-full-width{
         padding-left: 0;
         padding-right: 0;
@@ -28,12 +32,16 @@
         text-transform: inherit;
         font-weight: $font-weight-light;
         margin-bottom: .75rem;
+
+        &.welcome{
+          font-size: xx-large;
+          text-align: center;
+        }
       }
 
       .card-description, .card-category{
         color: rgba($white, 0.6);
       }
-
     }
 
     .card-header{

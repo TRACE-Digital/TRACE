@@ -16,7 +16,7 @@
 
 */
 import React from "react";
-import { Route, Switch, Redirect, useLocation } from "react-router-dom";
+import { Route, Switch, useLocation } from "react-router-dom";
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
 
@@ -122,7 +122,7 @@ function Admin(props) {
               />
               <Switch>
                 {getRoutes(routes)}
-                <Redirect from="*" to="/admin/dashboard" />
+                {/* <Redirect from="*" to="/landing" /> */}
               </Switch>
             </div>
           </div>

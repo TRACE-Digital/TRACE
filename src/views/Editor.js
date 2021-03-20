@@ -1,6 +1,6 @@
-import React from "react";
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Colors from "views/Colors.js";
+import { Auth } from 'aws-amplify';
 
 // reactstrap components
 import {
@@ -32,7 +32,7 @@ function Editor() {
 const [isOpen, setIsOpen] = useState(false);
 
 const togglePopup = (e) => {
-  if (e.target.className == "tim-icons icon-pencil icon"){
+  if (e.target.className === "tim-icons icon-pencil icon"){
     setIsOpen(!isOpen);
   }
   else {
@@ -40,8 +40,17 @@ const togglePopup = (e) => {
   }
 }
 
+useEffect(() => {
+ async function isLoggedIn () {
+  if (!(localStorage.getItem('user'))) {
+    window.location.href = '/#/login';
+  }
+ }
+ isLoggedIn();
+}, []);
+
   return (
-    
+
     <>
     <div onClick={togglePopup} className={isOpen ? "content blur" : "content"}>
 
@@ -52,11 +61,11 @@ const togglePopup = (e) => {
         <Row>
           {tempData.map(site => (
             <Col lg="3">
-            
-              <Card className="card-user"> 
+
+              <Card className="card-user">
                 <CardBody>
                   <div>
-                
+
                   <UncontrolledDropdown>
                   <DropdownToggle
                     caret
@@ -84,20 +93,22 @@ const togglePopup = (e) => {
             </Col>
           ))}
           <Col lg="3">
-            <Card className="card-user add-to-edit"> 
-                <CardBody>
-                  <div className= "edit-text">
-                  <span className="icon">
-                    <i class="fas fa-plus"></i>
-                  </span>
-                  </div>
-                </CardBody>
-              </Card>
+            <a id="new" href="#new">
+              <Card className="card-user add-to-edit">
+                  <CardBody>
+                    <div className= "edit-text">
+                    <span className="icon">
+                      <i class="fas fa-plus"></i>
+                    </span>
+                    </div>
+                  </CardBody>
+                </Card>
+            </a>
           </Col>
         </Row>
       </div>
-    </div>   
-    <div className="content">{isOpen ?  <Colors/>  : null}  </div> 
+    </div>
+    <div className="content">{isOpen ?  <Colors/>  : null}  </div>
     </>
   );
 }
