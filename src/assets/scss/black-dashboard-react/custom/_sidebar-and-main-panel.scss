@@ -598,7 +598,6 @@
       display: flex;
       align-items: center;
       min-height:50px;
-
     }
 
     .two-search{
@@ -1033,3 +1032,56 @@
   }
 
 }
+
+// First and last name stuff
+// .name {
+//   background-color:white;
+//   width: auto;
+//   margin-left: auto;
+//   margin-right: auto;
+//   border-radius: 15px;
+//   display: flex;
+//   align-items: center;
+//   min-height: 50px;
+// }
+
+.nameEntryInput input { // Input box
+  background-color:white;
+  width: 200px;
+  margin-right: auto;
+  border-radius: 10px;
+  display: flex;
+  align-items: left;
+  margin-left: 12px;
+  min-height: 30px;
+  text-indent: 10px;
+  // margin-bottom: 8px;
+}
+
+.nameList {
+    display: inline-flex;
+    white-space: nowrap;
+    vertical-align: bottom;
+    flex-flow: wrap;
+    margin-left: 8px;
+    margin-right: 8px;
+    text-overflow: ellipsis;
+
+    .entered {
+      border-color:#d3d3d3;
+      background-color:#d3d3d3;
+      color:#373737;
+      border-style: solid;
+      padding: 2px;
+      margin-right: 5px;
+      margin-bottom: 5px;
+      border-radius: 10px;
+      border-width: thin;
+      white-space: nowrap;
+
+      .icon{
+        padding-right:3px;
+        padding-top:4px;
+      }
+    }
+  }
