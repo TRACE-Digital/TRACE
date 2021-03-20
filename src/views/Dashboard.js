@@ -21,6 +21,8 @@ import classNames from "classnames";
 // react plugin used to create charts
 import { Line, Bar } from "react-chartjs-2";
 
+import Popup from '../components/AddSitePopup/AddSitePopup';  
+
 // reactstrap components
 import {
   Button,
@@ -60,6 +62,11 @@ function Dashboard(props) {
   const setBgChartData = (name) => {
     setbigChartData(name);
   };
+  const [showPopup, togglePopup] = React.useState(false);
+
+  const handleAddClick = () => {
+    togglePopup(!showPopup);
+  }
 
   useEffect(() => {
     async function loadAccounts() {
@@ -91,9 +98,17 @@ function Dashboard(props) {
             className="add-site-button"
             block
             color="primary"
+            onClick={handleAddClick}
           >
             Add New Site
           </Button>
+          {showPopup ?  
+              <Popup
+                        text='Click "Close Button" to hide popup'  
+                        closePopup={handleAddClick}  
+              />  
+              : null  
+          }
         </div>
 
         <hr></hr>
