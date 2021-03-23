@@ -491,6 +491,56 @@
       }
     }
 
+    >.request-form-container {
+      
+      >.issue-forms {
+        background-color:whitesmoke;
+        border-radius: 15px;
+        height:auto;
+        padding: 40px;
+        max-width: 800px;
+
+        >.title{
+          font-size:30px;
+          color:black;
+          text-align:center;
+          font-weight: 300;
+        }
+
+        .asterisk {
+          color: #B90E0A;
+        }
+
+        #input {
+          color: black;
+        }
+
+        // >.submit-button-container {
+        //   margin-top: 20px;
+        //   text-align: center;
+
+        //   .error-message-visible{
+        //     color:#ff4d4d;
+        //     font-size:17px;
+        //     border-radius: 15px;
+        //     margin-left: auto;
+        //     margin-right: auto;
+        //     padding-top:4px;
+        //     padding-bottom:5px;
+        //     text-shadow: none;
+        //     width:250px;
+        //     text-align:center;
+        //     background-color:#ffb3b3 ;
+        //     font-weight: 400;
+        //   }
+    
+        //   .error-not-visible{
+        //     visibility:hidden;
+        //   }
+        // }
+      }
+    }
+
     >.site-popup {
       position: absolute;
       max-width: 800px;
