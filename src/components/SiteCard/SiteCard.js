@@ -5,12 +5,11 @@ import { Card, CardBody, Button, Col } from "reactstrap";
 import { IconButton } from "@material-ui/core";
 import { AccountType } from "trace-search";
 
-
 /**
  * Displays a Card with information about the account passed in
  * @param props.account An Account object with relevant data for the account that it represents
  * @param props.page A string denoting one of three pages where this is used - "search", "dashboard", or "editor"
- * @returns 
+ * @returns
  */
 const SiteCard = (props) => {
   const [flipped, setFlipped] = useState(false);
@@ -18,14 +17,14 @@ const SiteCard = (props) => {
   const account = props.account;
   const isUnregistered = account.type === AccountType.UNREGISTERED;
 
-  console.log(account)
-
-  const search = (props.page === "search")
-  const dashboard = (props.page === "dashboard")
-  const editor = (props.page === "editor")
+  const search = props.page === "search";
+  const dashboard = props.page === "dashboard";
+  const editor = props.page === "editor";
 
   if (!search && !dashboard && !editor) {
-    console.warn('WARNING - invalid type passed to SiteCard component. Needs to be "search", "dashboard", or "editor"')
+    console.warn(
+      'WARNING - invalid type passed to SiteCard component. Needs to be "search", "dashboard", or "editor"'
+    );
   }
 
   let firstNames = "";
@@ -38,7 +37,7 @@ const SiteCard = (props) => {
     lastNames = account.matchedLastNames.join(", ");
   }
   if (account.site.tags) {
-    tags = account.site.tags.join(", ")
+    tags = account.site.tags.join(", ");
   }
 
   /**
@@ -105,8 +104,8 @@ const SiteCard = (props) => {
               </a>
             </div>
 
-            {/* CLAIM BUTTONS (IF APPLICABLE) */}
-            {(isUnregistered || !search) ? (
+            {/* CLAIM BUTTONS (IF APPLICABLE) - only show if you're on search page AND account is unregistered */}
+            {isUnregistered || !search ? (
               <div></div>
             ) : (
               <div className="test">
@@ -126,63 +125,74 @@ const SiteCard = (props) => {
               </div>
             )}
 
-            {/* Flip Button - don't show if on the editor */}
-            { !editor && (
-            <div className="flip-button">
-              <IconButton onClick={() => setFlipped(true)}>
-                <i className="fas fa-redo" id="flip-icon"></i>
-              </IconButton>
-            </div>)}
-
+            {/* Flip Button - don't show if on the editor (but show on search and dashboard) */}
+            {!editor && (
+              <div className="flip-button">
+                <IconButton onClick={() => setFlipped(true)}>
+                  <i className="fas fa-redo" id="flip-icon"></i>
+                </IconButton>
+              </div>
+            )}
           </CardBody>
         </Card>
 
         {/* BACK OF CARD - don't show if on the editor */}
-        { !editor ? (
-        <Card className="card-user">
-          <CardBody className="card-body">
-            <h3>More on {account.site.name}...</h3>
+        {!editor ? (
+          <Card className="card-user">
+            <CardBody className="card-body">
+              <h3>More on {account.site.name}...</h3>
 
-            {/* TAGS (CATEGORIES) */}
-            <div className="additional-info">
-              TAGS - {tags}
-            </div>
+              {/* TAGS (CATEGORIES) - show on both search and dashboard */}
+              <div className="additional-info">TAGS - {tags}</div>
+              <br />
 
-            {/* PRIVACY RATING FROM HIBP */}
-            <div className="additional-info">
-              PRIVACY RATING - {" "}
-              <PrivacyBadge service={account.site.name}></PrivacyBadge>
-            </div>
-
-            {/* FIRST NAMES */}
-            {firstNames.length !== 0 && !dashboard && (
+              {/* PRIVACY RATING FROM HIBP - show on both search and dashboard */}
               <div className="additional-info">
-                FIRST NAME(S) FOUND - {firstNames}
+                PRIVACY RATING -{" "}
+                <PrivacyBadge service={account.site.name}></PrivacyBadge>
               </div>
-            )}
+              <br />
 
-            {/* LAST NAMES */}
-            {lastNames.length !== 0 && !dashboard && (
-              <div className="additional-info">
-                LAST NAME(S) FOUND - {lastNames}
+              {/* FIRST NAMES - only for search if there are last names to display*/}
+              {firstNames.length !== 0 && search && (
+                <>
+                  <div className="additional-info">
+                    FIRST NAME(S) FOUND - {firstNames}
+                  </div>
+                  <br />
+                </>
+              )}
+
+              {/* LAST NAMES - only for search if there are last names to display */}
+              {lastNames.length !== 0 && search && (
+                <>
+                  <div className="additional-info">
+                    LAST NAME(S) FOUND - {lastNames}
+                  </div>
+                  <br />
+                </>
+              )}
+
+              {/* DATE CLAIMED - only for dashboard */}
+              {dashboard && (
+                <>
+                  <div className="additional-info">
+                    CLAIMED - {account.claimedAt.toUTCString()}
+                  </div>
+                  <br />
+                </>
+              )}
+
+              <div className="flip-button">
+                <IconButton onClick={() => setFlipped(false)}>
+                  <i className="fas fa-redo" id="flip-icon"></i>
+                </IconButton>
               </div>
-            )}
-
-            {/* CONFIDENCE LEVEL */}
-            {/* {!isUnregistered && (
-              <div className="additional-info">
-                Confidence Level: {account.confidence}
-              </div>
-            )} */}
-
-            <div className="flip-button">
-              <IconButton onClick={() => setFlipped(false)}>
-                <i className="fas fa-redo" id="flip-icon"></i>
-              </IconButton>
-            </div>
-          </CardBody>
-        </Card>
-        ) : <div/>}
+            </CardBody>
+          </Card>
+        ) : (
+          <div />
+        )}
       </ReactCardFlip>
     </Col>
   );
