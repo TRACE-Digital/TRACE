@@ -39,11 +39,7 @@ function Contact() {
   return (
     <>
       <div className="content">
-        <h3 className="header-title">Contact us</h3>
-
-        <br></br>
-        <br></br>
-        <br></br>
+        <h3 className="header">Contact us</h3>
 
         <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
             <DropdownToggle caret>
@@ -85,16 +81,6 @@ function Contact() {
                 : null  
             }
         </div>
-        
-        <br></br>
-        <br></br>
-
-        <h3 className="header-title">Meet the developers</h3>
-
-        <br></br>
-        <br></br>
-        <br></br>
-        
       </div>
     </>
   );
