@@ -27,7 +27,7 @@ import Charlene from '../assets/img/BabyPics/Charlene.jpeg';
 import Chris from '../assets/img/BabyPics/Chris.jpg';
 import Cora from '../assets/img/BabyPics/Cora.JPG';
 import Isabel from '../assets/img/BabyPics/Isabel.png';
-import Jack from '../assets/img/BabyPics/Jack.JPG';
+import Jack from '../assets/img/BabyPics/Jack.png';
 import Jakob from '../assets/img/BabyPics/Jakob.jpeg';
 
 
