@@ -69,7 +69,7 @@ const SiteCard = (props) => {
   };
 
   return (
-    <Col lg="3" key={account.id}>
+    //<Col lg="3" key={account.id}>
       <ReactCardFlip
         isFlipped={flipped}
         flipSpeedBackToFront=".8"
@@ -188,7 +188,7 @@ const SiteCard = (props) => {
         </Card>
         ) : <div/>}
       </ReactCardFlip>
-    </Col>
+    //</Col>
   );
 };
 

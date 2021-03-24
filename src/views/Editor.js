@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Colors from "views/Colors.js";
 import { Auth } from 'aws-amplify';
-import Draggable from 'react-draggable';
-
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 // reactstrap components
 import {
@@ -29,6 +28,8 @@ var name = 'Isabel Battaglioli'
 //   { 'title': 'Skype', 'prettyUrl': 'www.skype.com', 'profileUrl': 'www.skype.com/userProfile', 'userName': '@SKYPE HANDLE', 'iconClass': 'fab fa-skype' },
 //   { 'title': 'Apple', 'prettyUrl': 'www.apple.com', 'profileUrl': 'www.apple.com/userProfile', 'userName': '@APPLE HANDLE', 'iconClass': 'fab fa-apple' },
 // ];
+
+
 
 const tempData = [{
   "rev": "1-d3d7cff6aa0db9bc04e98d43429f17f4",
@@ -90,12 +91,12 @@ const tempData = [{
       "urlMain": "https://www.github.com/",
       "username_claimed": "blue",
       "username_unclaimed": "noonewouldeverusethis7",
-      "logoClass": "fa-github",
+      "logoClass": "fa-apple",
       "tags": [
           "Developers"
       ],
-      "name": "GitHub",
-      "prettyUrl": "www.github.com"
+      "name": "Apple",
+      "prettyUrl": "www.apple.com"
   },
   "userName": "isabel",
   "id": "searchDef/2021-03-20T19:31:48.549Z/Search #1/search/2021-03-20T19:31:48.671Z/searchResult/account/GitHub/isabel",
@@ -107,8 +108,8 @@ const tempData = [{
   "actionTaken": "None"
 },
 {
-  "rev": "1-1b54ec9d4d09c027f875aa0167330ddd",
-  "createdAt": "2021-03-20T19:32:48.069Z",
+  "rev": "1-c2116aa47305b8918ec32c2e4a00477e",
+  "createdAt": "2021-03-20T19:31:49.499Z",
   "site": {
       "errorType": "status_code",
       "regexCheck": "^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$",
@@ -116,27 +117,25 @@ const tempData = [{
       "urlMain": "https://www.github.com/",
       "username_claimed": "blue",
       "username_unclaimed": "noonewouldeverusethis7",
-      "logoClass": "fa-github",
+      "logoClass": "fa-reddit",
       "tags": [
           "Developers"
       ],
-      "name": "GitHub",
-      "prettyUrl": "www.github.com"
+      "name": "Reddit",
+      "prettyUrl": "www.reddit.com"
   },
-  "userName": "cohenchris",
-  "id": "searchDef/2021-03-20T19:32:47.126Z/Search #2/search/2021-03-20T19:32:47.235Z/searchResult/account/GitHub/cohenchris",
+  "userName": "isabel",
+  "id": "searchDef/2021-03-20T19:31:48.549Z/Search #1/search/2021-03-20T19:31:48.671Z/searchResult/account/GitHub/isabel",
   "type": "Discovered",
   "matchedFirstNames": [
-      "Chris"
+      "isabel"
   ],
-  "matchedLastNames": [
-      "Cohen"
-  ],
+  "matchedLastNames": [],
   "actionTaken": "None"
 },
 {
-  "rev": "1-1b54ec9d4d09c027f875aa0167330ddd",
-  "createdAt": "2021-03-20T19:32:48.069Z",
+  "rev": "1-c2116aa47305b8918ec32c2e4a00477e",
+  "createdAt": "2021-03-20T19:31:49.499Z",
   "site": {
       "errorType": "status_code",
       "regexCheck": "^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$",
@@ -144,37 +143,49 @@ const tempData = [{
       "urlMain": "https://www.github.com/",
       "username_claimed": "blue",
       "username_unclaimed": "noonewouldeverusethis7",
-      "logoClass": "fa-github",
+      "logoClass": "fa-instagram",
       "tags": [
           "Developers"
       ],
-      "name": "GitHub",
-      "prettyUrl": "www.github.com"
+      "name": "Instagram",
+      "prettyUrl": "www.instagram.com"
   },
-  "userName": "cohenchris",
-  "id": "searchDef/2021-03-20T19:32:47.126Z/Search #2/search/2021-03-20T19:32:47.235Z/searchResult/account/GitHub/cohenchris",
+  "userName": "isabel",
+  "id": "searchDef/2021-03-20T19:31:48.549Z/Search #1/search/2021-03-20T19:31:48.671Z/searchResult/account/GitHub/isabel",
   "type": "Discovered",
   "matchedFirstNames": [
-      "Chris"
+      "isabel"
   ],
-  "matchedLastNames": [
-      "Cohen"
-  ],
+  "matchedLastNames": [],
   "actionTaken": "None"
-}
+},
 ]
 
 function Editor() {
 
+
 const [isOpen, setIsOpen] = useState(false);
+const [characters, updateCharacters] = useState(tempData);
+const [colorScheme, setColorScheme] = useState("Default");
+
+function handleOnDragEnd(result) {
+  if (!result.destination) return;
+  console.log(characters)
+  const items = Array.from(characters);
+  const [reorderedItem] = items.splice(result.source.index, 1);
+  items.splice(result.destination.index, 0, reorderedItem);
+  updateCharacters(items);
+}
 
 const togglePopup = (e) => {
   if (e.target.className === "tim-icons icon-pencil icon"){
     setIsOpen(!isOpen);
   }
-  else {
-    setIsOpen(false);
-  }
+
+}
+
+function handleLanguage(colorChoice){
+  setColorScheme(colorChoice);
 }
 
 useEffect(() => {
@@ -188,75 +199,54 @@ useEffect(() => {
 
 
   return (
-    
+      
     <>
-    <div onClick={togglePopup} className={isOpen ? "content blur" : "content"}>
+    {isOpen ?  <Colors onSelectLanguage={handleLanguage}/>  : null}
+    <div onClick={togglePopup} className={isOpen ? `content blur ${colorScheme}` : `content ${colorScheme}`}>
+      <div className={`editor-background ${colorScheme}`}>
 
-  
-      <div className="editor-title">
+      <div className={`editor-title ${colorScheme}`}>
         {name}<i className="tim-icons icon-pencil icon"></i>
       </div>
-      <div>
-       
-        <Row>
-          
 
-          {tempData.map(site => (
-            <Draggable grid={[4, 14 ]}>
-            {/* <Col lg="3"> */}
-              <SiteCard account={site} page="editor" />
-              {/* <Card className="card-user">
-                <CardBody>
-                  <div>
+      <DragDropContext onDragEnd={handleOnDragEnd}>
+  
+        <Droppable droppableId="characters">
+          {(provided) => (
 
-                  <UncontrolledDropdown>
-                  <DropdownToggle
-                    caret
-                    className="btn-icon dot"
-                    color="link"
-                    type="button"
-                  >
-                  <i class="fas fa-ellipsis-h"></i>
-                  </DropdownToggle>
-                  <DropdownMenu className="dropdown-menu-right">
-                    <DropdownItem
-                      href="#pablo"
-                      onClick={(e) => e.preventDefault()}
-                    >
-                      REMOVE
-                    </DropdownItem>
-                  </DropdownMenu>
-                </UncontrolledDropdown>
-                    <div className = "editor"> <i className={site.iconClass}></i></div>
-                    <div className = "editor-handle-name"> {site.userName}</div>
-                    <div className = "editor-link"> {site.prettyUrl} </div>
-                  </div>
-                </CardBody>
-              </Card> */}
-            {/* </Col> */}
-            </Draggable>
-          ))}
-          <Col lg="3">
-            <a id="new" href="#new">
-              <Card className="card-user add-to-edit">
-                  <CardBody>
-                    <div className= "edit-text">
-                    <span className="icon">
-                      <i class="fas fa-plus"></i>
-                    </span>
-                    </div>
-                  </CardBody>
-                </Card>
-            </a>
-          </Col>
-          
-        </Row>
+          <ul {...provided.droppableProps} ref={provided.innerRef} className ="editor-blocks">
+              <Row>
+              {characters.map((item, index) => {
+                  
+                  return (
+                    <Col lg="3">
+                    <Draggable key={item.site.name} draggableId={item.site.name} index={index}>
+                      {(provided) => (
+                        <li className = "idk" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                            {<SiteCard account={item} page="editor"/>}
+                        </li>
+                      )}
+                    </Draggable>
+                    </Col>
+                  );
+                  
+                })}
+                
+                {provided.placeholder}
+                </Row>
+          </ul>
+  
+          )}
+        </Droppable>
       
+      </DragDropContext>
+
       </div>
     </div>
-    <div className="content">{isOpen ?  <Colors/>  : null}  </div>
+    {/* <div className={isOpen ? `content blur ${colorScheme}` : `content ${colorScheme}`}  >{isOpen ?  <Colors onSelectLanguage={handleLanguage}/>  : null}  </div> */}
     </>
   );
 }
+
 
 export default Editor;

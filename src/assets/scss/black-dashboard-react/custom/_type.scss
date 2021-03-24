@@ -166,15 +166,58 @@ p{
 }
 
 ul {
+
+    &.editor-blocks{
+        list-style-type: none;
+        flex-wrap: wrap;
+        padding-right:40px;
+      }
+    
+    &.new-sites-ul{
+        padding:0px !important;
+    }
+
+
     &.editor{
-        margin-left:18%;
         line-height: 50px;
+        text-align: center;
+        padding:0px !important;
         margin-top:10px;
+
+        .color-choices{
+            height: 150px;
+            width: auto;
+            padding: 10px;
+            margin:5px;
+            cursor:pointer;
+        }
+
+        .color-choices:hover{
+            outline: #333 solid 2px;
+        }
+
+        .color-choices-selected{
+            height: 150px;
+            width: auto;
+            padding: 10px;
+            margin:5px;
+            outline: #333 solid 2px;
+        }
     }
 }
 
 ul li, ol li{
   color: $white;
+
+ 
+
+  &.new-sites-ul{
+    color:black !important;
+    text-align:center;
+    list-style-type: none;
+    margin-bottom:15px;
+    
+}
 
   &.editor-popup{
     color:black;
