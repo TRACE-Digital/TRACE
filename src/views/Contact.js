@@ -49,68 +49,68 @@ function Contact() {
     return (
         <>
             <div className="content">
-                <div className="toggle-container">
-                <ButtonGroup
-                    className="btn-group-toggle float-right"
-                    data-toggle="buttons"
-                >
-                    <Button
-                        tag="label"
-                        className={classNames("btn-simple", {
-                            active: templateType === "request_website",
-                        })}
-                        color="info"
-                        id="0"
-                        size="sm"
-                        onClick={handleRequestWebsiteClick}
-                    >
-                        <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                            Website Support
-                        </span>
-                        <span className="d-block d-sm-none">
-                            <i className="tim-icons icon-single-02" />
-                        </span>
-                    </Button>
-                    <Button
-                        color="info"
-                        id="1"
-                        size="sm"
-                        tag="label"
-                        className={classNames("btn-simple", {
-                            active: templateType === "request_feature",
-                        })}
-                        onClick={handleRequestFeatureClick}
-                    >
-                        <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                            Feature Request
-                        </span>
-                        <span className="d-block d-sm-none">
-                            <i className="tim-icons icon-gift-2" />
-                        </span>
-                    </Button>
-                    <Button
-                        color="info"
-                        id="2"
-                        size="sm"
-                        tag="label"
-                        className={classNames("btn-simple", {
-                            active: templateType === "bug_report",
-                        })}
-                        onClick={handleBugReportClick}
-                    >
-                        <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                            Bug Report
-                        </span>
-                        <span className="d-block d-sm-none">
-                            <i className="tim-icons icon-tap-02" />
-                        </span>
-                    </Button>
-                </ButtonGroup>
-                </div>
-
                 <h3 className="header">Contact us</h3>
 
                 <h4 className="instructions">How can we help? Please select a form that best relates to your inquiry.</h4>
+
+                <div className="toggle-container">
+                    <ButtonGroup
+                        className="btn-group-toggle"
+                        data-toggle="buttons"
+                    >
+                        <Button
+                            tag="label"
+                            className={classNames("btn-simple", {
+                                active: templateType === "request_website",
+                            })}
+                            color="info"
+                            id="0"
+                            size="sm"
+                            onClick={handleRequestWebsiteClick}
+                        >
+                            <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
+                                Website Support
+                            </span>
+                            <span className="d-block d-sm-none">
+                                <i className="tim-icons icon-single-02" />
+                            </span>
+                        </Button>
+                        <Button
+                            color="info"
+                            id="1"
+                            size="sm"
+                            tag="label"
+                            className={classNames("btn-simple", {
+                                active: templateType === "request_feature",
+                            })}
+                            onClick={handleRequestFeatureClick}
+                        >
+                            <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
+                                Feature Request
+                            </span>
+                            <span className="d-block d-sm-none">
+                                <i className="tim-icons icon-gift-2" />
+                            </span>
+                        </Button>
+                        <Button
+                            color="info"
+                            id="2"
+                            size="sm"
+                            tag="label"
+                            className={classNames("btn-simple", {
+                                active: templateType === "bug_report",
+                            })}
+                            onClick={handleBugReportClick}
+                        >
+                            <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
+                                Bug Report
+                            </span>
+                            <span className="d-block d-sm-none">
+                                <i className="tim-icons icon-tap-02" />
+                            </span>
+                        </Button>
+                    </ButtonGroup>
+                </div>
 
                 {/* <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
                     <DropdownToggle caret>
