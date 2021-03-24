@@ -43,9 +43,9 @@ function UserProfile() {
 
   function getPicture(item) {
     return (
-        <Col md={4}>
+        <Col md={3}>
             <img className="baby-pics" alt="" src={`${item.image}`}></img>
-            <div className="name">
+            <div className="dev-name">
                 <text>{item.label} </text>
             </div>
         </Col>
