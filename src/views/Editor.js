@@ -1,33 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import Colors from "views/Colors.js";
 import { Auth } from 'aws-amplify';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { Auth } from "aws-amplify";
+import { ThirdPartyAccount, accounts, AccountType } from "trace-search";
+import SiteCard from "components/SiteCard/SiteCard";
 
 // reactstrap components
 import {
   Card,
   CardBody,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
   Row,
   Col,
 } from "reactstrap";
-import SiteCard from 'components/SiteCard/SiteCard';
 
-var name = 'Isabel Battaglioli'
-
-// var tempData = [
-//   { 'title': 'Instagram', 'prettyUrl': 'www.instagram.com', 'profileUrl': 'www.instagram.com/userProfile', 'userName': '@INSTAGRAM HANDLE', 'iconClass': 'fab fa-instagram' },
-//   { 'title': 'Snapchat', 'prettyUrl': 'www.snapchat.com', 'profileUrl': 'www.snapchat.com/userProfile', 'userName': '@SNAPCHAT HANDLE', 'iconClass': 'fab fa-snapchat' },
-//   { 'title': 'Facebook', 'prettyUrl': 'www.facebook.com', 'profileUrl': 'www.facebook.com/userProfile', 'userName': '@FACEBOOK HANDLE', 'iconClass': 'fab fa-facebook-square' },
-//   { 'title': 'Vine', 'prettyUrl': 'www.vine.com', 'profileUrl': 'www.vine.com/userProfile', 'userName': '@VINE HANDLE', 'iconClass': 'fab fa-vine' },
-//   { 'title': 'Pinterest', 'prettyUrl': 'www.pinterest.com', 'profileUrl': 'www.pinterest.com/userProfile', 'userName': '@PINTEREST HANDLE', 'iconClass': 'fab fa-pinterest-square' },
-//   { 'title': 'Twitter', 'prettyUrl': 'www.twitter.com', 'profileUrl': 'www.twitter.com/userProfile', 'userName': '@TWITTER HANDLE', 'iconClass': 'fab fa-twitter-square' },
-//   { 'title': 'Skype', 'prettyUrl': 'www.skype.com', 'profileUrl': 'www.skype.com/userProfile', 'userName': '@SKYPE HANDLE', 'iconClass': 'fab fa-skype' },
-//   { 'title': 'Apple', 'prettyUrl': 'www.apple.com', 'profileUrl': 'www.apple.com/userProfile', 'userName': '@APPLE HANDLE', 'iconClass': 'fab fa-apple' },
-// ];
+var name = "Isabel Battaglioli";
 
 
 
@@ -160,8 +147,17 @@ const tempData = [{
   "actionTaken": "None"
 },
 ]
+const Editor = () => {
+  const [claimedAccounts, setClaimedAccounts] = useState({});
+  const [isOpen, setIsOpen] = useState(false);
 
-function Editor() {
+  const togglePopup = (e) => {
+    if (e.target.className === "tim-icons icon-pencil icon") {
+      setIsOpen(!isOpen);
+    } else {
+      setIsOpen(false);
+    }
+  };
 
 
 const [isOpen, setIsOpen] = useState(false);
@@ -187,16 +183,40 @@ const togglePopup = (e) => {
 function handleLanguage(colorChoice){
   setColorScheme(colorChoice);
 }
+  /**
+   * If user is not logged in, redirect to login page.
+   */
+  useEffect(() => {
+   async function isLoggedIn () {
+    if (!(localStorage.getItem('user'))) {
+      window.location.href = '/#/login';
+    }
+   }
+   isLoggedIn();
+  }, []);
 
-useEffect(() => {
- async function isLoggedIn () {
-  if (!(localStorage.getItem('user'))) {
-    window.location.href = '/#/login';
-  }
- }
- isLoggedIn();
-}, []);
+  /**
+   * Monitor for new claimed accounts. Every time the accounts array is updated, re-render to show the proper tiles.
+   */
+  useEffect(() => {
+    const loadAccounts = async () => {
+      try {
+        // Load all accounts from the database into memory
+        await ThirdPartyAccount.loadAll();
+        // setPlsRender((current) => !current);
+      } catch (e) {
+        console.error("Failed to load accounts from the database!");
+        console.error(e);
+        return {};
+      }
+      return accounts;
+    };
 
+    loadAccounts().then(() => {
+      setClaimedAccounts(accounts);
+    });
+
+  }, [accounts]);
 
   return (
       
@@ -246,7 +266,7 @@ useEffect(() => {
     {/* <div className={isOpen ? `content blur ${colorScheme}` : `content ${colorScheme}`}  >{isOpen ?  <Colors onSelectLanguage={handleLanguage}/>  : null}  </div> */}
     </>
   );
-}
+};
 
 
 export default Editor;

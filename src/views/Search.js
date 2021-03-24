@@ -46,10 +46,10 @@ function SearchComponent() {
   const [resultIds, setResultsIds] = useState([]);
   const [progress, setProgress] = useState(-1);
   const [categories, setCategories] = useState(tags.slice());
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [sortMethod, setSortMethod] = useState("new");
-  const [discoveredSites, setDiscoveredSites] = useState([]);
-  const [unregisteredSites, setUnregisteredSites] = useState([]);
+  const [dropdownOpen, setDropdownOpen] = useState(false); // used for filter
+  const [sortMethod, setSortMethod] = useState("new"); // used for filter
+  const [discoveredSites, setDiscoveredSites] = useState([]); // used for filter
+  const [unregisteredSites, setUnregisteredSites] = useState([]); // used for filter
 
   let discovered = [];
   let unregistered = [];
@@ -429,13 +429,13 @@ function SearchComponent() {
                 <strong>Alphabetical Z-A</strong>
               </DropdownItem>
               <DropdownItem onClick={() => setSortMethod("confidence")}>
-              <strong>Confidence</strong>
+                <strong>Confidence (Highest to Lowest)</strong>
               </DropdownItem>
               <DropdownItem onClick={() => setSortMethod("new")}>
-              <strong>Newest</strong>
+                <strong>Newest</strong>
               </DropdownItem>
               <DropdownItem onClick={() => setSortMethod("old")}>
-              <strong>Oldest</strong>
+                <strong>Oldest</strong>
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
