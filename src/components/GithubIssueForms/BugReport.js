@@ -102,38 +102,49 @@ const BugReportForm = (props) => {
     return (
         <div className="issue-forms">
             <h1 className="title">{props.text}</h1>
+            <p className="description">Use this form to report a bug. Please be as detailed as possible to help us fix the issue quickly.</p>
             <Form>
                 <Row form>
-                    <FormGroup>
-                        <Label for="title">Title</Label><span className="asterisk">*</span>
-                        <Input type="text" name="title" id="input" onChange={(e) => onTitleChange(`${e.target.value}`)}/>
-                    </FormGroup>
+                    <Col md={12}>
+                        <FormGroup>
+                            <Label for="title">Title</Label><span className="asterisk">*</span>
+                            <Input type="text" name="title" id="input" onChange={(e) => onTitleChange(`${e.target.value}`)}/>
+                        </FormGroup>
+                    </Col>
                 </Row>
                 <Row form>
-                    <FormGroup>
-                        <Label for="problem">Please describe the bug.</Label>
-                        <span className="asterisk">*</span>
-                        <Input type="textarea" name="problem" id="input" onChange={(e) => onProblemChange(`${e.target.value}`)}/>
-                    </FormGroup>
+                    <Col md={12}>
+                        <FormGroup>
+                            <Label for="problem">Please describe the bug.</Label>
+                            <span className="asterisk">*</span>
+                            <Input type="textarea" name="problem" id="input" onChange={(e) => onProblemChange(`${e.target.value}`)}/>
+                        </FormGroup>
+                    </Col>
                 </Row>
                 <Row form>
-                    <FormGroup>
-                        <Label for="steps">Please list the steps to reproduce the behavior.</Label>
-                        <span className="asterisk">*</span>
-                        <Input type="textarea" name="steps" id="input" onChange={(e) => onStepsChange(`${e.target.value}`)}/>
-                    </FormGroup>
+                    <Col md={12}>
+                        <FormGroup>
+                            <Label for="steps">Please list the steps to reproduce the behavior.</Label>
+                            <span className="asterisk">*</span>
+                            <Input type="textarea" name="steps" id="input" onChange={(e) => onStepsChange(`${e.target.value}`)}/>
+                        </FormGroup>
+                    </Col>
                 </Row>
                 <Row form>
-                    <FormGroup>
-                        <Label for="expected">Please provide a clear and concise description of what you expected to happen.</Label>
-                        <Input type="textarea" name="expected" id="input" onChange={(e) => onExpectedChange(`${e.target.value}`)}/>
-                    </FormGroup>
+                    <Col md={12}>
+                        <FormGroup>
+                            <Label for="expected">Please provide a clear and concise description of what you expected to happen.</Label>
+                            <Input type="textarea" name="expected" id="input" onChange={(e) => onExpectedChange(`${e.target.value}`)}/>
+                        </FormGroup>
+                    </Col>
                 </Row>
                 <Row form>
-                    <FormGroup>
-                        <Label for="other">Add any other context about the feature request here.</Label>
-                        <Input type="textarea" name="other" id="input" onChange={(e) => onOtherChange(`${e.target.value}`)}/>
-                    </FormGroup>
+                    <Col md={12}>
+                        <FormGroup>
+                            <Label for="other">Add any other context about the feature request here.</Label>
+                            <Input type="textarea" name="other" id="input" onChange={(e) => onOtherChange(`${e.target.value}`)}/>
+                        </FormGroup>
+                    </Col>
                 </Row>
             </Form>
             <div className="submit-button-container">

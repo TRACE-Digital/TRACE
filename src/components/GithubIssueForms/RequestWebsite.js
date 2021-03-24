@@ -85,25 +85,33 @@ const RequestWebsiteForm = (props) => {
     return (
         <div className="issue-forms">
             <h1 className="title">{props.text}</h1>
+            <p className="description">Use this form to request support for a website in the automated search. 
+            Please make sure the site you are requesting has a public profile page. We cannot find private accounts like emails or uber.</p>
             <Form>
                 <Row form>
-                    <FormGroup>
-                        <Label for="title">Title</Label><span className="asterisk">*</span>
-                        <Input type="text" name="title" id="input" onChange={(e) => onTitleChange(`${e.target.value}`)}/>
-                    </FormGroup>
+                    <Col md={12}>
+                        <FormGroup>
+                            <Label for="title">Title</Label><span className="asterisk">*</span>
+                            <Input type="text" name="title" id="input" onChange={(e) => onTitleChange(`${e.target.value}`)}/>
+                        </FormGroup>
+                    </Col>
                 </Row>
                 <Row form>
-                    <FormGroup>
-                        <Label for="website">Please list the website(s) you would like added to our automated search algorithm.</Label>
-                        <span className="asterisk">*</span>
-                        <Input type="textarea" name="website" id="input" onChange={(e) => onWebsiteChange(`${e.target.value}`)}/>
-                    </FormGroup>
+                    <Col md={12}>
+                        <FormGroup>
+                            <Label for="website">Please list the website(s) you would like supported</Label>
+                            <span className="asterisk">*</span>
+                            <Input type="textarea" name="website" id="input" onChange={(e) => onWebsiteChange(`${e.target.value}`)}/>
+                        </FormGroup>
+                    </Col>
                 </Row>
                 <Row form>
-                    <FormGroup>
-                        <Label for="other">Add any other context about the feature request here.</Label>
-                        <Input type="textarea" name="other" id="input" onChange={(e) => onOtherChange(`${e.target.value}`)}/>
-                    </FormGroup>
+                    <Col md={12}>
+                        <FormGroup>
+                            <Label for="other">Add any other context about the feature request here</Label>
+                            <Input type="textarea" name="other" id="input" onChange={(e) => onOtherChange(`${e.target.value}`)}/>
+                        </FormGroup>
+                    </Col>
                 </Row>
             </Form>
             <div className="submit-button-container">

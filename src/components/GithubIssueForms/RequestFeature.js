@@ -93,31 +93,40 @@ const RequestFeatureForm = (props) => {
     return (
         <div className="issue-forms">
             <h1 className="title">{props.text}</h1>
+            <p className="description">Use this form to suggest a new feature for TRACE.</p>
             <Form>
                 <Row form>
-                    <FormGroup>
-                        <Label for="title">Title</Label><span className="asterisk">*</span>
-                        <Input type="text" name="title" id="input" onChange={(e) => onTitleChange(`${e.target.value}`)}/>
-                    </FormGroup>
+                    <Col md={12}>
+                        <FormGroup>
+                            <Label for="title">Title</Label><span className="asterisk">*</span>
+                            <Input type="text" name="title" id="input" onChange={(e) => onTitleChange(`${e.target.value}`)}/>
+                        </FormGroup>
+                    </Col>
                 </Row>
                 <Row form>
-                    <FormGroup>
-                        <Label for="problem">Is your feature request related to a problem? Please describe.</Label>
-                        <Input type="textarea" name="problem" id="input" onChange={(e) => onProblemChange(`${e.target.value}`)}/>
-                    </FormGroup>
+                    <Col md={12}>
+                        <FormGroup>
+                            <Label for="problem">Is your feature request related to a problem? Please describe.</Label>
+                            <Input type="textarea" name="problem" id="input" onChange={(e) => onProblemChange(`${e.target.value}`)}/>
+                        </FormGroup>
+                    </Col>
                 </Row>
                 <Row form>
-                    <FormGroup>
-                        <Label for="solution">Describe the solution you'd like.</Label>
-                        <span className="asterisk">*</span>
-                        <Input type="textarea" name="solution" id="input" onChange={(e) => onSolutionChange(`${e.target.value}`)}/>
-                    </FormGroup>
+                    <Col md={12}>
+                        <FormGroup>
+                            <Label for="solution">Describe the solution you'd like.</Label>
+                            <span className="asterisk">*</span>
+                            <Input type="textarea" name="solution" id="input" onChange={(e) => onSolutionChange(`${e.target.value}`)}/>
+                        </FormGroup>
+                    </Col>
                 </Row>
                 <Row form>
-                    <FormGroup>
-                        <Label for="other">Add any other context about the feature request here.</Label>
-                        <Input type="textarea" name="other" id="input" onChange={(e) => onOtherChange(`${e.target.value}`)}/>
-                    </FormGroup>
+                    <Col md={12}>
+                        <FormGroup>
+                            <Label for="other">Add any other context about the feature request here.</Label>
+                            <Input type="textarea" name="other" id="input" onChange={(e) => onOtherChange(`${e.target.value}`)}/>
+                        </FormGroup>
+                    </Col>
                 </Row>
             </Form>
             <div className="submit-button-container">
