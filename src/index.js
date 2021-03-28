@@ -17,7 +17,7 @@
 */
 import React from "react";
 import ReactDOM from "react-dom";
-import { Route, Switch, Redirect, Router } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 import AdminLayout from "layouts/Admin/Admin.js";
 
@@ -77,14 +77,14 @@ Amplify.configure({
 ReactDOM.render(
   <ThemeContextWrapper>
     <BackgroundColorWrapper>
-      <Router>
+      <BrowserRouter>
         <Switch>
           <Redirect exact from="/" to="/landing" />
-          <Route path="/landing" component={Landing} />
-          <Route path="/login" component={Login} />
+          <Route  path="/landing" component={Landing} />
+          <Route  path="/login" component={Login} />
           <Route path="/" render={(props) => <AdminLayout {...props} />} />
         </Switch>
-      </Router>
+      </BrowserRouter>
     </BackgroundColorWrapper>
   </ThemeContextWrapper>,
   document.getElementById("root")
