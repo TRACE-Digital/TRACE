@@ -25,15 +25,13 @@ jobs:
 
       - name: Deploy to GitHub Pages
         if: success()
-        uses: crazy-max/ghaction-github-pages@v2.2.0
+        uses: leigholiver/commit-with-deploy-key@v1.0.2
         with:
-          repo: TRACE-Digital/TRACE-build
-          target_branch: master
-          commit_message: Build and deploy from TRACE-Digital/TRACE
-          author: TRACE Bot <78513483+trace-digi-bot@users.noreply.github.com>
-          committer: TRACE Bot <78513483+trace-digi-bot@users.noreply.github.com>
-          keep_history: true
-          allow_empty_commit: false
-          build_dir: build
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          source: build
+          deploy_key: ${{ secrets.DEPLOY_KEY }}
+          destination_branch: master
+          destination_folder: .
+          destination_repo: TRACE-Digital/TRACE-build
+          delete_destination: true
+          git_username: trace-digi-bot
+          git_email: 78513483+trace-digi-bot@users.noreply.github.com
