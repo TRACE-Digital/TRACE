@@ -3,6 +3,7 @@ import { Auth } from 'aws-amplify';
 
 // reactstrap components
 import { Alert, Card, CardImg, CardBody, CardTitle, Button, Form, FormGroup, Input } from 'reactstrap';
+import { Link } from "react-router-dom";
 
 async function signUp(username, email, password) {
   try {
@@ -47,15 +48,19 @@ async function signIn(username, password) {
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLogin, setisLogin] = useState(true);
   const [error, setError] = useState(null);
+
+  const isLogin = window.location.href.includes('login');
 
   return (
     <div className="login">
       <Card style={{width: '30rem'}}>
           <CardImg top src={require("assets/img/header.jpg").default} alt="trace logo"/>
           <CardBody>
-              <CardTitle className='welcome'>Welcome to TRACE</CardTitle>
+              <CardTitle className='welcome'>
+                {isLogin ? 'Sign in' : 'Welcome to TRACE!'}
+              </CardTitle>
+
               {error && <Alert color="danger">{error}</Alert>}
               <Form id='sign-up-form'  onSubmit={async (e) => {
                 e.preventDefault();
@@ -90,8 +95,12 @@ function Login() {
               </Form>
               <Button color="primary" block type="submit" form='sign-up-form' >{isLogin ? "Log In" : "Sign Up"}</Button>
               <br/>
-              <a block href="#account" onClick={() => {setisLogin(!isLogin)}}>{isLogin ? "Don't have an account? Sign Up" : "Already have an account? Log In"}</a>
-
+              <Link
+                color="primary"
+                to={isLogin ? "/signup" : "/login"}
+              >
+                {isLogin ? "Don't have an account? Sign Up" : "Already have an account? Log In"}
+              </Link>
           </CardBody>
       </Card>
   </div>

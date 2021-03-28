@@ -82,6 +82,7 @@ ReactDOM.render(
           <Redirect exact from="/" to="/landing" />
           <Route  path="/landing" component={Landing} />
           <Route  path="/login" component={Login} />
+          <Route  path="/signup" component={Login} />
           <Route path="/" render={(props) => <AdminLayout {...props} />} />
         </Switch>
       </BrowserRouter>
