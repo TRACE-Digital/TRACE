@@ -48,6 +48,7 @@ async function signIn(username, password) {
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
 
   const isLogin = window.location.href.includes('login');
@@ -68,7 +69,11 @@ function Login() {
                 if (isLogin) {
                   localError = await signIn(email, password);
                 } else {
-                  localError = await signUp(email, email, password)
+                  if (password === confirmPassword) {
+                    localError = await signUp(email, email, password);
+                  } else {
+                    localError = 'Passwords do not match!';
+                  }
                 }
                 setError(localError);
 
@@ -92,8 +97,22 @@ function Login() {
                     onChange={e => setPassword(e.target.value)}
                   />
                 </FormGroup>
+                {isLogin ? <div></div> :
+                  <FormGroup>
+                    <Input
+                      placeholder="Confirm password"
+                      type="password"
+                      value={confirmPassword}
+                      onChange={e => setConfirmPassword(e.target.value)}
+                    />
+                  </FormGroup>
+                }
               </Form>
-              <Button color="primary" block type="submit" form='sign-up-form' >{isLogin ? "Log In" : "Sign Up"}</Button>
+
+              <Button color="primary" block type="submit" form='sign-up-form' >
+                {isLogin ? "Log In" : "Sign Up"}
+              </Button>
+
               <br/>
               <Link
                 color="primary"
