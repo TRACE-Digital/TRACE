@@ -23,7 +23,7 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Deploy to TRACE-Digital/TRACE-Build
+      - name: Deploy to TRACE-Digital/TRACE-build
         if: success()
         uses: leigholiver/commit-with-deploy-key@v1.0.2
         with:
