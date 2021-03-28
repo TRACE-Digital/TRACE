@@ -68,7 +68,7 @@ function Login() {
                 setError(localError);
 
                 if (!localError) {
-                  window.location.href = '/admin/dashboard';
+                  window.location.href = '/dashboard';
                 }
               }}>
               <FormGroup>

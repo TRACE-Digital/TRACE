@@ -66,7 +66,7 @@ function Dashboard(props) {
           <Link
             className="btn btn-primary add-site-button"
             color="primary"
-            to="/admin/search"
+            to="/search"
           >
             Add New Site
           </Link>
