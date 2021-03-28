@@ -23,13 +23,13 @@ async function signUp(username, email, password) {
 }
 
 // Use this to verify email eventually
-async function confirmSignUp(username, code) {
-    try {
-      await Auth.confirmSignUp(username, code);
-    } catch (error) {
-        console.log('error confirming sign up', error);
-    }
-}
+// async function confirmSignUp(username, code) {
+//     try {
+//       await Auth.confirmSignUp(username, code);
+//     } catch (error) {
+//         console.log('error confirming sign up', error);
+//     }
+// }
 
 async function signIn(username, password) {
     try {
@@ -90,7 +90,7 @@ function Login() {
               </Form>
               <Button color="primary" block type="submit" form='sign-up-form' >{isLogin ? "Log In" : "Sign Up"}</Button>
               <br/>
-              <a block href="javascript:void(0)" onClick={() => {setisLogin(!isLogin)}}>{isLogin ? "Don't have an account? Sign Up" : "Already have an account? Log In"}</a>
+              <a block href="#account" onClick={() => {setisLogin(!isLogin)}}>{isLogin ? "Don't have an account? Sign Up" : "Already have an account? Log In"}</a>
 
           </CardBody>
       </Card>
