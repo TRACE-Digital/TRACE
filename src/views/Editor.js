@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Colors from "views/Colors.js";
-import { Auth } from 'aws-amplify';
 
 // reactstrap components
 import {

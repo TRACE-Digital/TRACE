@@ -1,25 +1,6 @@
-import { Auth } from 'aws-amplify';
-
-
 // reactstrap components
 import { Button } from 'reactstrap';
 import { NavLink } from "react-router-dom";
-
-async function signUp(email, username, password) {
-  try {
-      const { user } = await Auth.signUp({
-          username,
-          password,
-          attributes: {
-              email,          // optional
-              // other custom attributes
-          }
-      });
-      console.log(user);
-  } catch (error) {
-      console.log('error signing up:', error);
-  }
-}
 
 function Landing() {
 
