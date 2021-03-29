@@ -23,7 +23,7 @@ import {
   Col,
 } from "reactstrap";
 
-import Charlene from '../assets/img/BabyPics/Charlene.jpeg';
+import Charlene from '../assets/img/BabyPics/Charlene.png';
 import Chris from '../assets/img/BabyPics/Chris.jpg';
 import Cora from '../assets/img/BabyPics/Cora.JPG';
 import Isabel from '../assets/img/BabyPics/Isabel.png';
