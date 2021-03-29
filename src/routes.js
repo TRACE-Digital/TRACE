@@ -62,6 +62,14 @@ var routes = [
     icon: "tim-icons icon-send",
     component: Contact,
     layout: "",
+  },
+  {
+    path: "/about",
+    name: "About Us",
+    rtlName: "ملف تعريفي للمستخدم",
+    icon: "tim-icons icon-single-02",
+    component: UserProfile,
+    layout: "",
   }
 
 ];
