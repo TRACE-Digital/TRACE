@@ -52,11 +52,11 @@ async function signOut() {
     console.log('after');
     console.log(await Auth.currentAuthenticatedUser());
     localStorage.removeItem('user');
-    window.location.href = '/#/login';
+    window.location.href = '/login';
     } catch (error) {
       console.log('error signing out: ', error);
       localStorage.removeItem('user');
-      window.location.href = '/#/login';
+      window.location.href = '/login';
     }
 }
 

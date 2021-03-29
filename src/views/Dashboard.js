@@ -22,7 +22,6 @@ import Popup from '../components/AddSitePopup/AddSitePopup';
 
 // reactstrap components
 import {
-  Button,
   Card,
   CardBody,
   DropdownToggle,
@@ -39,19 +38,15 @@ import PrivacyBadge from "../components/PrivacyBadge/PrivacyBadge";
 import { Link } from "react-router-dom";
 
 function Dashboard(props) {
-  const [plsRender, setPlsRender] = React.useState(false);
-  const [bigChartData, setbigChartData] = React.useState("data1");
-  const setBgChartData = (name) => {
-    setbigChartData(name);
-  };
   const [showPopup, togglePopup] = React.useState(false);
 
   const handleAddClick = () => {
     togglePopup(!showPopup);
   }
+  const [, setPlsRender] = React.useState(false);
 
   useEffect(() => {
-    async function loadAccounts() {
+    const loadAccounts = async () => {
       try {
         // Load all accounts from the database into memory
         await ThirdPartyAccount.loadAll();
