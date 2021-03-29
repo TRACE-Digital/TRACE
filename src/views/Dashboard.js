@@ -15,77 +15,145 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useState } from "react";
+import React from "react";
 // nodejs library that concatenates classes
 
+import Popup from '../components/AddSitePopup/AddSitePopup';  
+
 // reactstrap components
-import { Row } from "reactstrap";
+import {
+  Card,
+  CardBody,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  UncontrolledDropdown,
+  Row,
+  Col,
+} from "reactstrap";
 
 import { ThirdPartyAccount, accounts, AccountType } from "trace-search";
 import { useEffect } from "react";
 import PrivacyBadge from "../components/PrivacyBadge/PrivacyBadge";
 import { Link } from "react-router-dom";
-import SiteCard from "components/SiteCard/SiteCard";
-import {Col } from "reactstrap";
 
-const Dashboard = (props) => {
-  const [bigChartData, setbigChartData] = useState("data1");
+function Dashboard(props) {
+  const [showPopup, togglePopup] = React.useState(false);
 
-  const [claimedAccounts, setClaimedAccounts] = useState({});
+  const handleAddClick = () => {
+    togglePopup(!showPopup);
+  }
+  const [, setPlsRender] = React.useState(false);
 
-  const setBgChartData = (name) => {
-    setbigChartData(name);
-  };
-
-  /**
-   * Monitor for new claimed accounts. Every time the accounts array is updated, re-render to show the proper tiles.
-   */
   useEffect(() => {
     const loadAccounts = async () => {
       try {
         // Load all accounts from the database into memory
         await ThirdPartyAccount.loadAll();
+        setPlsRender((current) => !current);
       } catch (e) {
         console.error("Failed to load accounts from the database!");
         console.error(e);
-        return {};
       }
-      return accounts;
-    };
+      console.log(accounts);
+    }
 
-    loadAccounts().then(() => {
-      setClaimedAccounts(accounts);
-    });
-
-    console.log(accounts)
-  }, [accounts]);
-
+    loadAccounts();
+  }, []);
 
   return (
-    <div className="content">
-      <div className="header">
-        <h3 className="header-title">Claimed Accounts</h3>
+    <>
+      <div className={showPopup ? "content blur" : "content"}>
+        <div className="header">
+          <h3 className="header-title">Claimed Accounts</h3>
+          {/* {Object.values(accounts).map(account => {
+            return <div key={account.id}>{account.site.name} - {account.userName}</div>
+          })} */}
 
-        <Link
-          className="btn btn-primary add-site-button"
-          color="primary"
-          to="/admin/search"
-        >
-          Add New Site
-        </Link>
+          <Link
+            className="btn btn-primary add-site-button"
+            color="primary"
+            onClick={handleAddClick}
+          >
+            Add New Site
+          </Link>
+        </div>
+
+        <hr></hr>
+
+        <Row>
+          {Object.values(accounts)
+            .filter((account) => account.type === AccountType.CLAIMED)
+            .map((account) => (
+              <Col lg="3" key={account.id}>
+                <Card className="card-user">
+                  <CardBody>
+                    <div>
+                      <div className="dashboard-parent">
+                        <div className="badge">
+                          <PrivacyBadge
+                            service={account.site.name}
+                          ></PrivacyBadge>
+                        </div>
+                        <div>
+                          <UncontrolledDropdown>
+                            <DropdownToggle
+                              caret
+                              className="btn-icon dot"
+                              color="link"
+                              type="button"
+                            >
+                              <i className="fas fa-ellipsis-h"></i>
+                            </DropdownToggle>
+                            <DropdownMenu className="dropdown-menu-right">
+                              <DropdownItem onClick={(e) => e.preventDefault()}>
+                                REMOVE
+                              </DropdownItem>
+                              <DropdownItem onClick={(e) => e.preventDefault()}>
+                                EDIT
+                              </DropdownItem>
+                            </DropdownMenu>
+                          </UncontrolledDropdown>
+                        </div>
+                      </div>
+                      <div className="editor">
+                        {" "}
+                        <i
+                          className={
+                            account.site.logoClass !== "fa-question-circle"
+                              ? "fab " + account.site.logoClass
+                              : "fas " + account.site.logoClass
+                          }
+                        ></i>
+                      </div>
+                      <div className="editor-handle-name">
+                        @{account.userName}
+                      </div>
+                      <div className="editor-link">
+                        <a href={account.url} target="blank">
+                          {account.site.prettyUrl ||
+                            account.site.urlMain ||
+                            account.site.url}
+                        </a>
+                      </div>
+                    </div>
+                  </CardBody>
+                </Card>
+              </Col>
+            ))}
+        </Row>
       </div>
-
-      <hr></hr>
-
-      <Row>
-        {Object.values(claimedAccounts).map((acc) => (
-          <Col lg="3" key={acc.id}>
-          <SiteCard account={acc} page="dashboard" />
-          </Col>
-        ))}
-      </Row>
-    </div>
+      <div className="content">
+        {showPopup ?  
+                <Popup
+                          text='Create New Site'  
+                          closePopup={handleAddClick}  
+                />  
+                : null  
+        }
+      </div>
+    </>
   );
-};
+}
 
 export default Dashboard;

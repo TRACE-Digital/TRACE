@@ -21,8 +21,6 @@ import {
 
 var name = "Isabel Battaglioli";
 
-
-
 const Editor = () => {
   const [claimedAccounts, setClaimedAccounts] = useState({});
   const [isOpen, setIsOpen] = useState(false);
@@ -31,7 +29,7 @@ const Editor = () => {
     "backgroundColor":"#1E1D2A",
     "siteColor":"#26283A",
     "iconColor":"Default"
-}])
+  }])
 
   const [heightSize, setHeightSize] = useState("");
 
@@ -58,16 +56,13 @@ const Editor = () => {
     console.log(colorScheme[0]);
   }
 
-  /**
-   * If user is not logged in, redirect to login page.
-   */
   useEffect(() => {
-   async function isLoggedIn () {
-    if (!(localStorage.getItem('user'))) {
-      window.location.href = '/#/login';
+    async function isLoggedIn () {
+      if (!(localStorage.getItem('user'))) {
+        window.location.href = '/login';
+      }
     }
-   }
-   isLoggedIn();
+    isLoggedIn();
   }, []);
 
   /**

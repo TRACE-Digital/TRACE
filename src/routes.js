@@ -29,7 +29,7 @@ var routes = [
     rtlName: "لوحة القيادة",
     icon: "tim-icons icon-laptop",
     component: Dashboard,
-    layout: "/admin",
+    layout: "",
   },
   {
     path: "/search",
@@ -37,7 +37,7 @@ var routes = [
     rtlName: "لوحة القيادة",
     icon: "tim-icons icon-zoom-split",
     component: Search,
-    layout: "/admin",
+    layout: "",
   },
   {
     path: "/analytics",
@@ -45,15 +45,7 @@ var routes = [
     rtlName: "إخطارات",
     icon: "tim-icons icon-chart-bar-32",
     component: Analytics,
-    layout: "/admin",
-  },
-  {
-    path: "/user-profile",
-    name: "Profile",
-    rtlName: "ملف تعريفي للمستخدم",
-    icon: "tim-icons icon-single-02",
-    component: UserProfile,
-    layout: "/admin",
+    layout: "",
   },
   {
     path: "/profile-editor",
@@ -61,7 +53,7 @@ var routes = [
     rtlName: "ملف تعريفي للمستخدم",
     icon: "tim-icons icon-pencil",
     component: Editor,
-    layout: "/admin",
+    layout: "",
   },
   {
     path: "/contact",
@@ -69,7 +61,7 @@ var routes = [
     rtlName: "ملف تعريفي للمستخدم",
     icon: "tim-icons icon-send",
     component: Contact,
-    layout: "/admin",
+    layout: "",
   }
 
 ];
