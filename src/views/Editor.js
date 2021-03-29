@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Colors from "views/Colors.js";
-import { Auth } from 'aws-amplify';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Auth } from "aws-amplify";
 import { ThirdPartyAccount, accounts, AccountType } from "trace-search";
 import SiteCard from "components/SiteCard/SiteCard";
+import {
+  GridContextProvider,
+  GridDropZone,
+  GridItem,
+  swap
+} from "react-grid-dnd";
 
 // reactstrap components
 import {
@@ -18,171 +23,41 @@ var name = "Isabel Battaglioli";
 
 
 
-const tempData = [{
-  "rev": "1-d3d7cff6aa0db9bc04e98d43429f17f4",
-  "createdAt": "2021-03-20T19:28:46.094Z",
-  "site": {
-      "errorMsg": "The specified profile could not be found",
-      "errorType": "message",
-      "url": "https://steamcommunity.com/id/{}",
-      "urlMain": "https://steamcommunity.com/",
-      "username_claimed": "blue",
-      "username_unclaimed": "noonewouldeverusethis7",
-      "logoClass": "fa-steam",
-      "tags": [
-          "Gaming"
-      ],
-      "name": "Steam",
-      "prettyUrl": "steamcommunity.com"
-  },
-  "userName": "test",
-  "id": "searchDef/2021-03-20T19:28:40.413Z/Search #1/search/2021-03-20T19:28:40.528Z/searchResult/account/Steam/test",
-  "type": "Discovered",
-  "matchedFirstNames": [],
-  "matchedLastNames": [],
-  "actionTaken": "None"
-},
-{
-  "rev": "1-c2116aa47305b8918ec32c2e4a00477e",
-  "createdAt": "2021-03-20T19:31:49.499Z",
-  "site": {
-      "errorType": "status_code",
-      "regexCheck": "^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$",
-      "url": "https://www.github.com/{}",
-      "urlMain": "https://www.github.com/",
-      "username_claimed": "blue",
-      "username_unclaimed": "noonewouldeverusethis7",
-      "logoClass": "fa-github",
-      "tags": [
-          "Developers"
-      ],
-      "name": "GitHub",
-      "prettyUrl": "www.github.com"
-  },
-  "userName": "isabel",
-  "id": "searchDef/2021-03-20T19:31:48.549Z/Search #1/search/2021-03-20T19:31:48.671Z/searchResult/account/GitHub/isabel",
-  "type": "Discovered",
-  "matchedFirstNames": [
-      "isabel"
-  ],
-  "matchedLastNames": [],
-  "actionTaken": "None"
-},
-{
-  "rev": "1-c2116aa47305b8918ec32c2e4a00477e",
-  "createdAt": "2021-03-20T19:31:49.499Z",
-  "site": {
-      "errorType": "status_code",
-      "regexCheck": "^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$",
-      "url": "https://www.github.com/{}",
-      "urlMain": "https://www.github.com/",
-      "username_claimed": "blue",
-      "username_unclaimed": "noonewouldeverusethis7",
-      "logoClass": "fa-apple",
-      "tags": [
-          "Developers"
-      ],
-      "name": "Apple",
-      "prettyUrl": "www.apple.com"
-  },
-  "userName": "isabel",
-  "id": "searchDef/2021-03-20T19:31:48.549Z/Search #1/search/2021-03-20T19:31:48.671Z/searchResult/account/GitHub/isabel",
-  "type": "Discovered",
-  "matchedFirstNames": [
-      "isabel"
-  ],
-  "matchedLastNames": [],
-  "actionTaken": "None"
-},
-{
-  "rev": "1-c2116aa47305b8918ec32c2e4a00477e",
-  "createdAt": "2021-03-20T19:31:49.499Z",
-  "site": {
-      "errorType": "status_code",
-      "regexCheck": "^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$",
-      "url": "https://www.github.com/{}",
-      "urlMain": "https://www.github.com/",
-      "username_claimed": "blue",
-      "username_unclaimed": "noonewouldeverusethis7",
-      "logoClass": "fa-reddit",
-      "tags": [
-          "Developers"
-      ],
-      "name": "Reddit",
-      "prettyUrl": "www.reddit.com"
-  },
-  "userName": "isabel",
-  "id": "searchDef/2021-03-20T19:31:48.549Z/Search #1/search/2021-03-20T19:31:48.671Z/searchResult/account/GitHub/isabel",
-  "type": "Discovered",
-  "matchedFirstNames": [
-      "isabel"
-  ],
-  "matchedLastNames": [],
-  "actionTaken": "None"
-},
-{
-  "rev": "1-c2116aa47305b8918ec32c2e4a00477e",
-  "createdAt": "2021-03-20T19:31:49.499Z",
-  "site": {
-      "errorType": "status_code",
-      "regexCheck": "^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$",
-      "url": "https://www.github.com/{}",
-      "urlMain": "https://www.github.com/",
-      "username_claimed": "blue",
-      "username_unclaimed": "noonewouldeverusethis7",
-      "logoClass": "fa-instagram",
-      "tags": [
-          "Developers"
-      ],
-      "name": "Instagram",
-      "prettyUrl": "www.instagram.com"
-  },
-  "userName": "isabel",
-  "id": "searchDef/2021-03-20T19:31:48.549Z/Search #1/search/2021-03-20T19:31:48.671Z/searchResult/account/GitHub/isabel",
-  "type": "Discovered",
-  "matchedFirstNames": [
-      "isabel"
-  ],
-  "matchedLastNames": [],
-  "actionTaken": "None"
-},
-]
 const Editor = () => {
   const [claimedAccounts, setClaimedAccounts] = useState({});
   const [isOpen, setIsOpen] = useState(false);
+  const [colorScheme, setColorScheme] = useState([{
+    "titleColor":"#FFFFFF",
+    "backgroundColor":"#1E1D2A",
+    "siteColor":"#26283A",
+    "iconColor":"Default"
+}])
+
+  const [heightSize, setHeightSize] = useState("");
 
   const togglePopup = (e) => {
-    if (e.target.className === "tim-icons icon-pencil icon") {
+    if (e.target.className === "tim-icons icon-pencil icon"){
       setIsOpen(!isOpen);
-    } else {
-      setIsOpen(false);
     }
-  };
-
-
-const [isOpen, setIsOpen] = useState(false);
-const [characters, updateCharacters] = useState(tempData);
-const [colorScheme, setColorScheme] = useState("Default");
-
-function handleOnDragEnd(result) {
-  if (!result.destination) return;
-  console.log(characters)
-  const items = Array.from(characters);
-  const [reorderedItem] = items.splice(result.source.index, 1);
-  items.splice(result.destination.index, 0, reorderedItem);
-  updateCharacters(items);
-}
-
-const togglePopup = (e) => {
-  if (e.target.className === "tim-icons icon-pencil icon"){
-    setIsOpen(!isOpen);
   }
 
-}
+  function onChange(sourceId, sourceIndex, targetIndex, targetId) {
+    const items = Array.from(Object.values(claimedAccounts));
+    console.log(items);
+    const nextState = swap(items, sourceIndex, targetIndex);
+    setClaimedAccounts(nextState);
+  }
 
-function handleLanguage(colorChoice){
-  setColorScheme(colorChoice);
-}
+  function handleLanguage(colorChoice){
+    const updated = [...colorChoice];
+    setColorScheme([...updated]);
+    console.log(colorScheme[0].titleColor);
+    console.log(colorScheme[0].siteColor);
+    console.log(colorScheme[0].backgroundColor);
+    console.log(colorScheme[0].iconColor);
+    console.log(colorScheme[0]);
+  }
+
   /**
    * If user is not logged in, redirect to login page.
    */
@@ -214,6 +89,7 @@ function handleLanguage(colorChoice){
 
     loadAccounts().then(() => {
       setClaimedAccounts(accounts);
+      setHeightSize(Array.from(Object.values(accounts)).length);
     });
 
   }, [accounts]);
@@ -222,51 +98,36 @@ function handleLanguage(colorChoice){
       
     <>
     {isOpen ?  <Colors onSelectLanguage={handleLanguage}/>  : null}
-    <div onClick={togglePopup} className={isOpen ? `content blur ${colorScheme}` : `content ${colorScheme}`}>
-      <div className={`editor-background ${colorScheme}`}>
+      <div onClick={togglePopup} className={isOpen ? `content blur` : `content`}>
+        <div className={`editor-background`} style={{ backgroundColor: `${colorScheme[0].backgroundColor}` }}>
 
-      <div className={`editor-title ${colorScheme}`}>
-        {name}<i className="tim-icons icon-pencil icon"></i>
+        <div className={"editor-title"} style={{ color: `${colorScheme[0].titleColor}` }}>
+          {name}<i className="tim-icons icon-pencil icon"></i>
+        </div>
+          <GridContextProvider onChange={onChange}>
+            <GridDropZone
+              id="items"
+              boxesPerRow={4}
+              rowHeight={330}
+              style={{ height: `${(heightSize/4) * 330}px`}} 
+            > 
+              {Object.values(claimedAccounts).map(item => (
+                <GridItem className="boxes" key={item.id}> 
+                  <div
+                    style={{
+                    width: "100%",
+                    height: "100%",
+                    }}>
+                      {<SiteCard  editorColor={colorScheme[0].siteColor} account={item} page="editor"/>}
+                  </div>
+              </GridItem>
+              ))}
+            </GridDropZone>
+          </GridContextProvider>
+        </div>
       </div>
-
-      <DragDropContext onDragEnd={handleOnDragEnd}>
-  
-        <Droppable droppableId="characters">
-          {(provided) => (
-
-          <ul {...provided.droppableProps} ref={provided.innerRef} className ="editor-blocks">
-              <Row>
-              {characters.map((item, index) => {
-                  
-                  return (
-                    <Col lg="3">
-                    <Draggable key={item.site.name} draggableId={item.site.name} index={index}>
-                      {(provided) => (
-                        <li className = "idk" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                            {<SiteCard account={item} page="editor"/>}
-                        </li>
-                      )}
-                    </Draggable>
-                    </Col>
-                  );
-                  
-                })}
-                
-                {provided.placeholder}
-                </Row>
-          </ul>
-  
-          )}
-        </Droppable>
-      
-      </DragDropContext>
-
-      </div>
-    </div>
-    {/* <div className={isOpen ? `content blur ${colorScheme}` : `content ${colorScheme}`}  >{isOpen ?  <Colors onSelectLanguage={handleLanguage}/>  : null}  </div> */}
     </>
   );
 };
-
 
 export default Editor;

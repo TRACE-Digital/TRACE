@@ -20,12 +20,15 @@ const SiteCard = (props) => {
   const search = props.page === "search";
   const dashboard = props.page === "dashboard";
   const editor = props.page === "editor";
+  const colors = props.color;
+  const editorColor = props.editorColor;
 
   if (!search && !dashboard && !editor) {
     console.warn(
       'WARNING - invalid type passed to SiteCard component. Needs to be "search", "dashboard", or "editor"'
     );
   }
+  console.log(colors);
 
   let firstNames = "";
   let lastNames = "";
@@ -75,7 +78,8 @@ const SiteCard = (props) => {
         flipSpeedFrontToBack="1"
       >
         {/* FRONT OF CARD */}
-        <Card className="card-user">
+        <Card className = {props.page == "editor" ? `card-user ${colors}` : "card-user" } style={props.page == "editor" ? { backgroundColor: `${editorColor}` } : null}>
+        {/* <Card className="card-user"> */}
           <CardBody className="card-body">
             {/* ICON */}
             <div className="editor">

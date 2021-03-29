@@ -26,6 +26,7 @@ import { useEffect } from "react";
 import PrivacyBadge from "../components/PrivacyBadge/PrivacyBadge";
 import { Link } from "react-router-dom";
 import SiteCard from "components/SiteCard/SiteCard";
+import {Col } from "reactstrap";
 
 const Dashboard = (props) => {
   const [bigChartData, setbigChartData] = useState("data1");
@@ -78,7 +79,9 @@ const Dashboard = (props) => {
 
       <Row>
         {Object.values(claimedAccounts).map((acc) => (
+          <Col lg="3" key={acc.id}>
           <SiteCard account={acc} page="dashboard" />
+          </Col>
         ))}
       </Row>
     </div>

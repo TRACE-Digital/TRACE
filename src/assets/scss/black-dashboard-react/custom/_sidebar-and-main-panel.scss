@@ -482,6 +482,22 @@
     transform: translate(-50%, -50%);
     background-color:whitesmoke;
 
+    .colors{
+      margin-bottom:25px;
+      .color-div{
+        text-align:center;
+        .popup-titles{
+          color:black;
+          margin:10px;
+        }
+
+        .chrome-picker {
+          text-align:center;
+          margin:auto;
+        }
+      }
+    }
+    
     >.title{
       font-size:40px;
       color:black;
@@ -516,14 +532,6 @@
 
     &.blur{
       opacity: .3 !important;
-
-      &.Default{
-        //background-color:	#1E1D2A !important;
-      }
-    }
-
-    &.Default{
-      //background-color: red !important;
     }
 
     &.landing{
@@ -540,8 +548,6 @@
       }
     }
 
-    
-
     >.drag-wrapper{
       padding: 30px;
       background: #ccc;
@@ -550,24 +556,17 @@
     }
 
     >.editor-background{
-      
-      outline: white solid;
+      border: white solid;
       min-height:calc(95vh - 70px);
+      border-radius: 15px;
+      overflow-y: scroll;
+      max-height:calc(95vh - 70px);
+      padding:10px;
+      
 
-      &.Default{
-        background-color:	#1E1D2A !important;
-      }
-
-      &.Pink{
-        background-color:	#6D1C37 !important;
-      }
-
-      &.Purple{
-        background-color:	#9995B9 !important;
-      }
-
-      &.Blue{
-        background-color:	#204D8C !important;
+      .boxes{
+        padding-left:7px;
+        padding-right:7px
       }
 
       > .editor-title {
@@ -577,22 +576,6 @@
         font-size: 50px;
         margin-top:10px;
         margin-bottom:10px;
-
-        &.Default{
-          color:#FFFFFF !important;
-        }
-  
-        &.Pink{
-          color:#EB8B8D !important;
-        }
-  
-        &.Purple{
-          color:#D4F7F6 !important;
-        }
-  
-        &.Blue{
-          color:#EACAB2 !important;
-        }
   
         .icon{
           font-size: 25px !important;
@@ -608,8 +591,6 @@
         }
       }
     }
-
-
 
     > .search-title{
       color:$white;
