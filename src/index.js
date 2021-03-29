@@ -32,7 +32,6 @@ import Login from "views/Login.js";
 import ThemeContextWrapper from "./components/ThemeWrapper/ThemeWrapper";
 import BackgroundColorWrapper from "./components/BackgroundColorWrapper/BackgroundColorWrapper";
 
-
 import Amplify from 'aws-amplify';
 
 Amplify.configure({

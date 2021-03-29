@@ -29,6 +29,7 @@ import routes from "routes.js";
 
 import logo from "assets/img/fingerprint.svg";
 import { BackgroundColorContext } from "contexts/BackgroundColorContext";
+import NotFound from "components/NotFound";
 
 var ps;
 
@@ -98,7 +99,7 @@ function Admin(props) {
         return routes[i].name;
       }
     }
-    return "Brand";
+    return "";
   };
   return (
     <BackgroundColorContext.Consumer>
@@ -122,6 +123,7 @@ function Admin(props) {
               />
               <Switch>
                 {getRoutes(routes)}
+                <Route component={NotFound} />
                 {/* <Redirect from="*" to="/landing" /> */}
               </Switch>
             </div>
