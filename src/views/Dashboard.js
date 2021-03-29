@@ -31,10 +31,18 @@ import {
   Col,
 } from "reactstrap";
 
+import { Auth } from 'aws-amplify';
 import { ThirdPartyAccount, accounts, AccountType } from "trace-search";
 import { useEffect } from "react";
 import PrivacyBadge from "../components/PrivacyBadge/PrivacyBadge";
 import { Link } from "react-router-dom";
+
+async function sayHello() {
+  // alert('heloooooooo');
+  console.log('this should be logged out');
+  const user = await Auth.currentUserPoolUser();
+  console.log(user);
+}
 
 function Dashboard(props) {
   const [plsRender, setPlsRender] = React.useState(false);

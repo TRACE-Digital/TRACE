@@ -6,15 +6,13 @@ import { Alert, Card, CardImg, CardBody, CardTitle, Button, Form, FormGroup, Inp
 
 async function signUp(username, email, password) {
   try {
-      const { user } = await Auth.signUp({
+      await Auth.signUp({
           username,
           password,
           attributes: {
               email,
           }
       });
-      console.log(user);
-      localStorage.setItem('user', user);
       return null;
   } catch (error) {
       console.log('error signing up:', error);
@@ -33,14 +31,12 @@ async function confirmSignUp(username, code) {
 
 async function signIn(username, password) {
     try {
-        const user = await Auth.signIn(username, password);
-        console.log(user)
-        localStorage.setItem('user', user);
+        await Auth.signIn(username, password);
         return null;
     } catch (error) {
       Auth.error = error;
-        console.log('error signing in', error.message);
-        return error.message;
+      console.log('error signing in', error.message);
+      return error.message;
     }
 }
 

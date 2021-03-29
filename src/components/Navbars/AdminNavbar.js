@@ -40,23 +40,33 @@ import {
 } from "reactstrap";
 import ToggleButton from 'react-toggle-button';
 import { Link } from "react-router-dom";
+// import { Auth } from 'aws-amplify';
+import Auth from "@aws-amplify/auth";
 
-import { Auth } from 'aws-amplify';
+Auth.currentAuthenticatedUser({
+  bypassCache: false  // Optional, By default is false. If set to true, this call will send a request to Cognito to get the latest user data
+}).then(user => console.log(user))
+.catch(err => console.log(err));
 
 async function signOut() {
   console.log('before')
-  console.log(await Auth.currentAuthenticatedUser())
+  const user = await Auth.currentUserPoolUser();
   try {
-    const currentUser = Auth.userPool.getCurrentUser();
-    await currentUser.signOut();
+    const user = await Auth.currentUserPoolUser();
+
+    // const status = await Auth.signOutCognitoSession();
+    const status = await Auth.signOut();
+    console.log(status);
+    user = await Auth.currentUserPoolUser();
+    console.log(user);
     console.log('after');
-    console.log(await Auth.currentAuthenticatedUser());
-    localStorage.removeItem('user');
-    window.location.href = '/#/login';
+    // console.log(await Auth.currentAuthenticatedUser());
+    // localStorage.removeItem('user');
+    // window.location.href = '/#/login';
     } catch (error) {
       console.log('error signing out: ', error);
-      localStorage.removeItem('user');
-      window.location.href = '/#/login';
+      // localStorage.removeItem('user');
+      // window.location.href = '/#/login';
     }
 }
 
@@ -64,7 +74,7 @@ function AdminNavbar(props) {
   const [collapseOpen, setcollapseOpen] = React.useState(false);
   const [modalSearch, setmodalSearch] = React.useState(false);
   const [color, setcolor] = React.useState("navbar-transparent");
-  const [isLoggedIn, setIsLoggedIn] = React.useState((localStorage.getItem('user')));
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [replicate, setReplicate] = React.useState(false);
 
   // Setup replication
@@ -104,6 +114,15 @@ function AdminNavbar(props) {
     return function cleanup() {
       window.removeEventListener("resize", updateColor);
     };
+  });
+
+  React.useEffect(() => {
+    (async () => {
+      const user = await Auth.currentUserPoolUser();
+      console.log(user);
+      setIsLoggedIn(user ? true : false);
+    })();
+
   });
   // function that adds color white/transparent to the navbar on resize (this is for the collapse)
   const updateColor = () => {
@@ -207,6 +226,7 @@ function AdminNavbar(props) {
                   <NavLink onClick={() => {
                     signOut();
                     setIsLoggedIn(!isLoggedIn);
+                    window.location.href = "/#/landing";
                     }} tag="li">)
                     <DropdownItem className="nav-item">Log Out</DropdownItem>
                   </NavLink>}
