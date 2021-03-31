@@ -97,10 +97,9 @@ function SearchComponent() {
   }
 
   function keyPress(e) {
-    console.log("testing!");
-    if (e.keyCode === 13) {
+    if (e.keyCode === 32) {
       if (!userNames.includes(e.target.value) && e.target.value !== "") {
-        userNames.push(e.target.value);
+        userNames.push(e.target.value.trim());
         setUserNames([...userNames]);
         setKeywordsEntered(false);
       }
@@ -108,6 +107,8 @@ function SearchComponent() {
     } else if (e.keyCode === 8 && e.target.value === "") {
       userNames.splice(userNames.length - 1, 1);
       setUserNames([...userNames]);
+    } else if (e.keyCode === 13) {
+      submitSearch(e);
     }
   }
 
@@ -254,12 +255,16 @@ function SearchComponent() {
   return (
     // TITLE AND SEARCH BAR
     <div className="content">
+    {resultIds.length == 0 && (
+      <>
       <div className="search-title">TRACE</div>
       <div className="search-info">
         Find your digital footprint. Manage your online presence. Our service
         allows you to increase your social media engagement while keeping your
         privacy a priority. Sync your information or work locally.
       </div>
+      </>
+    )}
 
       <div className="one">
         <div className="three">
@@ -440,6 +445,26 @@ function SearchComponent() {
             </DropdownMenu>
           </Dropdown>
           <hr></hr>
+          <Dropdown isOpen={dropdownOpen} toggle={toggleDropDown}>
+            <DropdownToggle caret>Select All</DropdownToggle>
+            <DropdownMenu>
+              <DropdownItem onClick={() => setSortMethod("az")}>
+                <strong>Alphabetical A-Z</strong>
+              </DropdownItem>
+              <DropdownItem onClick={() => setSortMethod("za")}>
+                <strong>Alphabetical Z-A</strong>
+              </DropdownItem>
+              <DropdownItem onClick={() => setSortMethod("confidence")}>
+              <strong>Confidence</strong>
+              </DropdownItem>
+              <DropdownItem onClick={() => setSortMethod("new")}>
+              <strong>Newest</strong>
+              </DropdownItem>
+              <DropdownItem onClick={() => setSortMethod("old")}>
+              <strong>Oldest</strong>
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         </div>
       )}
 
