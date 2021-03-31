@@ -171,7 +171,7 @@ function AdminNavbar(props) {
                   <NavLink onClick={() => {
                     signOut();
                     setIsLoggedIn(!isLoggedIn);
-                    window.location.href = "/#/landing";
+                    window.location.href = "/landing";
                     }} tag="li">)
                     <DropdownItem className="nav-item">Log Out</DropdownItem>
                   </NavLink>}
