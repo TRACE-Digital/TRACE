@@ -41,8 +41,7 @@
     "react-router-dom": "5.2.0",
     "react-scripts": "4.0.1",
     "react-toggle-button": "^2.2.0",
-    "reactstrap": "8.7.1",
-    "trace-search": "0.0.1"
+    "reactstrap": "8.7.1"
   },
   "devDependencies": {
     "gulp": "^4.0.2",

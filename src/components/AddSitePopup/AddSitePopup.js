@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Button, Row, Col, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 
-import { tags } from 'trace-search';
+import { ManualAccount, tags } from 'trace-search';
 
 const Popup = (props) => {
     const [categories, setCategories] = useState([]);
     const [username, setUsername] = useState('');
-    const [site, setSite] = useState('');
+    const [siteName, setSiteName] = useState('');
     const [url, setUrl] = useState('');
     const [showError, setShowError] = useState(false);
 
@@ -27,7 +27,7 @@ const Popup = (props) => {
 
     function onSiteChange(e) {
         setShowError(false);
-        setSite(e);
+        setSiteName(e);
     }
 
     function onUsernameChange(e) {
@@ -40,13 +40,19 @@ const Popup = (props) => {
         setUrl(e);
     }
 
-    function handleSubmit(e) {
-        console.log(site);
+    async function handleSubmit(e) {
+        console.log(siteName);
         console.log(username);
         console.log(url);
 
-        if (site && username && url) {
+        if (siteName && username && url) {
             // Add to database
+            const manualSite = { url: url, name: siteName, tags: categories };
+            const manualAccount = new ManualAccount(manualSite, username);
+
+            console.log(manualAccount.serialize());
+            await manualAccount.save();
+
             setShowError(false);
             props.closePopup();
         }
