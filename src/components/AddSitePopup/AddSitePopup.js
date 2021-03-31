@@ -9,6 +9,7 @@ const Popup = (props) => {
     const [siteName, setSiteName] = useState('');
     const [url, setUrl] = useState('');
     const [showError, setShowError] = useState(false);
+    const [dbError, setDbError] = useState(null);
 
     function handleClickCheckbox(e) {
         console.log(e.target.value);
@@ -26,16 +27,19 @@ const Popup = (props) => {
     }
 
     function onSiteChange(e) {
+        setDbError(null);
         setShowError(false);
         setSiteName(e);
     }
 
     function onUsernameChange(e) {
+        setDbError(null);
         setShowError(false);
         setUsername(e);
     }
 
     function onUrlChange(e) {
+        setDbError(null);
         setShowError(false);
         setUrl(e);
     }
@@ -50,11 +54,18 @@ const Popup = (props) => {
             const manualSite = { url: url, name: siteName, tags: categories };
             const manualAccount = new ManualAccount(manualSite, username);
 
-            console.log(manualAccount.serialize());
-            await manualAccount.save();
-
             setShowError(false);
-            props.closePopup();
+
+            try {
+                await manualAccount.save();
+                props.closePopup();
+            } catch (e) {
+                if (e.message === "Document update conflict") {
+                    setDbError("Account already exists");
+                } else {
+                setDbError(e.message);
+                }
+            }
         }
         else {
             setShowError(true);
@@ -106,6 +117,9 @@ const Popup = (props) => {
                 </Button>
                 <div className={showError ? "error-message-visible" : "error-not-visible"}>
                     Warning: required fields are empty
+                </div>
+                <div className={dbError ? "error-message-visible" : "error-not-visible"}>
+                    { dbError ? "Error: " + dbError : ""}
                 </div>
             </div>
         </div>
