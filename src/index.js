@@ -17,7 +17,7 @@
 */
 import React from "react";
 import ReactDOM from "react-dom";
-import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 import AdminLayout from "layouts/Admin/Admin.js";
 
@@ -33,7 +33,7 @@ import ThemeContextWrapper from "./components/ThemeWrapper/ThemeWrapper";
 import BackgroundColorWrapper from "./components/BackgroundColorWrapper/BackgroundColorWrapper";
 
 
-import Amplify, { Auth } from 'aws-amplify';
+import Amplify from 'aws-amplify';
 
 Amplify.configure({
     Auth: {
@@ -74,20 +74,18 @@ Amplify.configure({
     }
 });
 
-// You can get the current config object
-const currentConfig = Auth.configure();
-
 ReactDOM.render(
   <ThemeContextWrapper>
     <BackgroundColorWrapper>
-      <HashRouter>
+      <BrowserRouter>
         <Switch>
           <Redirect exact from="/" to="/landing" />
-          <Route path="/landing" component={Landing} />
-          <Route path="/login" component={Login} />
+          <Route  path="/landing" component={Landing} />
+          <Route  path="/login" component={Login} />
+          <Route  path="/signup" component={Login} />
           <Route path="/" render={(props) => <AdminLayout {...props} />} />
         </Switch>
-      </HashRouter>
+      </BrowserRouter>
     </BackgroundColorWrapper>
   </ThemeContextWrapper>,
   document.getElementById("root")

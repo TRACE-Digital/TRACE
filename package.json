@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "A privacy-focused tool for discovering, tracking, and sharing your online accounts.",
   "author": "TRACE Digital",
-  "license": "GPL-3.0+",
+  "license": "GPL-3.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TRACE-Digital/TRACE.git"

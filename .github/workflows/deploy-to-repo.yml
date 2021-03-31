@@ -1,0 +1,37 @@
+name: Build and Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout ${{ github.branch }}
+        uses: actions/checkout@v2
+
+      - name: Setup Node using nvm
+        shell: bash -l {0}
+        run: nvm install --latest-npm && nvm use
+
+      - name: Install packages
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy to TRACE-Digital/TRACE-build
+        if: success()
+        uses: leigholiver/commit-with-deploy-key@v1.0.2
+        with:
+          source: build
+          deploy_key: ${{ secrets.DEPLOY_KEY }}
+          destination_branch: master
+          destination_folder: .
+          destination_repo: TRACE-Digital/TRACE-build
+          delete_destination: true
+          git_username: trace-digi-bot
+          git_email: 78513483+trace-digi-bot@users.noreply.github.com

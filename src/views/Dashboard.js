@@ -20,7 +20,6 @@ import React from "react";
 
 // reactstrap components
 import {
-  Button,
   Card,
   CardBody,
   DropdownToggle,
@@ -45,14 +44,10 @@ async function sayHello() {
 }
 
 function Dashboard(props) {
-  const [plsRender, setPlsRender] = React.useState(false);
-  const [bigChartData, setbigChartData] = React.useState("data1");
-  const setBgChartData = (name) => {
-    setbigChartData(name);
-  };
+  const [, setPlsRender] = React.useState(false);
 
   useEffect(() => {
-    async function loadAccounts() {
+    const loadAccounts = async () => {
       try {
         // Load all accounts from the database into memory
         await ThirdPartyAccount.loadAll();
@@ -79,7 +74,7 @@ function Dashboard(props) {
           <Link
             className="btn btn-primary add-site-button"
             color="primary"
-            to="/admin/search"
+            to="/search"
           >
             Add New Site
           </Link>

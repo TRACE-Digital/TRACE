@@ -3,6 +3,7 @@ import { Auth } from 'aws-amplify';
 
 // reactstrap components
 import { Alert, Card, CardImg, CardBody, CardTitle, Button, Form, FormGroup, Input } from 'reactstrap';
+import { Link } from "react-router-dom";
 
 async function signUp(username, email, password) {
   try {
@@ -21,13 +22,13 @@ async function signUp(username, email, password) {
 }
 
 // Use this to verify email eventually
-async function confirmSignUp(username, code) {
-    try {
-      await Auth.confirmSignUp(username, code);
-    } catch (error) {
-        console.log('error confirming sign up', error);
-    }
-}
+// async function confirmSignUp(username, code) {
+//     try {
+//       await Auth.confirmSignUp(username, code);
+//     } catch (error) {
+//         console.log('error confirming sign up', error);
+//     }
+// }
 
 async function signIn(username, password) {
     try {
@@ -43,15 +44,20 @@ async function signIn(username, password) {
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLogin, setisLogin] = useState(true);
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
+
+  const isLogin = window.location.href.includes('login');
 
   return (
     <div className="login">
       <Card style={{width: '30rem'}}>
           <CardImg top src={require("assets/img/header.jpg").default} alt="trace logo"/>
           <CardBody>
-              <CardTitle className='welcome'>Welcome to TRACE</CardTitle>
+              <CardTitle className='welcome'>
+                {isLogin ? 'Sign in' : 'Welcome to TRACE!'}
+              </CardTitle>
+
               {error && <Alert color="danger">{error}</Alert>}
               <Form id='sign-up-form'  onSubmit={async (e) => {
                 e.preventDefault();
@@ -59,12 +65,16 @@ function Login() {
                 if (isLogin) {
                   localError = await signIn(email, password);
                 } else {
-                  localError = await signUp(email, email, password)
+                  if (password === confirmPassword) {
+                    localError = await signUp(email, email, password);
+                  } else {
+                    localError = 'Passwords do not match!';
+                  }
                 }
                 setError(localError);
 
                 if (!localError) {
-                  window.location.href = '/#/admin/dashboard';
+                  window.location.href = '/dashboard';
                 }
               }}>
               <FormGroup>
@@ -83,11 +93,29 @@ function Login() {
                     onChange={e => setPassword(e.target.value)}
                   />
                 </FormGroup>
+                {isLogin ? <div></div> :
+                  <FormGroup>
+                    <Input
+                      placeholder="Confirm password"
+                      type="password"
+                      value={confirmPassword}
+                      onChange={e => setConfirmPassword(e.target.value)}
+                    />
+                  </FormGroup>
+                }
               </Form>
-              <Button color="primary" block type="submit" form='sign-up-form' >{isLogin ? "Log In" : "Sign Up"}</Button>
-              <br/>
-              <a block href="javascript:void(0)" onClick={() => {setisLogin(!isLogin)}}>{isLogin ? "Don't have an account? Sign Up" : "Already have an account? Log In"}</a>
 
+              <Button color="primary" block type="submit" form='sign-up-form' >
+                {isLogin ? "Log In" : "Sign Up"}
+              </Button>
+
+              <br/>
+              <Link
+                color="primary"
+                to={isLogin ? "/signup" : "/login"}
+              >
+                {isLogin ? "Don't have an account? Sign Up" : "Already have an account? Log In"}
+              </Link>
           </CardBody>
       </Card>
   </div>
