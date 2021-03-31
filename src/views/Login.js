@@ -47,20 +47,47 @@ function Login() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
+
+  //
+  const welcomeElement = (
+    <>
+      <CardTitle className='welcome'>
+        Welcome to TRACE!
+      </CardTitle>
+      {error && <Alert color="danger">{error}</Alert>}
+    </>
+  )
+  const loginFields = (
+    <>
+      <FormGroup>
+        <Input
+          placeholder="Email"
+          type="text"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+        />
+      </FormGroup>
+      <FormGroup>
+        <Input
+          placeholder="Password"
+          type="password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+        />
+      </FormGroup>
+    </>
+  )
 
   return (
-    <ReactCardFlip isFlipped={isLogin} flipDirection="horizontal">
+    <ReactCardFlip isFlipped={!isLogin} flipDirection="horizontal">
       <div className="login">
         {/* Log In */}
         <Card style={{width: '30rem'}}>
             <CardImg top src={require("assets/img/header.jpg").default} alt="trace logo"/>
             <CardBody>
-                <CardTitle className='welcome'>
-                  Welcome to TRACE
-                </CardTitle>
-                {error && <Alert color="danger">{error}</Alert>}
-                <Form id='sign-up-form'  onSubmit={async (e) => {
+                {welcomeElement}
+                <Form id='sign-in-form'  onSubmit={async (e) => {
                   e.preventDefault();
                   let localError = false;
                   localError = await signIn(email, password);
@@ -69,29 +96,15 @@ function Login() {
                     window.location.href = '/dashboard';
                   }
                 }}>
-                <FormGroup>
-                    <Input
-                      placeholder="Email"
-                      type="text"
-                      value={email}
-                      onChange={e => setEmail(e.target.value)}
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Input
-                      placeholder="Password"
-                      type="password"
-                      value={password}
-                      onChange={e => setPassword(e.target.value)}
-                    />
-                  </FormGroup>
+                  {loginFields}
                 </Form>
-                <Button color="primary" block type="submit" form='sign-up-form' >
+                <Button color="primary" block type="submit" form='sign-in-form' >
                   Log In
                 </Button>
                 <br/>
                 <Link
                   color="primary"
+                  to="#"
                   onClick={(e) => {
                     e.preventDefault();
                     setIsLogin(false);
@@ -107,10 +120,7 @@ function Login() {
           <Card style={{width: '30rem'}}>
             <CardImg top src={require("assets/img/header.jpg").default} alt="trace logo"/>
             <CardBody>
-                <CardTitle className='welcome'>
-                  Welcome to TRACE!
-                </CardTitle>
-                {error && <Alert color="danger">{error}</Alert>}
+               {welcomeElement}
                 <Form id='sign-up-form'  onSubmit={async (e) => {
                   e.preventDefault();
                   let localError = false;
@@ -124,30 +134,15 @@ function Login() {
                     window.location.href = '/dashboard';
                   }
                 }}>
-                <FormGroup>
-                    <Input
-                      placeholder="Email"
-                      type="text"
-                      value={email}
-                      onChange={e => setEmail(e.target.value)}
-                    />
-                  </FormGroup>
+                  {loginFields}
                   <FormGroup>
                     <Input
-                      placeholder="Password"
+                      placeholder="Confirm password"
                       type="password"
-                      value={password}
-                      onChange={e => setPassword(e.target.value)}
+                      value={confirmPassword}
+                      onChange={e => setConfirmPassword(e.target.value)}
                     />
                   </FormGroup>
-                    <FormGroup>
-                      <Input
-                        placeholder="Confirm password"
-                        type="password"
-                        value={confirmPassword}
-                        onChange={e => setConfirmPassword(e.target.value)}
-                      />
-                    </FormGroup>
                 </Form>
                 <Button color="primary" block type="submit" form='sign-up-form' >
                   Sign Up
@@ -155,6 +150,7 @@ function Login() {
                 <br/>
                 <Link
                   color="primary"
+                  to="#"
                   onClick={(e) => {
                     e.preventDefault();
                     setIsLogin(true);
