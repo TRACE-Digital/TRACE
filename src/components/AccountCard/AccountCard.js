@@ -10,9 +10,9 @@ import { AccountType } from "trace-search";
  * Displays a Card with information about the account passed in
  * @param props.account An Account object with relevant data for the account that it represents
  * @param props.page A string denoting one of three pages where this is used - "search", "dashboard", or "editor"
- * @returns 
+ * @returns
  */
-const SiteCard = (props) => {
+const AccountCard = (props) => {
   const [flipped, setFlipped] = useState(false);
 
   const account = props.account;
@@ -23,7 +23,7 @@ const SiteCard = (props) => {
   const editor = (props.page === "editor")
 
   if (!search && !dashboard && !editor) {
-    console.warn('WARNING - invalid type passed to SiteCard component. Needs to be "search", "dashboard", or "editor"')
+    console.warn('WARNING - invalid type passed to AccountCard component. Needs to be "search", "dashboard", or "editor"')
   }
 
   let firstNames = "";
@@ -190,4 +190,4 @@ const SiteCard = (props) => {
   );
 };
 
-export default SiteCard;
+export default AccountCard;
