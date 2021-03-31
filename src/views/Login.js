@@ -4,6 +4,7 @@ import { Auth } from 'aws-amplify';
 // reactstrap components
 import { Alert, Card, CardImg, CardBody, CardTitle, Button, Form, FormGroup, Input } from 'reactstrap';
 import { Link } from "react-router-dom";
+import ReactCardFlip from "react-card-flip";
 
 async function signUp(username, email, password) {
   try {
@@ -46,79 +47,125 @@ function Login() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
-
-  const isLogin = window.location.href.includes('login');
+  const [isLogin, setIsLogin] = useState(false);
 
   return (
-    <div className="login">
-      <Card style={{width: '30rem'}}>
-          <CardImg top src={require("assets/img/header.jpg").default} alt="trace logo"/>
-          <CardBody>
-              <CardTitle className='welcome'>
-                {isLogin ? 'Sign in' : 'Welcome to TRACE!'}
-              </CardTitle>
-
-              {error && <Alert color="danger">{error}</Alert>}
-              <Form id='sign-up-form'  onSubmit={async (e) => {
-                e.preventDefault();
-                let localError = false;
-                if (isLogin) {
+    <ReactCardFlip isFlipped={isLogin} flipDirection="horizontal">
+      <div className="login">
+        {/* Log In */}
+        <Card style={{width: '30rem'}}>
+            <CardImg top src={require("assets/img/header.jpg").default} alt="trace logo"/>
+            <CardBody>
+                <CardTitle className='welcome'>
+                  Welcome to TRACE
+                </CardTitle>
+                {error && <Alert color="danger">{error}</Alert>}
+                <Form id='sign-up-form'  onSubmit={async (e) => {
+                  e.preventDefault();
+                  let localError = false;
                   localError = await signIn(email, password);
-                } else {
-                  if (password === confirmPassword) {
-                    localError = await signUp(email, email, password);
-                  } else {
-                    localError = 'Passwords do not match!';
+                  setError(localError);
+                  if (!localError) {
+                    window.location.href = '/dashboard';
                   }
-                }
-                setError(localError);
-
-                if (!localError) {
-                  window.location.href = '/dashboard';
-                }
-              }}>
-              <FormGroup>
-                  <Input
-                    placeholder="Email"
-                    type="text"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                  />
-                </FormGroup>
+                }}>
                 <FormGroup>
-                  <Input
-                    placeholder="Password"
-                    type="password"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                  />
-                </FormGroup>
-                {isLogin ? <div></div> :
-                  <FormGroup>
                     <Input
-                      placeholder="Confirm password"
-                      type="password"
-                      value={confirmPassword}
-                      onChange={e => setConfirmPassword(e.target.value)}
+                      placeholder="Email"
+                      type="text"
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
                     />
                   </FormGroup>
-                }
-              </Form>
-
-              <Button color="primary" block type="submit" form='sign-up-form' >
-                {isLogin ? "Log In" : "Sign Up"}
-              </Button>
-
-              <br/>
-              <Link
-                color="primary"
-                to={isLogin ? "/signup" : "/login"}
-              >
-                {isLogin ? "Don't have an account? Sign Up" : "Already have an account? Log In"}
-              </Link>
-          </CardBody>
-      </Card>
-  </div>
+                  <FormGroup>
+                    <Input
+                      placeholder="Password"
+                      type="password"
+                      value={password}
+                      onChange={e => setPassword(e.target.value)}
+                    />
+                  </FormGroup>
+                </Form>
+                <Button color="primary" block type="submit" form='sign-up-form' >
+                  Log In
+                </Button>
+                <br/>
+                <Link
+                  color="primary"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsLogin(false);
+                  }}
+                >
+                  Don't have an account? Sign Up
+                </Link>
+            </CardBody>
+        </Card>
+        </div>
+        {/* Sign Up */}
+      <div className="login">
+          <Card style={{width: '30rem'}}>
+            <CardImg top src={require("assets/img/header.jpg").default} alt="trace logo"/>
+            <CardBody>
+                <CardTitle className='welcome'>
+                  Welcome to TRACE!
+                </CardTitle>
+                {error && <Alert color="danger">{error}</Alert>}
+                <Form id='sign-up-form'  onSubmit={async (e) => {
+                  e.preventDefault();
+                  let localError = false;
+                    if (password === confirmPassword) {
+                      localError = await signUp(email, email, password);
+                    } else {
+                      localError = 'Passwords do not match!';
+                    }
+                  setError(localError);
+                  if (!localError) {
+                    window.location.href = '/dashboard';
+                  }
+                }}>
+                <FormGroup>
+                    <Input
+                      placeholder="Email"
+                      type="text"
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Input
+                      placeholder="Password"
+                      type="password"
+                      value={password}
+                      onChange={e => setPassword(e.target.value)}
+                    />
+                  </FormGroup>
+                    <FormGroup>
+                      <Input
+                        placeholder="Confirm password"
+                        type="password"
+                        value={confirmPassword}
+                        onChange={e => setConfirmPassword(e.target.value)}
+                      />
+                    </FormGroup>
+                </Form>
+                <Button color="primary" block type="submit" form='sign-up-form' >
+                  Sign Up
+                </Button>
+                <br/>
+                <Link
+                  color="primary"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsLogin(true);
+                  }}
+                >
+                  Already have an account? Log In
+                </Link>
+            </CardBody>
+        </Card>
+        </div>
+    </ReactCardFlip>
   );
 }
 

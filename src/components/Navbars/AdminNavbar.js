@@ -15,11 +15,13 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import { useEffect, useState } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 
-import { clearDb, setupReplication, teardownReplication } from 'trace-search';
+import { clearDb } from 'trace-search';
+
+import SyncToggle from 'components/SyncToggle/SyncToggle';
 
 // reactstrap components
 import {
@@ -38,9 +40,7 @@ import {
   NavbarToggler,
   ModalHeader,
 } from "reactstrap";
-import ToggleButton from 'react-toggle-button';
 import { Link } from "react-router-dom";
-// import { Auth } from 'aws-amplify';
 import Auth from "@aws-amplify/auth";
 
 Auth.currentAuthenticatedUser({
@@ -49,66 +49,20 @@ Auth.currentAuthenticatedUser({
 .catch(err => console.log(err));
 
 async function signOut() {
-  console.log('before')
-  const user = await Auth.currentUserPoolUser();
   try {
-    const user = await Auth.currentUserPoolUser();
-
-    // const status = await Auth.signOutCognitoSession();
-    const status = await Auth.signOut();
-    console.log(status);
-    user = await Auth.currentUserPoolUser();
-    console.log(user);
-    console.log('after');
-    // console.log(await Auth.currentAuthenticatedUser());
-    // localStorage.removeItem('user');
-    // window.location.href = '/#/login';
+    await Auth.signOut();
     } catch (error) {
       console.log('error signing out: ', error);
-      // localStorage.removeItem('user');
-      // window.location.href = '/#/login';
     }
 }
 
 function AdminNavbar(props) {
-  const [collapseOpen, setcollapseOpen] = React.useState(false);
-  const [modalSearch, setmodalSearch] = React.useState(false);
-  const [color, setcolor] = React.useState("navbar-transparent");
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-  const [replicate, setReplicate] = React.useState(false);
+  const [collapseOpen, setcollapseOpen] = useState(false);
+  const [modalSearch, setmodalSearch] = useState(false);
+  const [color, setcolor] = useState("navbar-transparent");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Setup replication
-  React.useEffect(() => {
-    async function handleReplication() {
-      if (replicate) {
-        try {
-          const obj = await setupReplication();
-          const replicator = obj.TODO_replication;
-
-          replicator.on('error', (e) => {
-            alert(`Replication error!\n\n${e}`);
-            console.error(e);
-            setReplicate(false);
-          });
-        } catch(e) {
-          alert(`Replication error!\n\n${e}`);
-          console.error(e);
-          setReplicate(false);
-          return;
-        }
-      } else {
-        try {
-          await teardownReplication();
-        } catch (e) {
-          console.error(e);
-          return;
-        }
-      }
-    }
-    handleReplication();
-  }, [replicate]);
-
-  React.useEffect(() => {
+  useEffect(() => {
     window.addEventListener("resize", updateColor);
     // Specify how to clean up after this effect:
     return function cleanup() {
@@ -116,11 +70,15 @@ function AdminNavbar(props) {
     };
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     (async () => {
-      const user = await Auth.currentUserPoolUser();
-      console.log(user);
-      setIsLoggedIn(user ? true : false);
+      try {
+        await Auth.currentUserPoolUser();
+        setIsLoggedIn(true);
+      }
+      catch {
+        setIsLoggedIn(false);
+      }
     })();
 
   });
@@ -173,15 +131,7 @@ function AdminNavbar(props) {
           <Collapse navbar isOpen={collapseOpen}>
             <Nav className="ml-auto" navbar>
               <UncontrolledDropdown nav>
-                <div style={{ textAlign: 'center' }}>
-                  Sync
-                <ToggleButton
-                    inactiveLabel={<span>Off</span>}
-                    activeLabel={<span>On</span>}
-                    value={replicate || false}
-                    onToggle={() => setReplicate(prev => !prev) }
-                  />
-                </div>
+                <SyncToggle/>
               </UncontrolledDropdown>
               <UncontrolledDropdown nav>
                 <DropdownToggle
