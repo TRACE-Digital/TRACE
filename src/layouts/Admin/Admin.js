@@ -29,7 +29,7 @@ import routes from "routes.js";
 
 import logo from "assets/img/fingerprint.svg";
 import { BackgroundColorContext } from "contexts/BackgroundColorContext";
-import NotFound from "components/NotFound";
+import NotFound from "components/NotFound/NotFound";
 
 var ps;
 
