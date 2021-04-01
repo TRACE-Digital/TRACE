@@ -107,7 +107,7 @@ const AccountCard = (props) => {
           onClick={handleClick}
         >
           <CardBody className="card-body">
-            <h3>More on {props.account.site.name}...</h3>
+            <h3>{props.account.site.name}</h3>
 
             {/* TAGS (CATEGORIES) */}
             <div className="additional-info">

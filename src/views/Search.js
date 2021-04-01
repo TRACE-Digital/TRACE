@@ -62,6 +62,15 @@ function SearchComponent() {
     window.location.reload();
   };
 
+  const handleClearClick = async () => {
+    // Clear old results
+    setResultsIds([]);
+    setProgress(-1);
+    const search = await currentSearch.definition.new()
+    setCurrentSearch(search);
+    return search;
+  }
+
   const selectAll = () => {
     setCategories(tags.slice());
     setTagsEntered(false);
@@ -143,12 +152,8 @@ function SearchComponent() {
 
       await searchDef.save();
 
-      const search = await searchDef.new()
-      setCurrentSearch(search);
-
       // Clear old results
-      setResultsIds([]);
-      setProgress(0);
+      const search = await handleClearClick();
 
       // Register for notification of new results
       search.events.on("result", (id) => {
@@ -252,9 +257,16 @@ function SearchComponent() {
         </span>
       </div>
       <div className="refine-search">
-        <span className="the-text cancel" onClick={handleCancelClick}>
-          cancel
-        </span>
+        {progress > 0 && progress < 100 && (
+          <span className="the-text cancel" onClick={handleCancelClick}>
+            cancel
+          </span>
+        )}
+        {progress === 100 && (
+          <span className="the-text cancel" onClick={handleClearClick}>
+            clear
+          </span>
+        )}
       </div>
 
       {/* REFINE SEARCH */}
