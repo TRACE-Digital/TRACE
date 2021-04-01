@@ -504,7 +504,7 @@ function SearchComponent() {
           accounts={currentSearch?.inconclusiveResults}
           selectable={true}
           actionable={true}
-			    flippable={true}
+          flippable={true}
           showNames={true}
           showTripleDot={false}
         />
