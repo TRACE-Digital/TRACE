@@ -1,9 +1,18 @@
 import PrivacyBadge from "components/PrivacyBadge/PrivacyBadge";
 import React, { useState } from "react";
 import ReactCardFlip from "react-card-flip";
-import { Card, CardBody, Button, Col } from "reactstrap";
+import {
+  Card,
+  CardBody,
+  Button,
+  Col,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  UncontrolledDropdown,
+} from "reactstrap";
 import { IconButton } from "@material-ui/core";
-
+import { ManualAccount } from 'trace-search';
 /**
  * Displays a Card with information about the account passed in
  * @param props.account An Account object with relevant data for the account that it represents
@@ -49,6 +58,43 @@ const AccountCard = (props) => {
           onClick={handleClick}
         >
           <CardBody className="card-body">
+
+            {props.showTripleDot && (
+            <div className="dashboard-parent">
+              <UncontrolledDropdown>
+                <DropdownToggle
+                  caret
+                  className="btn-icon dot"
+                  color="link"
+                  type="button"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <i className="fas fa-ellipsis-h"></i>
+                </DropdownToggle>
+                <DropdownMenu className="dropdown-menu-right">
+                  <DropdownItem onClick={
+                    async (e) => {
+                      e.stopPropagation()
+                      await props.account.remove();
+                      // TODO: Trigger rerender
+                    }
+                  }>
+                    Remove
+                  </DropdownItem>
+                  {props.account instanceof ManualAccount && (
+                  <>
+                    <DropdownItem divider tag="li" />
+                    <DropdownItem onClick={(e) => e.stopPropagation()}>
+                      Edit
+                    </DropdownItem>
+                  </>
+                  )}
+                </DropdownMenu>
+              </UncontrolledDropdown>
+            </div>
+            )}
+
+
             {/* ICON */}
             <div className="editor">
               {" "}
@@ -163,10 +209,10 @@ AccountCard.defaultProps = {
   selectable: true,
   flippable: true,
   showNames: true,
+  showTripleDot: true,
   selected: false,
   onSelect: () => {},
   onDeselect: () => {},
-  onPlzRemove: () => {},
 }
 
 /**

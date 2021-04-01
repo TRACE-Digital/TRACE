@@ -107,6 +107,7 @@ function Dashboard(props) {
                       <div className="dashboard-parent">
                         <div className="badge">
                           <PrivacyBadge
+                            account={account}
                             service={account.site.name}
                           ></PrivacyBadge>
                         </div>

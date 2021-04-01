@@ -486,6 +486,7 @@ function SearchComponent() {
 	    		actionable={true}
 			    flippable={true}
           showNames={true}
+          showTripleDot={false}
         />
       }
       {(activeTab === "unregistered") &&
@@ -496,6 +497,7 @@ function SearchComponent() {
           actionable={true}
           flippable={true}
           showNames={true}
+          showTripleDot={false}
         />
       }
       {(activeTab === "inconclusive") &&
@@ -506,6 +508,7 @@ function SearchComponent() {
 			    actionable={true}
 			    flippable={true}
           showNames={true}
+          showTripleDot={false}
         />
       }
       </>

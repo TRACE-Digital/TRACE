@@ -170,10 +170,10 @@ function AccountCardList(props) {
             actionable={props.actionable}
             flippable={props.flippable}
             showNames={props.showNames}
+            showTripleDot={props.showTripleDot}
             selected={selection.includes(account.id)}
             onSelected={() => setSelection(prev => prev.concat(account.id))}
 					  onDeselected={() => setSelection(prev => prev.filter(id => id !== account.id))}
-            onPlzRemove={() => props.accounts.filter(a => a.id !== account.id)}
           />
         ))}
       </Row>
