@@ -151,12 +151,13 @@ function AdminNavbar(props) {
                   <DropdownItem tag="li" className="">
 
                   </DropdownItem>
-                  { isLoggedIn && <div>
+                  if (isLoggedIn) { <div>
                   <DropdownItem divider tag="li" />
                     <NavLink tag="li">
                       <DropdownItem className="nav-item" onClick={async () => {
                         try {
-                          await clearDb();
+                          await resetDb();
+                          await resetRemoteDb();
                           window.location.reload();
                         } catch (e) {
                           console.error(e);
