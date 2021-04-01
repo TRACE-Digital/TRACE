@@ -99,7 +99,7 @@ const Popup = (props) => {
                 <Label for="tags">Tags</Label>
                 <Row>
                     {tags.map(tag => (
-                        <Col lg="3" key={tag}>
+                        <Col lg="3" xs="3" key={tag}>
                             <input
                                 type="checkbox"
                                 value={tag}
