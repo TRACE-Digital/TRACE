@@ -56,6 +56,7 @@ const AccountCard = (props) => {
         <Card
           className={'card-user site-card ' + (props.selected ? 'selected-site-card' : '')}
           onClick={handleClick}
+          title={props.account.reason /* Display error for FailedAccounts */}
         >
           <CardBody className="card-body">
 
@@ -108,16 +109,8 @@ const AccountCard = (props) => {
             </div>
 
             <div className="editor-handle-name" style={{fontWeight: "bold"}}>{props.account.site.name}</div>
-            <div className="editor-handle-name">@{props.account.userName}</div>
             <div className="editor-link">
-              <a
-                href={props.account.site.url.replace("{}", props.account.userName)}
-                target="blank"
-              >
-                {props.account.site.prettyUrl ||
-                  props.account.site.urlMain ||
-                  props.account.site.url}
-              </a>
+              <a href={props.account.url} target="blank">@{props.account.userName}</a>
             </div>
 
             {props.actionable && (
@@ -155,41 +148,48 @@ const AccountCard = (props) => {
           <CardBody className="card-body">
             <h3>{props.account.site.name}</h3>
 
-            {/* TAGS (CATEGORIES) */}
-            <div className="additional-info">
-              TAGS - {tags}
-              <br/>
-            </div>
+            {/* CONFIDENCE LEVEL */}
+            {props.account.confidence > 0 && (
+              <div className="additional-info">
+                Confidence Level: {props.account.confidence}
+              </div>
+            )}
 
-            {/* PRIVACY RATING FROM HIBP */}
+            {/* PRIVACY RATING */}
             <div className="additional-info">
-              PRIVACY RATING - {" "}
+              Privacy Rating - {" "}
               <PrivacyBadge account={props.account} service={props.account.site.name}></PrivacyBadge>
               <br/>
             </div>
 
             {/* FIRST NAMES */}
-            {firstNames.length !== 0 && props.showNames && (
+            {firstNames.length > 0 && props.showNames && (
               <div className="additional-info">
-                FIRST NAME(S) FOUND - {firstNames}
+                First Name(s) Found  - {firstNames}
                 <br/>
               </div>
             )}
 
             {/* LAST NAMES */}
-            {lastNames.length !== 0 && props.showNames && (
+            {lastNames.length > 0 && props.showNames && (
               <div className="additional-info">
-                LAST NAME(S) FOUND - {lastNames}
+                Last Name(s) Found - {lastNames}
                 <br/>
               </div>
             )}
 
-            {/* CONFIDENCE LEVEL */}
-            {/* {!isUnregistered && (
+            {/* TAGS (CATEGORIES) */}
+            <div className="additional-info">
+              Tags - {tags}
+              <br/>
+            </div>
+
+            {/* ERROR FOR FAILED ACCOUNTS */}
+            {props.account.reason !== undefined && (
               <div className="additional-info">
-                Confidence Level: {props.account.confidence}
+                <br/><code>{props.account.reason}</code>
               </div>
-            )} */}
+            )}
 
             <div className="flip-button">
               <IconButton onClick={(e) => {e.stopPropagation(); setFlipped(false)}}>
