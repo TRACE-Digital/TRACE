@@ -15,7 +15,7 @@ function AccountCardList(props) {
   const toggleActionsDropdown = () => setActionsDropdownOpen((prevState) => !prevState);
 
   const selectAll = () => setSelection(props.accounts.map(account => account.id));
-	const deselectAll = () => setSelection([]);
+  const deselectAll = () => setSelection([]);
 
   const claimSelected = async () => {
     let count = 0;
