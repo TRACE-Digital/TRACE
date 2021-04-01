@@ -1,28 +1,18 @@
 import React, { useState, useEffect } from "react";
 import Colors from "views/Colors.js";
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { Auth } from "aws-amplify";
 import { ThirdPartyAccount, accounts, AccountType } from "trace-search";
 import SiteCard from "components/SiteCard/SiteCard";
-import {
-  GridContextProvider,
-  GridDropZone,
-  GridItem,
-  swap
-} from "react-grid-dnd";
-
-// reactstrap components
-import {
-  Card,
-  CardBody,
-  Row,
-  Col,
-} from "reactstrap";
+import { EditText, EditTextarea } from 'react-edit-text';
+import {GridContextProvider, GridDropZone, GridItem, swap} from "react-grid-dnd";
+import { Link } from "react-router-dom";
+import {Row, Col} from "reactstrap";
 
 var name = "Isabel Battaglioli";
 
+
 const Editor = () => {
   const [claimedAccounts, setClaimedAccounts] = useState({});
+  const[title, setTitle] = useState("Enter Title");
   const [isOpen, setIsOpen] = useState(false);
   const [colorScheme, setColorScheme] = useState([{
     "titleColor":"#FFFFFF",
@@ -49,11 +39,18 @@ const Editor = () => {
   function handleLanguage(colorChoice){
     const updated = [...colorChoice];
     setColorScheme([...updated]);
-    console.log(colorScheme[0].titleColor);
-    console.log(colorScheme[0].siteColor);
-    console.log(colorScheme[0].backgroundColor);
-    console.log(colorScheme[0].iconColor);
-    console.log(colorScheme[0]);
+  }
+
+  const handleAddClick = () => {
+    setIsOpen(!isOpen);
+  }
+
+  function keyDown(e){
+    console.log(e);
+  }
+
+  function updateTitle(e){
+    setTitle(e.target.value);
   }
 
   useEffect(() => {
@@ -63,6 +60,7 @@ const Editor = () => {
       }
     }
     isLoggedIn();
+    console.log(name.length);
   }, []);
 
   /**
@@ -90,22 +88,39 @@ const Editor = () => {
   }, [accounts]);
 
   return (
-      
     <>
-    {isOpen ?  <Colors onSelectLanguage={handleLanguage}/>  : null}
+    {isOpen ?  <Colors onSelectLanguage={handleLanguage} closePopup={handleAddClick} />  : null}
       <div onClick={togglePopup} className={isOpen ? `content blur` : `content`}>
         <div className={`editor-background`} style={{ backgroundColor: `${colorScheme[0].backgroundColor}` }}>
 
         <div className={"editor-title"} style={{ color: `${colorScheme[0].titleColor}` }}>
-          {name}<i className="tim-icons icon-pencil icon"></i>
+          {/* <EditText name="textbox1" defaultValue="Isabel Battaglioli"/> */}
+    
+          <input
+            className="editor-input"
+            type="text"
+            value={title}
+            maxLength={30}
+            onChange={updateTitle}
+            style={{color:`${colorScheme[0].titleColor}`, backgroundColor:`${colorScheme[0].backgroundColor}`, border:"none", outline: "none"}}
+          />
+          {/* <i className="tim-icons icon-pencil icon" style={{color:"white", margin:"5px"}}></i> */}
+          <Link
+            className="btn btn-primary editor-button"
+            color="primary"
+            onClick={handleAddClick}
+          >
+            Edit Page
+          </Link>
+        
+          
         </div>
           <GridContextProvider onChange={onChange}>
             <GridDropZone
               id="items"
               boxesPerRow={4}
               rowHeight={330}
-              style={{ height: `${(heightSize/4) * 330}px`}} 
-            > 
+              style={{ height: `${(heightSize/4) * 330}px`}}> 
               {Object.values(claimedAccounts).map(item => (
                 <GridItem className="boxes" key={item.id}> 
                   <div

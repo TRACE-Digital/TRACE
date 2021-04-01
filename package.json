@@ -40,6 +40,7 @@
     "react-color": "^2.19.3",
     "react-dom": "17.0.1",
     "react-draggable": "^4.4.3",
+    "react-edit-text": "^4.0.1",
     "react-gesture-responder": "^2.1.0",
     "react-grid-dnd": "^2.1.2",
     "react-notification-alert": "0.0.13",
