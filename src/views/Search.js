@@ -440,18 +440,30 @@ function SearchComponent() {
         <AccountCardList
           headerText="Discovered Accounts"
           accounts={discovered}
+          selectable={true}
+	    		actionable={true}
+			    flippable={true}
+          showNames={true}
         />
       }
       {(activeTab === "unregistered") &&
         <AccountCardList
           headerText="Unregistered Accounts"
           accounts={unregistered}
+          selectable={true}
+          actionable={true}
+          flippable={true}
+          showNames={true}
         />
       }
       {(activeTab === "inconclusive") &&
         <AccountCardList
           headerText="Inconclusive Accounts"
           accounts={[]} /* TODO */
+          selectable={true}
+			    actionable={true}
+			    flippable={true}
+          showNames={true}
         />
       }
       </>

@@ -68,7 +68,8 @@ function AdminNavbar(props) {
   useEffect(() => {
     (async () => {
       try {
-        await Auth.currentUserPoolUser();
+        const user = await Auth.currentUserPoolUser();
+        console.log(user);
         setIsLoggedIn(true);
       }
       catch {
@@ -145,6 +146,8 @@ function AdminNavbar(props) {
                   <NavLink tag="li">
                     <DropdownItem className="nav-item">Profile</DropdownItem>
                   </NavLink>
+                  <DropdownItem divider tag="li" />
+
                   <NavLink tag="li">
                     <DropdownItem className="nav-item">Settings</DropdownItem>
                   </NavLink>

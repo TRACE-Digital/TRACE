@@ -3,8 +3,6 @@ import React, { useState } from "react";
 import ReactCardFlip from "react-card-flip";
 import { Card, CardBody, Button, Col } from "reactstrap";
 import { IconButton } from "@material-ui/core";
-import { AccountType } from "trace-search";
-
 
 /**
  * Displays a Card with information about the account passed in
@@ -14,131 +12,102 @@ import { AccountType } from "trace-search";
  */
 const AccountCard = (props) => {
   const [flipped, setFlipped] = useState(false);
-
-  const account = props.account;
-  const isUnregistered = account.type === AccountType.UNREGISTERED;
-
-  const search = (props.page === "search")
-  const dashboard = (props.page === "dashboard")
-  const editor = (props.page === "editor")
-
-  if (!search && !dashboard && !editor) {
-    console.warn('WARNING - invalid type passed to AccountCard component. Needs to be "search", "dashboard", or "editor"')
-  }
-
   let firstNames = "";
   let lastNames = "";
   let tags = "";
-  if (account.matchedFirstNames) {
-    firstNames = account.matchedFirstNames.join(", ");
+  if (props.account.matchedFirstNames) {
+    firstNames = props.account.matchedFirstNames.join(", ");
   }
-  if (account.matchedLastNames) {
-    lastNames = account.matchedLastNames.join(", ");
+  if (props.account.matchedLastNames) {
+    lastNames = props.account.matchedLastNames.join(", ");
   }
-  if (account.site.tags) {
-    tags = account.site.tags.join(", ")
+  if (props.account.site.tags) {
+    tags = props.account.site.tags.join(", ")
   }
 
-  /**
-   * Claim account for the current user
-   */
-  const claimAccount = async () => {
-    //   async function claimAccount(account) {
-    try {
-      await account.claim();
-      alert("Account successfully claimed!");
-    } catch (e) {
-      alert("Account has already been claimed!");
-      console.error(e);
+  const handleClick = () => {
+    if (!props.selectable) {
+      return;
     }
-  };
-
-  /**
-   * Remove account for current user (from current screen)
-   */
-  const deleteAccount = async () => {
-    //   async function deleteAccount(account) {
-    try {
-      await account.reject();
-      alert("Account successfully removed!");
-    } catch (e) {
-      console.error(e);
+    if (props.selected) {
+      props.onDeselected();
+    } else {
+      props.onSelected();
     }
-  };
+  }
 
   return (
-    <Col lg="3" key={account.id}>
+    <Col lg="3" key={props.account.id}>
       <ReactCardFlip
-        isFlipped={flipped}
+        isFlipped={props.flippable && flipped}
         flipSpeedBackToFront=".8"
         flipSpeedFrontToBack="1"
       >
         {/* FRONT OF CARD */}
-        <Card className="card-user">
+        <Card
+          className={'card-user site-card ' + (props.selected ? 'selected-site-card' : '')}
+          onClick={handleClick}
+        >
           <CardBody className="card-body">
             {/* ICON */}
             <div className="editor">
               {" "}
               <i
                 className={
-                  account.site.logoClass !== "fa-question-circle"
-                    ? "fab " + account.site.logoClass
-                    : "fas " + account.site.logoClass
+                  props.account.site.logoClass !== "fa-question-circle"
+                    ? "fab " + props.account.site.logoClass
+                    : "fas " + props.account.site.logoClass
                 }
               ></i>
             </div>
 
-
-            <div className="editor-handle-name" style={{fontWeight: "bold"}}>{account.site.name}</div>
-            <div className="editor-handle-name">@{account.userName}</div>
+            <div className="editor-handle-name" style={{fontWeight: "bold"}}>{props.account.site.name}</div>
+            <div className="editor-handle-name">@{props.account.userName}</div>
             <div className="editor-link">
               <a
-                href={account.site.url.replace("{}", account.userName)}
+                href={props.account.site.url.replace("{}", props.account.userName)}
                 target="blank"
               >
-                {account.site.prettyUrl ||
-                  account.site.urlMain ||
-                  account.site.url}
+                {props.account.site.prettyUrl ||
+                  props.account.site.urlMain ||
+                  props.account.site.url}
               </a>
             </div>
 
-            {/* CLAIM BUTTONS (IF APPLICABLE) */}
-            {isUnregistered ? (
-              <div></div>
-            ) : (
+            {props.actionable && (
               <div className="test">
                 <Button
-                  onClick={() => claimAccount(account)}
+                  onClick={(e) => {e.stopPropagation(); claimAccount(props.account);}}
                   className="claim-button"
                 >
                   <i className="tim-icons icon-check-2" />
                 </Button>
                 &nbsp;
                 <Button
-                  onClick={() => deleteAccount(account)}
+                  onClick={(e) => {e.stopPropagation(); rejectAccount(props.account);}}
                   className="claim-button"
                 >
                   <i className="tim-icons icon-simple-remove" />
                 </Button>
               </div>
             )}
-
-            {/* Flip Button - don't show if on the editor */}
-            { !editor && (
+            {props.flippable && (
             <div className="flip-button">
-              <IconButton onClick={() => setFlipped(true)}>
-                <i class="tim-icons icon-refresh-01" style={{color: "#DDDDDD", transform: "scaleX(-1)"}}></i>
+              <IconButton onClick={(e) => {e.stopPropagation(); setFlipped(true)}}>
+                <i className="tim-icons icon-refresh-01" style={{color: "#DDDDDD", transform: "scaleX(-1)"}}></i>
               </IconButton>
             </div>)}
 
           </CardBody>
         </Card>
 
-        {/* BACK OF CARD - don't show if on the editor */}
-        { !editor ? (
-        <Card className="card-user">
+        {props.flippable && (
+        <Card
+          className={'card-user site-card ' + (props.selected ? 'selected-site-card' : '')}
+          onClick={handleClick}
+        >
           <CardBody className="card-body">
-            <h3>More on {account.site.name}...</h3>
+            <h3>More on {props.account.site.name}...</h3>
 
             {/* TAGS (CATEGORIES) */}
             <div className="additional-info">
@@ -149,12 +118,12 @@ const AccountCard = (props) => {
             {/* PRIVACY RATING FROM HIBP */}
             <div className="additional-info">
               PRIVACY RATING - {" "}
-              <PrivacyBadge service={account.site.name}></PrivacyBadge>
+              <PrivacyBadge service={props.account.site.name}></PrivacyBadge>
               <br/>
             </div>
 
             {/* FIRST NAMES */}
-            {firstNames.length !== 0 && !dashboard && (
+            {firstNames.length !== 0 && props.showNames && (
               <div className="additional-info">
                 FIRST NAME(S) FOUND - {firstNames}
                 <br/>
@@ -162,7 +131,7 @@ const AccountCard = (props) => {
             )}
 
             {/* LAST NAMES */}
-            {lastNames.length !== 0 && !dashboard && (
+            {lastNames.length !== 0 && props.showNames && (
               <div className="additional-info">
                 LAST NAME(S) FOUND - {lastNames}
                 <br/>
@@ -172,21 +141,64 @@ const AccountCard = (props) => {
             {/* CONFIDENCE LEVEL */}
             {/* {!isUnregistered && (
               <div className="additional-info">
-                Confidence Level: {account.confidence}
+                Confidence Level: {props.account.confidence}
               </div>
             )} */}
 
             <div className="flip-button">
-              <IconButton onClick={() => setFlipped(false)}>
-                <i class="tim-icons icon-refresh-01" style={{color: "#DDDDDD", transform: "scaleX(-1)"}}></i>
+              <IconButton onClick={(e) => {e.stopPropagation(); setFlipped(false)}}>
+                <i className="tim-icons icon-refresh-01" style={{color: "#DDDDDD", transform: "scaleX(-1)"}}></i>
               </IconButton>
             </div>
           </CardBody>
         </Card>
-        ) : <div/>}
+        )}
       </ReactCardFlip>
     </Col>
   );
+};
+
+AccountCard.defaultProps = {
+  actionable: true,
+  selectable: true,
+  flippable: true,
+  showNames: true,
+  selected: false,
+  onSelect: () => {},
+  onDeselect: () => {},
+  onPlzRemove: () => {},
+}
+
+/**
+   * Claim account for the current user
+   */
+export const claimAccount = async (account, quiet) => {
+  quiet = quiet !== undefined ? quiet : false;
+  try {
+    await account.claim();
+    !quiet && alert("Account successfully claimed!");
+    return true;
+  } catch (e) {
+    !quiet && alert("Account has already been claimed!");
+    console.error(e);
+    return false;
+  }
+};
+
+/**
+ * Reject account for current user (from current screen)
+ */
+export const rejectAccount = async (account, quiet) => {
+  console.log(account);
+  quiet = quiet !== undefined ? quiet : false;
+  try {
+    await account.reject();
+    !quiet && alert("Account successfully rejected!");
+    return true;
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
 };
 
 export default AccountCard;

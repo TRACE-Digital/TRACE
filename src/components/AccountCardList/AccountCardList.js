@@ -1,4 +1,6 @@
 import AccountCard from 'components/AccountCard/AccountCard';
+import { rejectAccount } from 'components/AccountCard/AccountCard';
+import { claimAccount } from 'components/AccountCard/AccountCard';
 import React, { useState, useEffect } from 'react';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'reactstrap';
 
@@ -16,9 +18,39 @@ function AccountCardList(props) {
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
   const [actionsDropdownOpen, setActionsDropdownOpen] = useState(false);
   const [sortedAccounts, setSortedAccounts] = useState([]);
+  const [selection, setSelection] = useState([]);
 
   const toggleSortDropdown = () => setSortDropdownOpen((prevState) => !prevState);
   const toggleActionsDropdown = () => setActionsDropdownOpen((prevState) => !prevState);
+
+  const selectAll = () => setSelection(props.accounts.map(account => account.id));
+	const deselectAll = () => setSelection([]);
+
+  const claimSelected = async () => {
+    let count = 0;
+    const selectedAccounts = props.accounts.filter(account => selection.includes(account.id));
+    for (const account of selectedAccounts) {
+      const result = await claimAccount(account, true);
+      if (result) {
+        count++;
+      }
+    }
+    alert(`Claimed ${count} accounts`);
+    return count;
+  };
+
+  const rejectSelected = async () => {
+    let count = 0;
+    const selectedAccounts = props.accounts.filter(account => selection.includes(account.id));
+    for (const account of selectedAccounts) {
+      const result = await rejectAccount(account, true);
+      if (result) {
+        count++;
+      }
+    }
+    alert(`Rejected ${count} accounts`);
+    return count;
+  };
 
   /**
    * This useEffect monitors sortMethod, which changes whenever a new sort method is selected.
@@ -82,44 +114,52 @@ function AccountCardList(props) {
     <>
       <span style={{display: "inline", float: "right"}}>
         {/* SORT DROPDOWN */}
-        <Dropdown isOpen={sortDropdownOpen} toggle={toggleSortDropdown} style={{display: "inline"}}>
-          <DropdownToggle caret>Sort By</DropdownToggle>
-          <DropdownMenu>
+        <Dropdown isOpen={sortDropdownOpen} toggle={toggleSortDropdown} style={{display: "inline", marginRight: "10px"}}>
+          <DropdownToggle caret>Sort By
+            <b className="caret d-none d-lg-block d-xl-block" style={{marginLeft: "-15px", marginTop: "-11px"}} />
+          </DropdownToggle>
+          <DropdownMenu style={{marginTop: "15px"}}>
             <DropdownItem onClick={() => setSortMethod("az")}>
-              <strong>Alphabetical A-Z</strong>
+              Alphabetical A-Z
             </DropdownItem>
+            <DropdownItem divider tag="li" />
             <DropdownItem onClick={() => setSortMethod("za")}>
-              <strong>Alphabetical Z-A</strong>
+              Alphabetical Z-A
             </DropdownItem>
+            <DropdownItem divider tag="li" />
             <DropdownItem onClick={() => setSortMethod("confidence")}>
-            <strong>Confidence</strong>
+              Confidence
             </DropdownItem>
+            <DropdownItem divider tag="li" />
             <DropdownItem onClick={() => setSortMethod("new")}>
-            <strong>Newest</strong>
+              Newest
             </DropdownItem>
+            <DropdownItem divider tag="li" />
             <DropdownItem onClick={() => setSortMethod("old")}>
-            <strong>Oldest</strong>
+              Oldest
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>
         {/* ACTIONS */}
         <Dropdown isOpen={actionsDropdownOpen} toggle={toggleActionsDropdown} style={{display: "inline"}}>
-          <DropdownToggle caret>Actions</DropdownToggle>
-          <DropdownMenu>
-            <DropdownItem onClick={() => setSortMethod("az")}>
-              <strong>Alphabetical A-Z</strong>
+          <DropdownToggle caret>Actions
+            <b className="caret d-none d-lg-block d-xl-block" style={{marginLeft: "-15px", marginTop: "-11px"}} />
+          </DropdownToggle>
+          <DropdownMenu style={{marginTop: "15px", fontWeight: "normal"}}>
+            <DropdownItem onClick={() => selectAll()}>
+              Select All
             </DropdownItem>
-            <DropdownItem onClick={() => setSortMethod("za")}>
-              <strong>Alphabetical Z-A</strong>
+            <DropdownItem divider tag="li" />
+            <DropdownItem onClick={() => deselectAll()}>
+              Deselect All
             </DropdownItem>
-            <DropdownItem onClick={() => setSortMethod("confidence")}>
-            <strong>Confidence</strong>
+            <DropdownItem divider tag="li" />
+            <DropdownItem onClick={() => claimSelected()}>
+              Claim Selected
             </DropdownItem>
-            <DropdownItem onClick={() => setSortMethod("new")}>
-            <strong>Newest</strong>
-            </DropdownItem>
-            <DropdownItem onClick={() => setSortMethod("old")}>
-            <strong>Oldest</strong>
+            <DropdownItem divider tag="li" />
+            <DropdownItem onClick={() => rejectSelected("new")}>
+              Reject Selected
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>
@@ -131,11 +171,28 @@ function AccountCardList(props) {
       </div>
       <Row>
         {sortedAccounts.map((account) => (
-          <AccountCard account={account} page="search" />
+          <AccountCard
+            key={account.id}
+            account={account}
+            page="search"
+            selectable={props.selectable}
+            actionable={props.actionable}
+            flippable={props.flippable}
+            showNames={props.showNames}
+            selected={selection.includes(account.id)}
+            onSelected={() => setSelection(prev => prev.concat(account.id))}
+					  onDeselected={() => setSelection(prev => prev.filter(id => id !== account.id))}
+            onPlzRemove={() => props.accounts.filter(a => a.id !== account.id)}
+          />
         ))}
       </Row>
     </>
   );
+}
+
+AccountCardList.defaultProps = {
+  accounts: [],
+  accountIds: [],
 }
 
 export default AccountCardList;
