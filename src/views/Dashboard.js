@@ -41,6 +41,10 @@ function Dashboard(props) {
   // Load the initial accounts that we need and
   // register for any future changes
   useEffect(() => {
+    const triggerRender = () => {
+      setPlsRender(prev => !prev);
+    };
+
     const loadAccounts = async () => {
       try {
         // Load what we need from the database into memory
@@ -55,14 +59,17 @@ function Dashboard(props) {
       console.log(ThirdPartyAccount.accountCache.items);
     }
 
-    ClaimedAccount.accountCache.events.on('change', () => {
-      setPlsRender(prev => !prev);
-    });
-    ManualAccount.accountCache.events.on('change', () => {
-      setPlsRender(prev => !prev);
-    });
+    ClaimedAccount.accountCache.events.on('change', triggerRender);
+    ManualAccount.accountCache.events.on('change', triggerRender);
 
     loadAccounts();
+
+    const cleanup = () => {
+      ClaimedAccount.accountCache.events.removeListener('change', triggerRender);
+      ManualAccount.accountCache.events.removeListener('change', triggerRender);
+    };
+
+    return cleanup;
   }, []);
 
   return (

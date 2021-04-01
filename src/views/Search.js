@@ -53,11 +53,19 @@ function SearchComponent() {
   // Results get updated as they are claimed/rejected
   // This catches those changes and forces a rerender
   useEffect(() => {
+    const triggerRender = () => {
+      setPlsRender(prev => !prev);
+    };
+
     // This may cause a few extra rerenders since it's results for all searches,
     // but the user is not likely to have many searches running at once
-    ThirdPartyAccount.resultCache.events.on('change', () => {
-      setPlsRender(prev => !prev);
-    });
+    ThirdPartyAccount.resultCache.events.on('change', triggerRender);
+
+    const cleanup = () => {
+      ThirdPartyAccount.resultCache.events.removeListener('change', triggerRender);
+    };
+
+    return cleanup;
   }, []);
 
   // Subscribe to results from our search
