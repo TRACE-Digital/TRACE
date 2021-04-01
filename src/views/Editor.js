@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Colors from "views/Colors.js";
-import { ThirdPartyAccount, accounts, AccountType } from "trace-search";
+import { ThirdPartyAccount, accounts, AccountType, ProfilePage, pages } from "trace-search";
 import SiteCard from "components/SiteCard/SiteCard";
 import { EditText, EditTextarea } from 'react-edit-text';
 import {GridContextProvider, GridDropZone, GridItem, swap} from "react-grid-dnd";
@@ -9,9 +9,9 @@ import {Row, Col} from "reactstrap";
 
 var name = "Isabel Battaglioli";
 
-
 const Editor = () => {
   const [claimedAccounts, setClaimedAccounts] = useState({});
+  const [myProfile, setProfileData] = useState({});
   const[title, setTitle] = useState("Enter Title");
   const [isOpen, setIsOpen] = useState(false);
   const [colorScheme, setColorScheme] = useState([{
@@ -36,22 +36,48 @@ const Editor = () => {
     setClaimedAccounts(nextState);
   }
 
+  async function saveData() {
+    await myProfile.save();
+  }
+
   function handleLanguage(colorChoice){
     const updated = [...colorChoice];
     setColorScheme([...updated]);
+    myProfile.colorScheme.titleColor = colorScheme[0].titleColor;
+    myProfile.colorScheme.backgroundColor = colorScheme[0].backgroundColor;
+    myProfile.colorScheme.siteColor = colorScheme[0].siteColor;
+    myProfile.colorScheme.iconColor = colorScheme[0].iconColor;
+    saveData();
   }
 
   const handleAddClick = () => {
     setIsOpen(!isOpen);
   }
 
-  function keyDown(e){
-    console.log(e);
-  }
-
   function updateTitle(e){
     setTitle(e.target.value);
+    myProfile.title = title;
   }
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      const results = await ProfilePage.loadAll();
+      if (results.length === 0) {
+        console.log("NEW PAGE");
+        const page = new ProfilePage();
+        results.push(page);
+      }
+      else {
+        colorScheme[0].backgroundColor = results[0].colorScheme.backgroundColor;
+        colorScheme[0].titleColor = results[0].colorScheme.titleColor;
+        colorScheme[0].siteColor = results[0].colorScheme.siteColor;
+        colorScheme[0].iconColor = results[0].colorScheme.iconColor;
+        setTitle(results[0].title);
+      }
+      setProfileData(results[0]);
+    };
+    loadProfile();
+  }, []);
 
   useEffect(() => {
     async function isLoggedIn () {
@@ -62,6 +88,8 @@ const Editor = () => {
     isLoggedIn();
     console.log(name.length);
   }, []);
+
+
 
   /**
    * Monitor for new claimed accounts. Every time the accounts array is updated, re-render to show the proper tiles.
@@ -86,6 +114,8 @@ const Editor = () => {
     });
 
   }, [accounts]);
+
+
 
   return (
     <>

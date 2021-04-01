@@ -3,7 +3,7 @@ import {Row, Col} from "reactstrap";
 import {ChromePicker} from 'react-color'
 import {Button, ButtonGroup} from "reactstrap";
 import classNames from "classnames";
-import {ThirdPartyAccount, accounts} from "trace-search";
+import { ThirdPartyAccount, accounts, ProfilePage, pages } from "trace-search";
 
 
 function Colors(props) {
@@ -16,6 +16,8 @@ function Colors(props) {
     const [chromeColor, setChromeColor] = useState();
     const [currentButton, setCurrentButton] = useState("Title");
     const [claimedAccounts, setClaimedAccounts] = useState({});
+    const [myProfile, setProfileData] = useState({});
+    const [onProfile, setOnProfile] = useState(false);
 
     const [showThemeFeature, setThemeFeature] = useState(false);
     const [showSiteFeature, setSiteFeature] = useState(true);
@@ -26,6 +28,16 @@ function Colors(props) {
         "siteColor":"#26283A",
         "iconColor":"Default"
     }])
+
+
+    useEffect(() => {
+        const loadProfile = async () => {
+          const results = await ProfilePage.loadAll();
+          setProfileData(results[0]);
+        };
+        loadProfile();
+    }, []);
+
 
     /**
      * Monitor for new claimed accounts. Every time the accounts array is updated, re-render to show the proper tiles.
@@ -49,6 +61,22 @@ function Colors(props) {
         });
 
     }, [accounts]);
+
+    async function saveData() {
+        await myProfile.save();
+      }
+
+    function handleAdd(item){
+        console.log("ENTERED ADD");
+        myProfile.accounts.push(item);
+        saveData();
+    }
+
+    function handleRemove(e){
+        console.log("ENTRED REMOVE");
+        // console.log(e);
+         console.log(myProfile.accounts);
+    }
 
     function handleColorPicker(e){
         setChromeColor(e);
@@ -101,13 +129,6 @@ function Colors(props) {
         setThemeFeature(true);
         setSiteFeature(false);
     }
-
-    function handleOver(e){
-        e.target.style.backgroundColor = "revert";
-  
-        console.log("IN HEREEEEE");
-    }
-
 
   return (
     <>
@@ -185,8 +206,10 @@ function Colors(props) {
                                 {Object.values(claimedAccounts).map(item => (
                                     <tr className="siteTr">
                                         <td className="siteTd">
-                                            <div className="add-remove-button">Add</div>
-                                            <span className="site-info">{item.site.name}</span>: {item.userName}
+                                            {myProfile.accounts.includes(item) ? 
+                                                <div className="remove-button" onClick={() => { handleRemove(item) }}>Remove</div> : 
+                                                <div className="add-button" onClick={() => { handleAdd(item) }}>Add</div>}
+                                            <div className="site-info">{item.site.name}: <span className="userName">{item.userName}</span></div>
                                         </td>
                                     </tr>
                                 ))}
@@ -194,9 +217,8 @@ function Colors(props) {
                         </div>
                         : null
                     }
-                    
                 </div>
-          
+
             </div>
         </>
     );

@@ -545,7 +545,7 @@
         overflow-y: scroll;
      
         .siteTable{
-          width:300px;
+          min-width:300px;
           border-spacing: 5px 1rem;
           border-radius: 15px;
           border-collapse: separate;
@@ -557,27 +557,51 @@
               color:black;
               border:solid #525f7f;;
               border-radius: 15px;
-              justify-content: center;
-              text-align:center;
+              text-align:left;
               
               .site-info{
                 font-weight: 600;
+                display:inline-block;
+                margin-right:7px;
 
+                >.userName{
+                  font-weight:350 !important;
+                }
               }
 
-              .add-remove-button{
+              .remove-button{
                 border:solid black;
                 border-width:thin;
-                margin-right:10px;
+                height:30px;
                 border-radius: 15px;
-                display: inline-block;
-                cursor:pointer;
+                margin:8px;
+                display:inline-block;
                 padding-top:3px;
-                background-color:#AEF1B7 ; //or #ffcccc
                 padding-bottom:3px;
                 padding-left:6px;
                 padding-right:6px;
+                text-align:center;
+                cursor:pointer;
+                background-color:#ffcccc; 
+              
               }
+
+              .add-button{
+                border:solid black;
+                border-width:thin;
+                height:30px;
+                border-radius: 15px;
+                margin:8px;
+                display:inline-block;
+                padding-top:3px;
+                padding-bottom:3px;
+                padding-left:6px;
+                padding-right:6px;
+                text-align:center;
+                cursor:pointer;
+                background-color:#AEF1B7 ; 
+              }
+
             }
           }
           
