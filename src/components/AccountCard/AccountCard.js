@@ -88,10 +88,9 @@ const AccountCard = (props) => {
               ></i>
             </div>
 
-            {/* USERNAME */}
-            <div className="editor-handle-name">@{account.userName}</div>
 
-            {/* SITE URL */}
+            <div className="editor-handle-name" style={{fontWeight: "bold"}}>{account.site.name}</div>
+            <div className="editor-handle-name">@{account.userName}</div>
             <div className="editor-link">
               <a
                 href={account.site.url.replace("{}", account.userName)}
@@ -128,7 +127,7 @@ const AccountCard = (props) => {
             { !editor && (
             <div className="flip-button">
               <IconButton onClick={() => setFlipped(true)}>
-                <i className="fas fa-redo" id="flip-icon"></i>
+                <i class="tim-icons icon-refresh-01" style={{color: "#DDDDDD", transform: "scaleX(-1)"}}></i>
               </IconButton>
             </div>)}
 
@@ -179,7 +178,7 @@ const AccountCard = (props) => {
 
             <div className="flip-button">
               <IconButton onClick={() => setFlipped(false)}>
-                <i className="fas fa-redo" id="flip-icon"></i>
+                <i class="tim-icons icon-refresh-01" style={{color: "#DDDDDD", transform: "scaleX(-1)"}}></i>
               </IconButton>
             </div>
           </CardBody>
