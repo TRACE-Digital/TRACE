@@ -6,6 +6,7 @@ import { EditText, EditTextarea } from 'react-edit-text';
 import {GridContextProvider, GridDropZone, GridItem, swap} from "react-grid-dnd";
 import { Link } from "react-router-dom";
 import {Row, Col} from "reactstrap";
+import { Auth } from 'aws-amplify';
 
 var name = "Isabel Battaglioli";
 
@@ -39,6 +40,18 @@ const Editor = () => {
   async function saveData() {
     await myProfile.save();
   }
+
+  useEffect(() => {
+  async function isLoggedIn () {
+    try {
+      await Auth.currentUserPoolUser();
+    }
+    catch {
+      window.location.href = '/login';
+    }
+  }
+    isLoggedIn();
+  }, []);
 
   function handleLanguage(colorChoice){
     const updated = [...colorChoice];
@@ -79,15 +92,7 @@ const Editor = () => {
     loadProfile();
   }, []);
 
-  useEffect(() => {
-    async function isLoggedIn () {
-      if (!(localStorage.getItem('user'))) {
-        window.location.href = '/login';
-      }
-    }
-    isLoggedIn();
-    console.log(name.length);
-  }, []);
+
 
 
 
