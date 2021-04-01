@@ -1,23 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 // reactstrap components
-import { Row, Col, Button } from "reactstrap";
-import SiteCard from "../components/SiteCard/SiteCard.js";
+import classNames from "classnames";
 
 import {
   SearchDefinition,
   AccountType,
   searchResults,
-  allSites,
+  SearchState,
+  supportedSites,
   tags,
   filterSitesByTags,
 } from "trace-search";
 import {
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
+  Button,
+  ButtonGroup,
+  Row,
+  Col,
 } from "reactstrap";
+import AccountCardList from "components/AccountCardList/AccountCardList.js";
 
 const testSiteNames = [
   "GitHub",
@@ -46,15 +47,11 @@ function SearchComponent() {
   const [resultIds, setResultsIds] = useState([]);
   const [progress, setProgress] = useState(-1);
   const [categories, setCategories] = useState(tags.slice());
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [sortMethod, setSortMethod] = useState("new");
-  const [discoveredSites, setDiscoveredSites] = useState([]);
-  const [unregisteredSites, setUnregisteredSites] = useState([]);
+  const [activeTab, setActiveTab] = useState("discovered");
+  const [currentSearch, setCurrentSearch] = useState(null);
 
   let discovered = [];
   let unregistered = [];
-
-  const toggleDropDown = () => setDropdownOpen((prevState) => !prevState);
 
   const handleRefineClick = () => {
     setVisible(!isVisible);
@@ -96,18 +93,23 @@ function SearchComponent() {
     }
   }
 
+  function addUserName(userName) {
+    if (!userNames.includes(userName) && userName !== "") {
+      userNames.push(userName.trim());
+      setUserNames([...userNames]);
+      setKeywordsEntered(false);
+    }
+    document.getElementById("search-bar").value = "";
+  }
+
   function keyPress(e) {
-    if (e.keyCode === 32) {
-      if (!userNames.includes(e.target.value) && e.target.value !== "") {
-        userNames.push(e.target.value.trim());
-        setUserNames([...userNames]);
-        setKeywordsEntered(false);
-      }
-      document.getElementById("search-bar").value = "";
-    } else if (e.keyCode === 8 && e.target.value === "") {
+    if (e.keyCode === 32) { // SPACE
+      addUserName(e.target.value);
+    } else if (e.keyCode === 8 && e.target.value === "") { // BACKSPACE
       userNames.splice(userNames.length - 1, 1);
       setUserNames([...userNames]);
-    } else if (e.keyCode === 13) {
+    } else if (e.keyCode === 13) { // ENTER
+      addUserName(e.target.value);
       submitSearch(e);
     }
   }
@@ -122,25 +124,33 @@ function SearchComponent() {
     } else {
       console.log("Submit Searches");
 
-      // Clear old results
-      setResultsIds([]);
-      setProgress(0);
+      let searchDef;
+      if (currentSearch) {
+        searchDef = currentSearch.definition;
+      } else {
+        searchDef = new SearchDefinition(undefined, []);
+      }
 
       // TODO: This should eventually move to SearchDefinition and
       // shouldn't be this terribly confusing and inefficient
-      const testSites = testSiteNames.map((name) => allSites[name]);
+      const testSites = testSiteNames.map((name) => supportedSites[name]);
       const taggedSites = filterSitesByTags(testSites, categories);
-      const taggedSiteNames = taggedSites.map((site) => site.name);
 
-      const searchDef = new SearchDefinition(undefined, taggedSiteNames);
+      searchDef.includedSites = taggedSites;
       searchDef.userNames = userNames;
       searchDef.firstNames = firstNames;
       searchDef.lastNames = lastNames;
 
       await searchDef.save();
 
-      const search = await searchDef.new();
+      const search = await searchDef.new()
+      setCurrentSearch(search);
 
+      // Clear old results
+      setResultsIds([]);
+      setProgress(0);
+
+      // Register for notification of new results
       search.events.on("result", (id) => {
         setResultsIds((prev) => prev.concat([id]));
         setProgress(search.progress);
@@ -182,64 +192,6 @@ function SearchComponent() {
     }
   }
 
-  /**
-   * This useEffect monitors sortMethod, which changes whenever a new sort method is selected.
-   * It also monitors the resultIds array, which changes every time a new result is added.
-   *
-   * If either of these things happen, the displayed data is re-sorted and re-rendered with the current sortMethod.
-   */
-  useEffect(() => {
-    // Sort an array passed in
-    const sortArray = (array) => {
-      let sorted = [...array];
-
-      if (sortMethod === "new") {
-        // sort by age, newest found first
-        // this happens by default
-      } else if (sortMethod === "old") {
-        // sort by age, oldest found first
-        // since array is sorted by new by default, just reverse the array
-        sorted.reverse();
-      } else if (sortMethod === "az") {
-        // sort alphabetically by site name, A-Z
-        sorted.sort((a, b) => {
-          return a.site.name.toUpperCase() < b.site.name.toUpperCase()
-            ? -1
-            : a.site.name.toUpperCase() > b.site.name.toUpperCase()
-            ? 1
-            : 0;
-        });
-      } else if (sortMethod === "za") {
-        // sort alphabetically by site name, Z-A
-        sorted.sort((a, b) => {
-          return a.site.name.toUpperCase() > b.site.name.toUpperCase()
-            ? -1
-            : a.site.name.toUpperCase() < b.site.name.toUpperCase()
-            ? 1
-            : 0;
-        });
-      } else if (sortMethod === "confidence") {
-        // sort by confidence level, highest first
-        sorted.sort((a, b) => {
-          return a.confidence < b.confidence
-            ? -1
-            : a.confidence > b.confidence
-            ? 1
-            : 0;
-        });
-      } else {
-        // invalid sort method
-        console.error(`Invalid sort method called: '${sortMethod}'`);
-      }
-
-      return sorted;
-    };
-
-    // Re-sort discovered and unregistered arrays based on sortMethod
-    setDiscoveredSites(sortArray(discovered));
-    setUnregisteredSites(sortArray(unregistered));
-    // TODO: is this ok?
-  }, [sortMethod, resultIds]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Add accounts to discovered/unregistered arrays in order to render later
   for (const resultId of resultIds) {
@@ -255,7 +207,7 @@ function SearchComponent() {
   return (
     // TITLE AND SEARCH BAR
     <div className="content">
-    {resultIds.length == 0 && (
+    {currentSearch === null && (
       <>
       <div className="search-title">TRACE</div>
       <div className="search-info">
@@ -402,97 +354,108 @@ function SearchComponent() {
           : ""}
       </div>
 
-      {progress >= 0 ? (
+      {(progress >= 0 ) && (
         <div style={{ width: "100%", textAlign: "center" }}>
           <div>{progress}%</div>
           <div
             style={{
               width: `${progress}%`,
-              backgroundColor: "#5e72e4",
+              backgroundColor: "#1d8cf8", // $info
+              background: "linear-gradient(to right, #1d8cf8, #3358f4)",
               borderRadius: 50,
             }}
           >
             &nbsp;
           </div>
         </div>
-      ) : (
-        <div></div>
       )}
 
-      <hr></hr>
+      <br/>
 
-      {/* FILTER DROPDOWN */}
-      {resultIds.length > 0 && (
-        <div>
-          <Dropdown isOpen={dropdownOpen} toggle={toggleDropDown}>
-            <DropdownToggle caret>Sort By</DropdownToggle>
-            <DropdownMenu>
-              <DropdownItem onClick={() => setSortMethod("az")}>
-                <strong>Alphabetical A-Z</strong>
-              </DropdownItem>
-              <DropdownItem onClick={() => setSortMethod("za")}>
-                <strong>Alphabetical Z-A</strong>
-              </DropdownItem>
-              <DropdownItem onClick={() => setSortMethod("confidence")}>
-              <strong>Confidence</strong>
-              </DropdownItem>
-              <DropdownItem onClick={() => setSortMethod("new")}>
-              <strong>Newest</strong>
-              </DropdownItem>
-              <DropdownItem onClick={() => setSortMethod("old")}>
-              <strong>Oldest</strong>
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-          <hr></hr>
-          <Dropdown isOpen={dropdownOpen} toggle={toggleDropDown}>
-            <DropdownToggle caret>Select All</DropdownToggle>
-            <DropdownMenu>
-              <DropdownItem onClick={() => setSortMethod("az")}>
-                <strong>Alphabetical A-Z</strong>
-              </DropdownItem>
-              <DropdownItem onClick={() => setSortMethod("za")}>
-                <strong>Alphabetical Z-A</strong>
-              </DropdownItem>
-              <DropdownItem onClick={() => setSortMethod("confidence")}>
-              <strong>Confidence</strong>
-              </DropdownItem>
-              <DropdownItem onClick={() => setSortMethod("new")}>
-              <strong>Newest</strong>
-              </DropdownItem>
-              <DropdownItem onClick={() => setSortMethod("old")}>
-              <strong>Oldest</strong>
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-        </div>
+      {currentSearch && currentSearch.state !== SearchState.CREATED && (
+      <>
+      <div style={{textAlign: "center"}}>
+
+        <ButtonGroup
+          className="btn-group-toggle"
+          data-toggle="buttons"
+        >
+          <Button
+            tag="label"
+            className={classNames("btn-simple", {
+              active: activeTab === "discovered",
+            })}
+            color="info"
+            id="0"
+            size="md"
+            onClick={() => setActiveTab("discovered")}
+          >
+            <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
+              Discovered
+            </span>
+            <span className="d-block d-sm-none">
+              <i className="tim-icons icon-single-02" />
+            </span>
+          </Button>
+          <Button
+            color="info"
+            id="1"
+            size="md"
+            tag="label"
+            className={classNames("btn-simple", {
+              active: activeTab === "unregistered",
+            })}
+            onClick={() => setActiveTab("unregistered")}
+          >
+            <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
+              Unregistered
+            </span>
+            <span className="d-block d-sm-none">
+              <i className="tim-icons icon-gift-2" />
+            </span>
+          </Button>
+          <Button
+            color="info"
+            id="2"
+            size="md"
+            tag="label"
+            className={classNames("btn-simple", {
+              active: activeTab === "inconclusive",
+            })}
+            onClick={() => setActiveTab("inconclusive")}
+          >
+            <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
+              Inconclusive
+            </span>
+            <span className="d-block d-sm-none">
+              <i className="tim-icons icon-tap-02" />
+            </span>
+          </Button>
+        </ButtonGroup>
+        <br/>
+        <br/>
+      </div>
+
+      {(activeTab === "discovered") &&
+        <AccountCardList
+          headerText="Discovered Accounts"
+          accounts={discovered}
+        />
+      }
+      {(activeTab === "unregistered") &&
+        <AccountCardList
+          headerText="Unregistered Accounts"
+          accounts={unregistered}
+        />
+      }
+      {(activeTab === "inconclusive") &&
+        <AccountCardList
+          headerText="Inconclusive Accounts"
+          accounts={[]} /* TODO */
+        />
+      }
+      </>
       )}
-
-      <div>
-        {resultIds.length > 0 && (
-          <div>
-            <h2>Discovered Accounts</h2>
-          </div>
-        )}
-        <Row>
-          {discoveredSites.map((account) => (
-            <SiteCard account={account} page="search" />
-          ))}
-        </Row>
-      </div>
-
-      <div>
-        {resultIds.length > 0 && (
-          <div>
-            <h2>Unregistered Accounts</h2>
-          </div>
-        )}
-        <Row>
-          {unregisteredSites.map((account) => (
-            <SiteCard account={account}></SiteCard>
-          ))}
-        </Row>
-      </div>
     </div>
   );
 }
