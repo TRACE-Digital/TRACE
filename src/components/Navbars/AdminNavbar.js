@@ -19,7 +19,7 @@ import { useEffect, useState } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 
-import { clearDb } from 'trace-search';
+import { resetDb, resetRemoteDb, setRemoteUser } from 'trace-search';
 
 import SyncToggle from 'components/SyncToggle/SyncToggle';
 
@@ -76,8 +76,8 @@ function AdminNavbar(props) {
         setIsLoggedIn(false);
       }
     })();
-
   });
+
   // function that adds color white/transparent to the navbar on resize (this is for the collapse)
   const updateColor = () => {
     if (window.innerWidth < 993 && collapseOpen) {
@@ -157,8 +157,17 @@ function AdminNavbar(props) {
                   <DropdownItem divider tag="li" />
                   <NavLink tag="li">
                     <DropdownItem className="nav-item" onClick={async () => {
+                      const confirmation = window.confirm('Are you sure? This action is irreversible and will delete ALL your data.');
+                      if (!confirmation) {
+                        return;
+                      }
+
                       try {
-                        await clearDb();
+                        await resetDb();
+                        if (isLoggedIn) {
+                          await setRemoteUser(await Auth.currentUserPoolUser());
+                          await resetRemoteDb();
+                        }
                         window.location.reload();
                       } catch (e) {
                         console.error(e);

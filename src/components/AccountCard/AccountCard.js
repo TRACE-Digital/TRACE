@@ -118,7 +118,7 @@ const AccountCard = (props) => {
             {/* PRIVACY RATING FROM HIBP */}
             <div className="additional-info">
               PRIVACY RATING - {" "}
-              <PrivacyBadge service={props.account.site.name}></PrivacyBadge>
+              <PrivacyBadge account={props.account} service={props.account.site.name}></PrivacyBadge>
               <br/>
             </div>
 

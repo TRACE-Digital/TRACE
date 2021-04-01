@@ -30,7 +30,7 @@ import {
   Col,
 } from "reactstrap";
 
-import { ThirdPartyAccount, accounts, AccountType } from "trace-search";
+import { ClaimedAccount, ManualAccount, ThirdPartyAccount } from "trace-search";
 import { useEffect } from "react";
 import PrivacyBadge from "../components/PrivacyBadge/PrivacyBadge";
 import { Link } from "react-router-dom";
@@ -38,18 +38,29 @@ import { Link } from "react-router-dom";
 function Dashboard(props) {
   const [, setPlsRender] = React.useState(false);
 
+  // Load the initial accounts that we need and
+  // register for any future changes
   useEffect(() => {
     const loadAccounts = async () => {
       try {
-        // Load all accounts from the database into memory
-        await ThirdPartyAccount.loadAll();
-        setPlsRender((current) => !current);
+        // Load what we need from the database into memory
+        await ClaimedAccount.loadAll();
+        await ManualAccount.loadAll();
+
+        setPlsRender(prev => !prev);
       } catch (e) {
         console.error("Failed to load accounts from the database!");
         console.error(e);
       }
-      console.log(accounts);
+      console.log(ThirdPartyAccount.accountCache.items);
     }
+
+    ClaimedAccount.accountCache.events.on('change', () => {
+      setPlsRender(prev => !prev);
+    });
+    ManualAccount.accountCache.events.on('change', () => {
+      setPlsRender(prev => !prev);
+    });
 
     loadAccounts();
   }, []);
@@ -75,8 +86,12 @@ function Dashboard(props) {
         <hr></hr>
 
         <Row>
-          {Object.values(accounts)
-            .filter((account) => account.type === AccountType.CLAIMED)
+          { /* Combine Claimed and Manual accounts for display */
+            [].concat(
+              Object.values(ClaimedAccount.accounts)
+            ).concat(
+              Object.values(ManualAccount.accounts)
+            )
             .map((account) => (
               <Col lg="3" key={account.id}>
                 <Card className="card-user">
@@ -98,7 +113,13 @@ function Dashboard(props) {
                             <i className="fas fa-ellipsis-h"></i>
                           </DropdownToggle>
                           <DropdownMenu className="dropdown-menu-right">
-                            <DropdownItem onClick={(e) => e.preventDefault()}>
+                            <DropdownItem onClick={
+                              async (e) => {
+                                e.preventDefault();
+                                await account.remove();
+                                // TODO: Trigger rerender
+                              }
+                            }>
                               REMOVE
                             </DropdownItem>
                             <DropdownItem onClick={(e) => e.preventDefault()}>

@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // reactstrap components
 import classNames from "classnames";
 
 import {
   SearchDefinition,
-  AccountType,
-  searchResults,
   SearchState,
+  ThirdPartyAccount,
   supportedSites,
   tags,
   filterSitesByTags,
@@ -44,31 +43,69 @@ function SearchComponent() {
   const [userNames, setUserNames] = useState([]);
   const [firstNames, setFirstNames] = useState([]);
   const [lastNames, setLastNames] = useState([]);
-  const [resultIds, setResultsIds] = useState([]);
   const [progress, setProgress] = useState(-1);
   const [categories, setCategories] = useState(tags.slice());
   const [activeTab, setActiveTab] = useState("discovered");
   const [currentSearch, setCurrentSearch] = useState(null);
+  const [, setPlsRender] = React.useState(false);
 
-  let discovered = [];
-  let unregistered = [];
+  // Register for changes to any search results
+  // Results get updated as they are claimed/rejected
+  // This catches those changes and forces a rerender
+  useEffect(() => {
+    // This may cause a few extra rerenders since it's results for all searches,
+    // but the user is not likely to have many searches running at once
+    ThirdPartyAccount.resultCache.events.on('change', () => {
+      setPlsRender(prev => !prev);
+    });
+  }, []);
+
+  // Subscribe to results from our search
+  useEffect(() => {
+    if (currentSearch === null) {
+      return;
+    }
+
+    const handle = (id) => {
+      // We don't care about the resultIds since
+      // this triggers a rerender
+      setProgress(search.progress);
+    };
+
+    // Preserve the state of currentSearch
+    const search = currentSearch;
+    // Register for notification of new results
+    search.events.on('result', handle);
+
+    const cleanup = () => {
+      search.events.removeListener('result', handle);
+    };
+
+    return cleanup;
+  }, [currentSearch]);
 
   const handleRefineClick = () => {
     setVisible(!isVisible);
   };
 
-  const handleCancelClick = () => {
-    // refresh window
-    window.location.reload();
+  const handleCancelClick = async () => {
+    await currentSearch.cancel();
+    // TODO: await handleClearClick() ??
   };
 
+  /**
+   * Clears the current search and returns
+   * a new `Search` based on the same definition
+   * (if a definition is present).
+   */
   const handleClearClick = async () => {
     // Clear old results
-    setResultsIds([]);
     setProgress(-1);
-    const search = await currentSearch.definition.new()
-    setCurrentSearch(search);
-    return search;
+    if (currentSearch) {
+      const search = await currentSearch.definition.new()
+      setCurrentSearch(search);
+      return search;
+    }
   }
 
   const selectAll = () => {
@@ -134,14 +171,19 @@ function SearchComponent() {
       console.log("Submit Searches");
 
       let searchDef;
+      let search;
       if (currentSearch) {
         searchDef = currentSearch.definition;
+        search = await handleClearClick();
       } else {
         searchDef = new SearchDefinition(undefined, []);
+        search = await searchDef.new();
+        setCurrentSearch(search);
       }
 
-      // TODO: This should eventually move to SearchDefinition and
-      // shouldn't be this terribly confusing and inefficient
+      // Tags can be passed into the SearchDefinition constructor
+      // but they will apply to all supportedSites
+      // Calculate this on our own since we want to limit the search to just test sites
       const testSites = testSiteNames.map((name) => supportedSites[name]);
       const taggedSites = filterSitesByTags(testSites, categories);
 
@@ -152,15 +194,7 @@ function SearchComponent() {
 
       await searchDef.save();
 
-      // Clear old results
-      const search = await handleClearClick();
-
-      // Register for notification of new results
-      search.events.on("result", (id) => {
-        setResultsIds((prev) => prev.concat([id]));
-        setProgress(search.progress);
-      });
-
+      console.log(search);
       await search.start();
     }
   }
@@ -194,18 +228,6 @@ function SearchComponent() {
       setTagsEntered(false);
       categories.push(e.target.value);
       setCategories([...categories]);
-    }
-  }
-
-
-  // Add accounts to discovered/unregistered arrays in order to render later
-  for (const resultId of resultIds) {
-    const account = searchResults[resultId];
-
-    if (account.type === AccountType.UNREGISTERED) {
-      unregistered.push(account);
-    } else {
-      discovered.push(account);
     }
   }
 
@@ -451,7 +473,7 @@ function SearchComponent() {
       {(activeTab === "discovered") &&
         <AccountCardList
           headerText="Discovered Accounts"
-          accounts={discovered}
+          accounts={currentSearch?.registeredResults}
           selectable={true}
 	    		actionable={true}
 			    flippable={true}
@@ -461,7 +483,7 @@ function SearchComponent() {
       {(activeTab === "unregistered") &&
         <AccountCardList
           headerText="Unregistered Accounts"
-          accounts={unregistered}
+          accounts={currentSearch?.unregisteredResults}
           selectable={true}
           actionable={true}
           flippable={true}
@@ -471,7 +493,7 @@ function SearchComponent() {
       {(activeTab === "inconclusive") &&
         <AccountCardList
           headerText="Inconclusive Accounts"
-          accounts={[]} /* TODO */
+          accounts={currentSearch?.inconclusiveResults}
           selectable={true}
 			    actionable={true}
 			    flippable={true}

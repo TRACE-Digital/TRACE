@@ -4,15 +4,6 @@ import { claimAccount } from 'components/AccountCard/AccountCard';
 import React, { useState, useEffect } from 'react';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'reactstrap';
 
-// import {
-//   SearchDefinition,
-//   AccountType,
-//   searchResults,
-//   allSites,
-//   tags,
-//   filterSitesByTags,
-// } from "trace-search";
-
 function AccountCardList(props) {
   const [sortMethod, setSortMethod] = useState("new");
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
