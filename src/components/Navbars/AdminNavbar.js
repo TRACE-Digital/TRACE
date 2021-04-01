@@ -151,17 +151,19 @@ function AdminNavbar(props) {
                   <DropdownItem tag="li" className="">
 
                   </DropdownItem>
+                  { isLoggedIn && <div>
                   <DropdownItem divider tag="li" />
-                  <NavLink tag="li">
-                    <DropdownItem className="nav-item" onClick={async () => {
-                      try {
-                        await clearDb();
-                        window.location.reload();
-                      } catch (e) {
-                        console.error(e);
-                      }
-                    }}>Delete my data</DropdownItem>
-                  </NavLink>
+                    <NavLink tag="li">
+                      <DropdownItem className="nav-item" onClick={async () => {
+                        try {
+                          await clearDb();
+                          window.location.reload();
+                        } catch (e) {
+                          console.error(e);
+                        }
+                      }}>Delete my data</DropdownItem>
+                    </NavLink></div>
+                  }
                   <DropdownItem divider tag="li" />
                   {!isLoggedIn &&
                   <NavLink to="/login" tag={Link}>
