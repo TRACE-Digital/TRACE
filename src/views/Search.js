@@ -482,7 +482,7 @@ function SearchComponent() {
           accounts={currentSearch?.registeredResults}
           selectable={true}
           actionable={true}
-			    flippable={true}
+          flippable={true}
           showNames={true}
           showTripleDot={false}
         />
