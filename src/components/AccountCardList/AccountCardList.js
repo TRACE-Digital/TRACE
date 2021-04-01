@@ -167,7 +167,6 @@ function AccountCardList(props) {
           <AccountCard
             key={account.id}
             account={account}
-            page="search"
             selectable={props.selectable}
             actionable={props.actionable}
             flippable={props.flippable}
