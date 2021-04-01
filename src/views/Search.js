@@ -323,9 +323,7 @@ function SearchComponent() {
           Deselect All
         </Button>
 
-        <br />
-        <br />
-        <br />
+        <br /><br /><br />
         <h1>NAMES</h1>
         {/* First Name section for refine search dropdown goes here*/}
         <h6>Enter First Names / Nicknames:</h6>

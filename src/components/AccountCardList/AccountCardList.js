@@ -132,6 +132,7 @@ function AccountCardList(props) {
           </DropdownMenu>
         </Dropdown>
         {/* ACTIONS */}
+        {props.actionable && (
         <Dropdown isOpen={actionsDropdownOpen} toggle={toggleActionsDropdown} style={{display: "inline"}}>
           <DropdownToggle caret>Actions
             <b className="caret d-none d-lg-block d-xl-block" style={{marginLeft: "-15px", marginTop: "-11px"}} />
@@ -154,11 +155,12 @@ function AccountCardList(props) {
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>
+        )}
         <br/>
       </span>
 
       <div>
-        <h2>{props.headerText} - {props.accounts.length} results</h2>
+        <h2>{props.headerText} - {props.accounts.length} result{(props.accounts.length === 1) ? '': 's'}</h2>
       </div>
       <Row>
         {sortedAccounts.map((account) => (
