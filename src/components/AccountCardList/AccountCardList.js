@@ -150,7 +150,7 @@ function AccountCardList(props) {
               Claim Selected
             </DropdownItem>
             <DropdownItem divider tag="li" />
-            <DropdownItem onClick={() => rejectSelected("new")}>
+            <DropdownItem onClick={() => rejectSelected()}>
               Reject Selected
             </DropdownItem>
           </DropdownMenu>
