@@ -481,7 +481,7 @@ function SearchComponent() {
           headerText="Discovered Accounts"
           accounts={currentSearch?.registeredResults}
           selectable={true}
-	    		actionable={true}
+          actionable={true}
 			    flippable={true}
           showNames={true}
           showTripleDot={false}
