@@ -3,6 +3,7 @@ import { Row, Col } from "reactstrap";
 import { ChromePicker } from 'react-color'
 import { Button, ButtonGroup } from "reactstrap";
 import classNames from "classnames";
+
 import { ThirdPartyAccount,  ClaimedAccount, ManualAccount } from "trace-search";
 import { icon } from '@fortawesome/fontawesome-svg-core';
 
@@ -24,6 +25,11 @@ function Colors(props) {
         "siteColor": "#26283A",
         "iconColor": "Default"
     }])
+
+
+
+    
+
     // const [claimedAccounts, setClaimedAccounts] = useState({});
     // const [onProfile, setOnProfile] = useState(false);
 
@@ -113,6 +119,7 @@ function Colors(props) {
         console.log("ENTERED ADD");
         props.page.accounts.push(item);
         setPlsRender(prev => !prev);
+        props.onUpdatePage(null);
     }
 
     function handleRemove(item) {
@@ -120,6 +127,7 @@ function Colors(props) {
         props.page.accounts.splice(props.page.accounts.indexOf(item), 1);
         setPlsRender(prev => !prev);
         console.log(props.page.accounts);
+        props.onUpdatePage(null);
     }
 
     function handleDefaultIcon(e){
@@ -239,24 +247,30 @@ function Colors(props) {
                                     <div id="title" 
                                         className="myButton" 
                                         style={currentButton == "Title" ? 
-                                            {"box-shadow": "0 0 6px #ba54fa", backgroundColor: `${titleColor}`, color: "white"} : 
-                                            { backgroundColor: `${titleColor}`, color: "white"}} 
+                                            {"box-shadow": "0 0 6px #ba54fa", backgroundColor: `${titleColor}`
+                                            , color: (`${titleColor}` == "#FFFFFF" || `${titleColor}` == "#ffffff" ?  "black" :  "white")} : 
+                                            { backgroundColor: `${titleColor}`, 
+                                            color: (`${titleColor}` == "#FFFFFF" || `${titleColor}` == "#ffffff" ?  "black" :  "white")}} 
                                         onClick={handleClick}>
                                             Title Color
                                     </div>
                                     <div id="background" 
                                         className="myButton" 
                                         style={currentButton == "Background" ? 
-                                            {"box-shadow": "0 0 6px #ba54fa", backgroundColor: `${backColor}`, color: "white"} : 
-                                            { backgroundColor: `${backColor}`, color: "white"}} 
+                                            {"box-shadow": "0 0 6px #ba54fa", backgroundColor: `${backColor}`, 
+                                            color: (`${backColor}` == "#FFFFFF" || `${backColor}` == "#ffffff" ?  "black" :  "white")} : 
+                                            { backgroundColor: `${backColor}`, 
+                                            color: (`${backColor}` == "#FFFFFF" || `${backColor}` == "#ffffff" ?  "black" :  "white")}} 
                                         onClick={handleClick}>
                                             Background Color
                                     </div>
                                     <div id="site" 
                                         className="myButton" 
                                         style={currentButton == "Site" ? 
-                                            { "box-shadow": "0 0 6px #ba54fa", backgroundColor: `${siteColor}`, color: "white"} : 
-                                            {backgroundColor: `${siteColor}`, color: "white"}} 
+                                            { "box-shadow": "0 0 6px #ba54fa", backgroundColor: `${siteColor}`, 
+                                            color: (`${siteColor}` == "#FFFFFF" || `${siteColor}` == "#ffffff" ?  "black" :  "white")} : 
+                                            {backgroundColor: `${siteColor}`, 
+                                            color: (`${backColor}` == "#FFFFFF" || `${backColor}` == "#ffffff" ?  "black" :  "white")}} 
                                         onClick={handleClick}>
                                             Site Color
                                     </div>

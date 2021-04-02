@@ -65,6 +65,11 @@ const Editor = () => {
    
   }
 
+  const updatePage = () => {
+    saveData();
+    setPlsRender(prev => !prev);
+  }
+
   /**
    * Function called when the add button is clicked for a site
    */
@@ -133,7 +138,7 @@ const Editor = () => {
 
   return (
     <>
-      {isOpen ? <Colors onSelectLanguage={handleLanguage} closePopup={handleAddClick} page={myProfile} /> : null}
+      {isOpen ? <Colors onSelectLanguage={handleLanguage} closePopup={handleAddClick} onUpdatePage={updatePage} page={myProfile} /> : null}
       <div className={isOpen ? `content blur` : `content`}>
         <div className={`editor-background`} style={{ backgroundColor: `${colorScheme[0].backgroundColor}` }}>
           <div className={"editor-title"} style={{ color: `${colorScheme[0].titleColor}` }}>
