@@ -33,7 +33,7 @@ function Colors(props) {
     // const [claimedAccounts, setClaimedAccounts] = useState({});
     // const [onProfile, setOnProfile] = useState(false);
 
-    
+
 
     // Load the initial accounts that we need and
     // register for any future changes
@@ -123,7 +123,7 @@ function Colors(props) {
     }
 
     function handleRemove(item) {
-        console.log("ENTRED REMOVE");
+        console.log("ENTERED REMOVE");
         props.page.accounts.splice(props.page.accounts.indexOf(item), 1);
         setPlsRender(prev => !prev);
         console.log(props.page.accounts);
@@ -146,22 +146,22 @@ function Colors(props) {
     function handleColorPicker(e) {
         setChromeColor(e);
         console.log(currentButton);
-        if (currentButton == "Title") {
+        if (currentButton === "Title") {
             setTitleColor(e.hex);
             colorProps[0].titleColor = e.hex;
             props.onSelectLanguage(colorProps);
         }
-        else if (currentButton == "Site") {
+        else if (currentButton === "Site") {
             setSiteColor(e.hex);
             colorProps[0].siteColor = e.hex;
             props.onSelectLanguage(colorProps);
         }
-        else if (currentButton == "Custom Icon") {
+        else if (currentButton === "Custom Icon") {
             setIconColor(e.hex);
             colorProps[0].iconColor = e.hex;
             props.onSelectLanguage(colorProps);
         }
-        else if (currentButton == "Background") {
+        else if (currentButton === "Background") {
             setBackgroundColor(e.hex);
             colorProps[0].backgroundColor = e.hex;
             props.onSelectLanguage(colorProps);
@@ -171,19 +171,19 @@ function Colors(props) {
     function handleClick(e) {
         setDisabled(false);
         console.log(e.target.id);
-        if (e.target.id == "title") {
+        if (e.target.id === "title") {
             setCurrentButton("Title");
             setChromeColor(e.target.style.backgroundColor);
         }
-        else if (e.target.id == "site") {
+        else if (e.target.id === "site") {
             setCurrentButton("Site");
             setChromeColor(e.target.style.backgroundColor);
         }
-        else if (e.target.id == "background") {
+        else if (e.target.id === "background") {
             setCurrentButton("Background");
             setChromeColor(e.target.style.backgroundColor);
         }
-        else if (e.target.id == "defaultIcon") {
+        else if (e.target.id === "defaultIcon") {
             setCurrentButton("Default Icon");
         }
     }

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Colors from "views/Colors.js";
-import { ThirdPartyAccount, accounts, AccountType, ProfilePage, pages } from "trace-search";
+import { ProfilePage } from "trace-search";
 import SiteCard from "components/SiteCard/SiteCard";
 import { GridContextProvider, GridDropZone, GridItem, swap } from "react-grid-dnd";
 import { Link } from "react-router-dom";
-import { Row, Col } from "reactstrap";
 import { Auth } from 'aws-amplify';
 import { renderToStaticMarkup } from 'react-dom/server'
 import {
@@ -31,7 +30,6 @@ const Editor = () => {
   /**
    * Initialize constants
    */
-  const [claimedAccounts, setClaimedAccounts] = useState({});
   const [myProfile, setProfileData] = useState(null);
   const [title, setTitle] = useState("Enter Title");
   const [isOpen, setIsOpen] = useState(false);
@@ -99,7 +97,7 @@ const Editor = () => {
    * Function called when title is edited and saves
    */
   function updateTitle(e) {
-    if (e.target.value == "") {
+    if (e.target.value === "") {
       setTitle("");
       myProfile.title = "";
     }
