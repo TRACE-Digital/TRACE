@@ -4,7 +4,27 @@
         height: 120px;
     }
 
+    &.highlighted{
+      // -moz-box-shadow: 0 0 10px #59A5DB;
+      // -webkit-box-shadow: 0 0 10px #59A5DB;
+      // box-shadow: 0px 0px 10px #59A5DB;
+    }
 
+    &.Pink{
+      background-color:#DD4662;
+    }
+
+    &.Default{
+      background-color:#26283A;
+    }
+
+    &.Purple{
+      background-color: #96B8DB;
+    }
+
+    &.Blue{
+      background-color: #4089BB;
+    }
 
     .edit-text{
       font-size: 1rem;
@@ -471,6 +491,19 @@
 
     }
 
+
+    .color-container{
+      font-size: 1rem;
+      color: #ffffff;
+      height: 70px;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      text-align:center;
+    }
+
+
+
     .editor-handle-name {
       font-size: 1rem;
       color:#ffffff;
@@ -548,6 +581,7 @@
         >.card-details {
           margin: auto;
         }
+        
     }
 
     hr {
