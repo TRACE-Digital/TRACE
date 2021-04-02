@@ -19,7 +19,7 @@ import { useEffect, useState } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 
-import { resetDb, resetRemoteDb, setRemoteUser, EXTENSION_VERSION } from 'trace-search';
+import { resetDb, resetRemoteDb, setRemoteUser } from 'trace-search';
 
 import SyncToggle from 'components/SyncToggle/SyncToggle';
 
@@ -157,7 +157,7 @@ function AdminNavbar(props) {
                   <DropdownItem divider tag="li" />
                   <NavLink tag="li">
                     <DropdownItem className="nav-item">
-                      Extension version: { EXTENSION_VERSION || 'Not installed' }
+                      Extension version: v{ window.__TRACE_EXTENSION_HOOK__?.getVersionStr() || 'Not installed' }
                     </DropdownItem>
                   </NavLink>
                   <NavLink tag="li">
