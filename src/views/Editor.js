@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Colors from "views/Colors.js";
-import { ProfilePage } from "trace-search";
+import { ThirdPartyAccount, accounts, AccountType, ProfilePage, pages } from "trace-search";
 import SiteCard from "components/SiteCard/SiteCard";
 import { GridContextProvider, GridDropZone, GridItem, swap } from "react-grid-dnd";
 import { Link } from "react-router-dom";
+import { Row, Col } from "reactstrap";
 import { Auth } from 'aws-amplify';
 import { renderToStaticMarkup } from 'react-dom/server'
 import {
@@ -30,6 +31,7 @@ const Editor = () => {
   /**
    * Initialize constants
    */
+  const [claimedAccounts, setClaimedAccounts] = useState({});
   const [myProfile, setProfileData] = useState(null);
   const [title, setTitle] = useState("Enter Title");
   const [isOpen, setIsOpen] = useState(false);
@@ -97,7 +99,7 @@ const Editor = () => {
    * Function called when title is edited and saves
    */
   function updateTitle(e) {
-    if (e.target.value === "") {
+    if (e.target.value == "") {
       setTitle("");
       myProfile.title = "";
     }
@@ -125,7 +127,6 @@ const Editor = () => {
   }, []);
 
   /**
-<<<<<<< HEAD
    * Monitors for user login before accessing profile page
    */
   useEffect(() => {
@@ -231,9 +232,6 @@ const Editor = () => {
 
   /**
    * Monitors for the profile page sites 
-=======
-   * Monitors for the profile page sites
->>>>>>> 96de4b2c03ff40deb44d227f8ef35aff2d47bfc2
    */
   useEffect(() => {
 
@@ -261,7 +259,7 @@ const Editor = () => {
 
   let baseContent = (
     <>
-    <div className={`editor-background`} style={{ backgroundColor: `${colorScheme[0].backgroundColor}` }}></div>
+    <div className={`editor-background`} style={{ backgroundColor: `${colorScheme[0].backgroundColor}` }}>
       <div className={"editor-title"} style={{ color: `${colorScheme[0].titleColor}` }}>
         <input
           className="editor-input"
@@ -281,6 +279,7 @@ const Editor = () => {
               </Col>
             ))}
             </Row>
+            </div>
             </div>
       </>
   );
