@@ -28,14 +28,6 @@ const Editor = () => {
     "iconColor": "Default"
   }])
 
-  /**
-   * Called when the edit button is clicked and sets isOpen to the opposite
-   */
-  const togglePopup = (e) => {
-    if (e.target.className === "tim-icons icon-pencil icon") {
-      setIsOpen(!isOpen);
-    }
-  }
 
   /**
    * Function is called when there is a change on the site grid and updates the order
@@ -67,6 +59,9 @@ const Editor = () => {
     myProfile.colorScheme.backgroundColor = colorScheme[0].backgroundColor;
     myProfile.colorScheme.siteColor = colorScheme[0].siteColor;
     myProfile.colorScheme.iconColor = colorScheme[0].iconColor;
+    console.log(myProfile.colorScheme.iconColor);
+    saveData();
+    setPlsRender(prev => !prev);
    
   }
 
@@ -92,22 +87,6 @@ const Editor = () => {
     }
     saveData();
   }
-
-  /**
-   * Monitors for user login before accessing profile page
-   */
-  useEffect(() => {
-    async function isLoggedIn() {
-      try {
-        await Auth.currentUserPoolUser();
-      }
-      catch {
-        window.location.href = '/login';
-      }
-    }
-    isLoggedIn();
-  }, []);
-
 
   /**
    * Monitors for user login before accessing profile page
@@ -154,7 +133,7 @@ const Editor = () => {
   return (
     <>
       {isOpen ? <Colors onSelectLanguage={handleLanguage} closePopup={handleAddClick} page={myProfile} /> : null}
-      <div onClick={togglePopup} className={isOpen ? `content blur` : `content`}>
+      <div className={isOpen ? `content blur` : `content`}>
         <div className={`editor-background`} style={{ backgroundColor: `${colorScheme[0].backgroundColor}` }}>
 
           <div className={"editor-title"} style={{ color: `${colorScheme[0].titleColor}` }}>
@@ -193,7 +172,7 @@ const Editor = () => {
                         width: "100%",
                         height: "100%",
                       }}>
-                      {<SiteCard editorColor={colorScheme[0].siteColor} account={item} page="editor" />}
+                      {<SiteCard editorColor={colorScheme[0].siteColor} iconColor={colorScheme[0].iconColor} account={item} page="editor" />}
                     </div>
                   </GridItem>
                 ))}

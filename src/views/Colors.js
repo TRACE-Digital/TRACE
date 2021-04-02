@@ -47,6 +47,10 @@ function Colors(props) {
                 console.error(e);
             }
             console.log(ThirdPartyAccount.accountCache.items);
+            // setTitleColor(props.page.colorScheme.titleColor);
+            // setBackgroundColor(props.page.colorScheme.backgroundColor);
+            // setSiteColor(props.page.colorScheme.siteColor);
+            // setIconColor(props.page.colorScheme.iconColor);
         }
 
         ClaimedAccount.accountCache.events.on('change', triggerRender);
@@ -116,6 +120,8 @@ function Colors(props) {
     function handleDefaultIcon(e){
         setDisabled(true);
         setCurrentButton("Default Icon");
+        colorProps[0].iconColor = "Default";
+        props.onSelectLanguage(colorProps);
     }
 
     function handleCustomIcon(e){
@@ -250,7 +256,7 @@ function Colors(props) {
                                         <div id="defaultIcon" 
                                             className="company-colors" 
                                             style={currentButton == "Default Icon" ? 
-                                                {"box-shadow": "0 0 6px #ba54fa", backgroundColor: `#ba54fa"`, color: "white" } : 
+                                                {"box-shadow": "0 0 6px #ba54fa", backgroundColor: `#ba54fa`, color: "white" } : 
                                                 { backgroundColor: `grey`, color: "white"}} 
                                             onClick={handleDefaultIcon}>
                                                 Default Icon

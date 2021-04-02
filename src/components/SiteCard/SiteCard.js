@@ -22,6 +22,8 @@ const SiteCard = (props) => {
   const editor = props.page === "editor";
   const colors = props.color;
   const editorColor = props.editorColor;
+  const iconColor = props.iconColor;
+
 
   if (!search && !dashboard && !editor) {
     console.warn(
@@ -85,11 +87,9 @@ const SiteCard = (props) => {
             <div className="editor">
               {" "}
               <i
-                className={
-                  account.site.logoClass !== "fa-question-circle"
-                    ? "fab " + account.site.logoClass
-                    : "fas " + account.site.logoClass
-                }
+                className={ account.site.logoClass !== "fa-question-circle" ? "fab " + account.site.logoClass : "fas " + account.site.logoClass}
+                style={props.page == "editor" ? (iconColor == "Default" ? null : { color: `${iconColor}` } ) : null}
+
               ></i>
             </div>
 
