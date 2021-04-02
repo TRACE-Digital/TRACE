@@ -83,9 +83,10 @@ const Editor = () => {
     }
     else {
       setTitle(e.target.value);
-      myProfile.title = title;
+      myProfile.title = e.target.value;
     }
     saveData();
+    setPlsRender(prev => !prev);
   }
 
   /**
@@ -122,7 +123,7 @@ const Editor = () => {
         setTitle(results[0].title);
       }
       setProfileData(results[0]);
-      setHeightSize(results[0].accounts.length);
+      setHeightSize(8); // temp for now
       // saveData();
 
     };
@@ -135,9 +136,7 @@ const Editor = () => {
       {isOpen ? <Colors onSelectLanguage={handleLanguage} closePopup={handleAddClick} page={myProfile} /> : null}
       <div className={isOpen ? `content blur` : `content`}>
         <div className={`editor-background`} style={{ backgroundColor: `${colorScheme[0].backgroundColor}` }}>
-
           <div className={"editor-title"} style={{ color: `${colorScheme[0].titleColor}` }}>
-
 
             <input
               className="editor-input"
