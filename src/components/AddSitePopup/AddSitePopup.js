@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Row, Col, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Button, Row, Col, Form, FormGroup, Label, Input } from 'reactstrap';
 
 import { ManualAccount, tags } from 'trace-search';
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from "axios";
-import { Button, Row, Col, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Button, Row, Col, Form, FormGroup, Label, Input } from 'reactstrap';
 
 // Github stuff
 const owner = "TRACE-Digital"
@@ -10,7 +10,7 @@ const team = ["jmcker", "charlorr", "isabelbattag", "cchan207", "jlmolskness", "
 
 const issueAlert = "Thank you for contacting us. Our team has been alerted. Your Github issue has been created at https://github.com/TRACE-Digital/TRACE/issues. \n\nClick OK to open your issue in another tab, CANCEL to stay.";
 
-const RequestWebsiteForm = (props) => {    
+const RequestWebsiteForm = (props) => {
     const [title, setTitle] = useState('');
     const [website, setWebsite] = useState('');
     const [other, setOther] = useState('');
@@ -29,7 +29,7 @@ const RequestWebsiteForm = (props) => {
     function onOtherChange(e) {
         setShowError(false);
         setOther(e);
-    } 
+    }
 
     async function createIssue() {
         const description = ("**What website do you want added to our automated search algorithm**\n")
@@ -84,7 +84,7 @@ const RequestWebsiteForm = (props) => {
     return (
         <div className="issue-forms">
             <h1 className="title">{props.text}</h1>
-            <p className="description">Use this form to request support for a website in the automated search. 
+            <p className="description">Use this form to request support for a website in the automated search.
             Please make sure the site you are requesting has a public profile page. We cannot find private accounts like emails or uber.</p>
             <Form>
                 <Row form>

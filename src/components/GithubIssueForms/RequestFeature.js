@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Row, Col, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Button, Row, Col, Form, FormGroup, Label, Input, } from 'reactstrap';
 import axios from "axios";
 
 // Github stuff
@@ -35,7 +35,7 @@ const RequestFeatureForm = (props) => {
     function onOtherChange(e) {
         setShowError(false);
         setOther(e);
-    } 
+    }
 
     function clearInputs() {
         var inputs = document.querySelectorAll("[id='input']");
@@ -50,7 +50,7 @@ const RequestFeatureForm = (props) => {
 
     async function createIssue() {
         const description = ("**Is your feature request related to a problem? Please describe**\n")
-            .concat(problem, "\n\n**Describe the solution you'd like**\n", solution, 
+            .concat(problem, "\n\n**Describe the solution you'd like**\n", solution,
             "\n\n**Additional context**\n", other);
 
         try {

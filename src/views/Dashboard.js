@@ -18,21 +18,9 @@
 import React from "react";
 // nodejs library that concatenates classes
 
-import Popup from '../components/AddSitePopup/AddSitePopup';  
+import Popup from '../components/AddSitePopup/AddSitePopup';
 
-// reactstrap components
-import {
-  Card,
-  CardBody,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
-  Row,
-  Col,
-} from "reactstrap";
-
-import { ThirdPartyAccount, accounts, AccountType, ClaimedAccount, ManualAccount } from "trace-search";
+import { ThirdPartyAccount, ClaimedAccount, ManualAccount } from "trace-search";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import AccountCardList from "components/AccountCardList/AccountCardList";
@@ -115,12 +103,12 @@ function Dashboard(props) {
       </div>
     </div>
     <div className="content">
-        {showPopup ?  
+        {showPopup ?
                 <Popup
-                          text='Create New Site'  
-                          closePopup={handleAddClick}  
-                />  
-                : null  
+                          text='Create New Site'
+                          closePopup={handleAddClick}
+                />
+                : null
         }
     </div>
   </>

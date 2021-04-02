@@ -9,7 +9,6 @@ import {
   FormGroup,
   Label,
   Input,
-  FormText,
 } from "reactstrap";
 
 // Github stuff
