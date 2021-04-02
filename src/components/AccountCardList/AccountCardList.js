@@ -3,6 +3,7 @@ import { rejectAccount } from 'components/AccountCard/AccountCard';
 import { claimAccount } from 'components/AccountCard/AccountCard';
 import React, { useState, useEffect } from 'react';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'reactstrap';
+import { tags } from 'trace-search';
 
 function AccountCardList(props) {
   const [sortMethod, setSortMethod] = useState("new");
@@ -42,6 +43,21 @@ function AccountCardList(props) {
     alert(`Rejected ${count} accounts`);
     return count;
   };
+
+  const sortByCategory = (array) => {
+    console.log(tags);
+    let result = [];
+    for (const tag of tags) {
+      const temp = array.filter(
+        (account) => account.site.tags.includes(tag)
+      );
+      if (temp.length !== 0) {
+        result.push(tag);
+        result = result.concat(temp);
+      }
+    }
+    return result;
+  }
 
   /**
    * This useEffect monitors sortMethod, which changes whenever a new sort method is selected.
@@ -88,6 +104,8 @@ function AccountCardList(props) {
             ? 1
             : 0;
         });
+      } else if (sortMethod === "category") {
+        sorted = sortByCategory(sorted);
       } else {
         // invalid sort method
         console.error(`Invalid sort method called: '${sortMethod}'`);
@@ -116,6 +134,10 @@ function AccountCardList(props) {
             <DropdownItem divider tag="li" />
             <DropdownItem onClick={() => setSortMethod("za")}>
               Alphabetical Z-A
+            </DropdownItem>
+            <DropdownItem divider tag="li" />
+            <DropdownItem onClick={() => setSortMethod("category")}>
+              Category
             </DropdownItem>
             <DropdownItem divider tag="li" />
             <DropdownItem onClick={() => setSortMethod("confidence")}>
@@ -164,7 +186,8 @@ function AccountCardList(props) {
       </div>
       <Row>
         {sortedAccounts.map((account) => (
-          <AccountCard
+          <>
+          {typeof account !== "string" && (<AccountCard
             key={account.id}
             account={account}
             selectable={props.selectable}
@@ -175,7 +198,13 @@ function AccountCardList(props) {
             selected={selection.includes(account.id)}
             onSelected={() => setSelection(prev => prev.concat(account.id))}
 					  onDeselected={() => setSelection(prev => prev.filter(id => id !== account.id))}
-          />
+          />)}
+          {typeof account === "string" &&
+            <div className='category-divider'>
+              <h3>{account}</h3>
+              <hr/>
+            </div>}
+          </>
         ))}
       </Row>
     </>

@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { Button, Row, Col, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Button, Row, Col, Form, FormGroup, Label, Input } from 'reactstrap';
 
-import { tags } from 'trace-search';
+import { ManualAccount, tags } from 'trace-search';
 
 const Popup = (props) => {
     const [categories, setCategories] = useState([]);
     const [username, setUsername] = useState('');
-    const [site, setSite] = useState('');
+    const [siteName, setSiteName] = useState('');
     const [url, setUrl] = useState('');
     const [showError, setShowError] = useState(false);
+    const [dbError, setDbError] = useState(null);
 
     function handleClickCheckbox(e) {
         console.log(e.target.value);
@@ -26,29 +27,45 @@ const Popup = (props) => {
     }
 
     function onSiteChange(e) {
+        setDbError(null);
         setShowError(false);
-        setSite(e);
+        setSiteName(e);
     }
 
     function onUsernameChange(e) {
+        setDbError(null);
         setShowError(false);
         setUsername(e);
     }
 
     function onUrlChange(e) {
+        setDbError(null);
         setShowError(false);
         setUrl(e);
     }
 
-    function handleSubmit(e) {
-        console.log(site);
+    async function handleSubmit(e) {
+        console.log(siteName);
         console.log(username);
         console.log(url);
 
-        if (site && username && url) {
+        if (siteName && username && url) {
             // Add to database
+            const manualSite = { url: url, name: siteName, tags: categories };
+            const manualAccount = new ManualAccount(manualSite, username);
+
             setShowError(false);
-            props.closePopup();
+
+            try {
+                await manualAccount.save();
+                props.closePopup();
+            } catch (e) {
+                if (e.message === "Document update conflict") {
+                    setDbError("Account already exists");
+                } else {
+                setDbError(e.message);
+                }
+            }
         }
         else {
             setShowError(true);
@@ -82,7 +99,7 @@ const Popup = (props) => {
                 <Label for="tags">Tags</Label>
                 <Row>
                     {tags.map(tag => (
-                        <Col lg="3" key={tag}>
+                        <Col lg="3" xs="3" key={tag}>
                             <input
                                 type="checkbox"
                                 value={tag}
@@ -100,6 +117,9 @@ const Popup = (props) => {
                 </Button>
                 <div className={showError ? "error-message-visible" : "error-not-visible"}>
                     Warning: required fields are empty
+                </div>
+                <div className={dbError ? "error-message-visible" : "error-not-visible"}>
+                    { dbError ? "Error: " + dbError : ""}
                 </div>
             </div>
         </div>

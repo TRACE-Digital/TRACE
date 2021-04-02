@@ -17,13 +17,9 @@ function Contact() {
     const [showRequestFeature, setRequestFeature] = useState(false);
     const [showRequestWebsite, setRequestWebsite] = useState(true);
     const [showBugReport, setBugReport] = useState(false);
-    // const [bigChartData, setbigChartData] = React.useState("rqeuest_website");
-
-    // const setBgChartData = (name) => {
-    //     setbigChartData(name);
-    // };
 
     const toggle = () => setOpen(!dropdownOpen);
+    console.log(toggle);
 
     const handleRequestFeatureClick = () => {
         setRequestFeature(true);

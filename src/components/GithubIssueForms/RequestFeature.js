@@ -1,20 +1,16 @@
 import React, { useState } from 'react';
-import { Octokit } from "@octokit/core";
-
-import { Button, Row, Col, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Button, Row, Col, Form, FormGroup, Label, Input, } from 'reactstrap';
+import axios from "axios";
 
 // Github stuff
 const owner = "TRACE-Digital"
 const repo = "TRACE";
 const labels = ["trace users"];
-const team = []; // ["jmcker", "charlorr", "isabelbattag", "cchan207", "jlmolskness", "cohenchris"]
-const token =  'token {personal_access_token}'; // TODO: get the token from AWS
+const team = ["jmcker", "charlorr", "isabelbattag", "cchan207", "jlmolskness", "cohenchris"]
 
 const issueAlert = "Thank you for contacting us. Our team has been alerted. Your Github issue has been created at https://github.com/TRACE-Digital/TRACE/issues. \n\nClick OK to open your issue in another tab, CANCEL to stay.";
 
 const RequestFeatureForm = (props) => {
-    const octokit = new Octokit({auth: token})
-    
     const [title, setTitle] = useState('');
     const [problem, setProblem] = useState('');
     const [solution, setSolution] = useState('');
@@ -39,7 +35,7 @@ const RequestFeatureForm = (props) => {
     function onOtherChange(e) {
         setShowError(false);
         setOther(e);
-    } 
+    }
 
     function clearInputs() {
         var inputs = document.querySelectorAll("[id='input']");
@@ -54,18 +50,21 @@ const RequestFeatureForm = (props) => {
 
     async function createIssue() {
         const description = ("**Is your feature request related to a problem? Please describe**\n")
-            .concat(problem, "\n\n**Describe the solution you'd like**\n", solution, 
+            .concat(problem, "\n\n**Describe the solution you'd like**\n", solution,
             "\n\n**Additional context**\n", other);
 
         try {
-            await octokit.request('POST /repos/{owner}/{repo}/issues', {
-                owner: owner,
-                repo: repo,
-                title: title,
-                body: description,
-                assignees: team,
-                labels: labels
-            })
+            await axios.post(
+                "https://yfv9ur3vth.execute-api.us-east-2.amazonaws.com/prod/issue",
+                {
+                  owner: owner,
+                  repo: repo,
+                  title: title,
+                  body: description,
+                  assignees: team,
+                  labels: labels,
+                }
+              );
         } catch (error) {
             console.log(error);
         }
@@ -79,7 +78,7 @@ const RequestFeatureForm = (props) => {
 
         if (title && solution) {
             setShowError(false);
-            // createIssue();
+            createIssue();
             clearInputs();
             if (window.confirm(issueAlert)) {
                 window.open("https://github.com/TRACE-Digital/TRACE/issues");
