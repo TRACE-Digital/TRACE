@@ -3,80 +3,138 @@ import Colors from "views/Colors.js";
 import { ThirdPartyAccount, accounts, AccountType, ProfilePage, pages } from "trace-search";
 import SiteCard from "components/SiteCard/SiteCard";
 import { EditText, EditTextarea } from 'react-edit-text';
-import {GridContextProvider, GridDropZone, GridItem, swap} from "react-grid-dnd";
+import { GridContextProvider, GridDropZone, GridItem, swap } from "react-grid-dnd";
 import { Link } from "react-router-dom";
-import {Row, Col} from "reactstrap";
+import { Row, Col } from "reactstrap";
 import { Auth } from 'aws-amplify';
 
-var name = "Isabel Battaglioli";
+
 
 const Editor = () => {
+
+  /**
+   * Initialize constants
+   */
   const [claimedAccounts, setClaimedAccounts] = useState({});
-  const [myProfile, setProfileData] = useState({});
-  const[title, setTitle] = useState("Enter Title");
+  const [myProfile, setProfileData] = useState(null);
+  const [title, setTitle] = useState("Enter Title");
   const [isOpen, setIsOpen] = useState(false);
+  const [heightSize, setHeightSize] = useState("");
+  const [, setPlsRender] = useState(false);
   const [colorScheme, setColorScheme] = useState([{
-    "titleColor":"#FFFFFF",
-    "backgroundColor":"#1E1D2A",
-    "siteColor":"#26283A",
-    "iconColor":"Default"
+    "titleColor": "#FFFFFF",
+    "backgroundColor": "#1E1D2A",
+    "siteColor": "#26283A",
+    "iconColor": "Default"
   }])
 
-  const [heightSize, setHeightSize] = useState("");
-
+  /**
+   * Called when the edit button is clicked and sets isOpen to the opposite
+   */
   const togglePopup = (e) => {
-    if (e.target.className === "tim-icons icon-pencil icon"){
+    if (e.target.className === "tim-icons icon-pencil icon") {
       setIsOpen(!isOpen);
     }
   }
 
+  /**
+   * Function is called when there is a change on the site grid and updates the order
+   */
   function onChange(sourceId, sourceIndex, targetIndex, targetId) {
-    const items = Array.from(Object.values(claimedAccounts));
-    console.log(items);
+    console.log(myProfile.accounts);
+    const items = myProfile.accounts;
     const nextState = swap(items, sourceIndex, targetIndex);
-    setClaimedAccounts(nextState);
+    console.log(nextState);
+    myProfile.accounts = nextState;
+    console.log(myProfile.accounts);
+    saveData();
+    setPlsRender(prev => !prev);
   }
 
+  /**
+   * Function saves the data to backend
+   */
   async function saveData() {
-    await myProfile.save();
-  }
-
-  useEffect(() => {
-  async function isLoggedIn () {
-    try {
-      await Auth.currentUserPoolUser();
-    }
-    catch {
-      window.location.href = '/login';
+    if (myProfile != null) {
+      await myProfile.save();
     }
   }
-    isLoggedIn();
-  }, []);
 
-  function handleLanguage(colorChoice){
+  /**
+   * Function handles any updating of the color choices from the popup and saves data
+   */
+  function handleLanguage(colorChoice) {
     const updated = [...colorChoice];
     setColorScheme([...updated]);
     myProfile.colorScheme.titleColor = colorScheme[0].titleColor;
     myProfile.colorScheme.backgroundColor = colorScheme[0].backgroundColor;
     myProfile.colorScheme.siteColor = colorScheme[0].siteColor;
     myProfile.colorScheme.iconColor = colorScheme[0].iconColor;
+   
+  }
+
+  /**
+   * Function called when the add button is clicked for a site
+   */
+  const handleAddClick = () => {
+    setIsOpen(!isOpen);
     saveData();
   }
 
-  const handleAddClick = () => {
-    setIsOpen(!isOpen);
+  /**
+   * Function called when title is edited and saves
+   */
+  function updateTitle(e) {
+    if (e.target.value == "") {
+      setTitle("");
+      myProfile.title = "";
+    }
+    else {
+      setTitle(e.target.value);
+      myProfile.title = title;
+    }
+    saveData();
   }
 
-  function updateTitle(e){
-    setTitle(e.target.value);
-    myProfile.title = title;
-  }
-
+  /**
+   * Monitors for user login before accessing profile page
+   */
   useEffect(() => {
+    async function isLoggedIn() {
+      try {
+        await Auth.currentUserPoolUser();
+      }
+      catch {
+        window.location.href = '/login';
+      }
+    }
+    isLoggedIn();
+  }, []);
+
+
+  /**
+   * Monitors for user login before accessing profile page
+   */
+  useEffect(() => {
+    async function isLoggedIn() {
+      try {
+        await Auth.currentUserPoolUser();
+      }
+      catch {
+        window.location.href = '/login';
+      }
+    }
+    isLoggedIn();
+  }, []);
+
+  /**
+   * Monitors for the profile page sites 
+   */
+  useEffect(() => {
+
     const loadProfile = async () => {
       const results = await ProfilePage.loadAll();
       if (results.length === 0) {
-        console.log("NEW PAGE");
         const page = new ProfilePage();
         results.push(page);
       }
@@ -88,87 +146,61 @@ const Editor = () => {
         setTitle(results[0].title);
       }
       setProfileData(results[0]);
+      // saveData();
+
     };
     loadProfile();
+
   }, []);
-
-
-
-
-
-  /**
-   * Monitor for new claimed accounts. Every time the accounts array is updated, re-render to show the proper tiles.
-   */
-  useEffect(() => {
-    const loadAccounts = async () => {
-      try {
-        // Load all accounts from the database into memory
-        await ThirdPartyAccount.loadAll();
-        // setPlsRender((current) => !current);
-      } catch (e) {
-        console.error("Failed to load accounts from the database!");
-        console.error(e);
-        return {};
-      }
-      return accounts;
-    };
-
-    loadAccounts().then(() => {
-      setClaimedAccounts(accounts);
-      setHeightSize(Array.from(Object.values(accounts)).length);
-    });
-
-  }, [accounts]);
-
-
 
   return (
     <>
-    {isOpen ?  <Colors onSelectLanguage={handleLanguage} closePopup={handleAddClick} />  : null}
+      {isOpen ? <Colors onSelectLanguage={handleLanguage} closePopup={handleAddClick} page={myProfile} /> : null}
       <div onClick={togglePopup} className={isOpen ? `content blur` : `content`}>
         <div className={`editor-background`} style={{ backgroundColor: `${colorScheme[0].backgroundColor}` }}>
 
-        <div className={"editor-title"} style={{ color: `${colorScheme[0].titleColor}` }}>
-          {/* <EditText name="textbox1" defaultValue="Isabel Battaglioli"/> */}
-    
-          <input
-            className="editor-input"
-            type="text"
-            value={title}
-            maxLength={30}
-            onChange={updateTitle}
-            style={{color:`${colorScheme[0].titleColor}`, backgroundColor:`${colorScheme[0].backgroundColor}`, border:"none", outline: "none"}}
-          />
-          {/* <i className="tim-icons icon-pencil icon" style={{color:"white", margin:"5px"}}></i> */}
-          <Link
-            className="btn btn-primary editor-button"
-            color="primary"
-            onClick={handleAddClick}
-          >
-            Edit Page
+          <div className={"editor-title"} style={{ color: `${colorScheme[0].titleColor}` }}>
+
+
+            <input
+              className="editor-input"
+              type="text"
+              value={title}
+              maxLength={30}
+              onChange={updateTitle}
+              style={{ color: `${colorScheme[0].titleColor}`, backgroundColor: `${colorScheme[0].backgroundColor}`, border: "none", outline: "none" }}
+            />
+
+            <Link
+              className="btn btn-primary editor-button"
+              color="primary"
+              onClick={handleAddClick}
+            >
+              Edit Page
           </Link>
-        
-          
-        </div>
-          <GridContextProvider onChange={onChange}>
-            <GridDropZone
-              id="items"
-              boxesPerRow={4}
-              rowHeight={330}
-              style={{ height: `${(heightSize/4) * 330}px`}}> 
-              {Object.values(claimedAccounts).map(item => (
-                <GridItem className="boxes" key={item.id}> 
-                  <div
-                    style={{
-                    width: "100%",
-                    height: "100%",
-                    }}>
-                      {<SiteCard  editorColor={colorScheme[0].siteColor} account={item} page="editor"/>}
-                  </div>
-              </GridItem>
-              ))}
-            </GridDropZone>
-          </GridContextProvider>
+
+
+          </div>
+          {myProfile &&
+            <GridContextProvider onChange={onChange}>
+              <GridDropZone
+                id="items"
+                boxesPerRow={4}
+                rowHeight={330}
+                style={{ height: `${(heightSize / 4) * 330}px` }}>
+                {myProfile.accounts.map(item => (
+                  <GridItem className="boxes" key={item.id}>
+                    <div
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                      }}>
+                      {<SiteCard editorColor={colorScheme[0].siteColor} account={item} page="editor" />}
+                    </div>
+                  </GridItem>
+                ))}
+              </GridDropZone>
+            </GridContextProvider>}
         </div>
       </div>
     </>
