@@ -65,7 +65,7 @@ const History = (props) => {
           );
         })}
 
-        {maxVisible < sortHistory.length &&
+        {maxVisible < sortedHistory.length &&
           <Button onClick={() => setMaxVisible(prev => Math.min(prev + 5, sortedHistory.length))}>
             Load More
           </Button>
