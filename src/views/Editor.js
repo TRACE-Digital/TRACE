@@ -41,12 +41,9 @@ const Editor = () => {
    * Function is called when there is a change on the site grid and updates the order
    */
   function onChange(sourceId, sourceIndex, targetIndex, targetId) {
-    console.log(myProfile.accounts);
     const items = myProfile.accounts;
     const nextState = swap(items, sourceIndex, targetIndex);
-    console.log(nextState);
     myProfile.accounts = nextState;
-    console.log(myProfile.accounts);
     saveData();
     setPlsRender(prev => !prev);
   }
@@ -146,6 +143,7 @@ const Editor = () => {
         setTitle(results[0].title);
       }
       setProfileData(results[0]);
+      setHeightSize(results[0].accounts.length);
       // saveData();
 
     };
@@ -187,7 +185,7 @@ const Editor = () => {
                 id="items"
                 boxesPerRow={4}
                 rowHeight={330}
-                style={{ height: `${(heightSize / 4) * 330}px` }}>
+                style={{ height: `${(heightSize / 3) * 330}px` }}>
                 {myProfile.accounts.map(item => (
                   <GridItem className="boxes" key={item.id}>
                     <div

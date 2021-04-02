@@ -505,18 +505,63 @@
           margin-top:20px;
           float:right;
           display:grid;
-          width:200px;
+          width:250px;
 
           .myButton{
-            border: $border;
+            border: 3px solid !important;
             margin-bottom:5px;
             border-color: white;
-            box-shadow: none;
-            padding: $padding-btn-vertical - 1 $padding-round-horizontal - 1;
+            box-shadow: 3px;
+            border: "3px solid";
+            padding: $padding-btn-vertical - 1 $padding-round-horizontal - 10;
             text-align:center;
             border-radius: 10px;
             cursor:pointer;
-            opacity:.8;
+        
+          }
+
+          .myButton:hover {
+            box-shadow: 0 0 5px $primary-states;
+          }
+
+          .two-icon-buttons{
+            text-align:center;
+
+            .company-colors{
+              border: 3px solid !important;
+              margin-bottom:5px;
+              border-color: white;
+              box-shadow: 3px;
+              padding: $padding-btn-vertical - 1 $padding-round-horizontal - 10;
+              border-radius: 10px;
+              margin-right:3px;
+              display: inline-block;
+              cursor:pointer;
+            }
+
+            .company-colors:hover {
+              box-shadow: 0 0 5px $primary-states;
+            }
+
+            .custom-colors{
+              border: 3px solid !important;
+              margin-bottom:5px;
+              margin-left:3px;
+              border: "3px solid";
+              border-color: white;
+              display: inline-block;
+              box-shadow: none;
+              padding: $padding-btn-vertical - 1 $padding-round-horizontal - 10;
+              text-align:center;
+              border-radius: 10px;
+              cursor:pointer;
+              
+
+            }
+
+            .custom-colors:hover {
+              box-shadow: 0 0 5px $primary-states;
+            }
           }
 
       
