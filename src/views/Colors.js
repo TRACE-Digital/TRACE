@@ -4,6 +4,7 @@ import { ChromePicker } from 'react-color'
 import { Button, ButtonGroup } from "reactstrap";
 import classNames from "classnames";
 import { ThirdPartyAccount,  ClaimedAccount, ManualAccount } from "trace-search";
+import { icon } from '@fortawesome/fontawesome-svg-core';
 
 
 function Colors(props) {
@@ -47,10 +48,14 @@ function Colors(props) {
                 console.error(e);
             }
             console.log(ThirdPartyAccount.accountCache.items);
-            // setTitleColor(props.page.colorScheme.titleColor);
-            // setBackgroundColor(props.page.colorScheme.backgroundColor);
-            // setSiteColor(props.page.colorScheme.siteColor);
-            // setIconColor(props.page.colorScheme.iconColor);
+            setTitleColor(props.page.colorScheme.titleColor);
+            colorProps[0].titleColor = props.page.colorScheme.titleColor;
+            setBackgroundColor(props.page.colorScheme.backgroundColor);
+            colorProps[0].backgroundColor = props.page.colorScheme.backgroundColor;
+            setSiteColor(props.page.colorScheme.siteColor);
+            colorProps[0].siteColor = props.page.colorScheme.siteColor;
+            setIconColor(props.page.colorScheme.iconColor);
+            colorProps[0].iconColor = props.page.colorScheme.iconColor;
         }
 
         ClaimedAccount.accountCache.events.on('change', triggerRender);
@@ -127,6 +132,7 @@ function Colors(props) {
     function handleCustomIcon(e){
         setDisabled(false);
         setCurrentButton("Custom Icon");
+        setChromeColor(e.target.style.backgroundColor);
     }
 
     function handleColorPicker(e) {
@@ -159,13 +165,15 @@ function Colors(props) {
         console.log(e.target.id);
         if (e.target.id == "title") {
             setCurrentButton("Title");
-
+            setChromeColor(e.target.style.backgroundColor);
         }
         else if (e.target.id == "site") {
             setCurrentButton("Site");
+            setChromeColor(e.target.style.backgroundColor);
         }
         else if (e.target.id == "background") {
             setCurrentButton("Background");
+            setChromeColor(e.target.style.backgroundColor);
         }
         else if (e.target.id == "defaultIcon") {
             setCurrentButton("Default Icon");
@@ -257,15 +265,15 @@ function Colors(props) {
                                             className="company-colors" 
                                             style={currentButton == "Default Icon" ? 
                                                 {"box-shadow": "0 0 6px #ba54fa", backgroundColor: `#ba54fa`, color: "white" } : 
-                                                { backgroundColor: `grey`, color: "white"}} 
+                                                {backgroundColor: (`${colorProps[0].iconColor}` == "Default"  && currentButton != "Custom Icon" ? `#ba54fa` : "grey"), color: "white"}} 
                                             onClick={handleDefaultIcon}>
                                                 Default Icon
                                         </div>
                                         <div id="customIcon" 
                                             className="custom-colors" 
-                                            style={currentButton == "Custom Icon" ? 
+                                            style={currentButton == "Custom Icon"? 
                                                 {"box-shadow": "0 0 6px #ba54fa", backgroundColor: `${iconColor}`, color: "white" } : 
-                                                {backgroundColor: `grey`, color: "white"}} 
+                                                {backgroundColor: (`${colorProps[0].iconColor}` != "Default" ? `${colorProps[0].iconColor}` : "grey"), color: "white"}} 
                                             onClick={handleCustomIcon}>
                                                 Custom Icon
                                         </div>
