@@ -1,3 +1,18 @@
+.site-card {
+  cursor: pointer;
+  -webkit-transition: box-shadow linear .4s;
+  transition: box-shadow linear .4s;
+}
+
+.site-card:hover {
+  box-shadow: 0 0 7px $primary-states;
+}
+
+.selected-site-card {
+  box-shadow: 0 0 9px $primary-states !important;
+  border: 3px solid $primary-states !important;
+}
+
 .card{
     background: $card-black-background;
     border: 0;

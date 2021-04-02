@@ -25,7 +25,10 @@
 
     .dashboard-parent{
       display: inline;
+      position: absolute;
+      right: 0;
       margin-bottom: 15px;
+      margin-right: 20px;
       >.badge{
         display: inline-block;
       }
@@ -483,7 +486,7 @@
     .test{
       text-align:center;
       margin-top:10px;
-      position:unset !important;  
+      position:unset !important;
     }
 
     .author {

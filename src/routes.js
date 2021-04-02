@@ -48,14 +48,6 @@ var routes = [
     layout: "",
   },
   {
-    path: "/user-profile",
-    name: "Profile",
-    rtlName: "ملف تعريفي للمستخدم",
-    icon: "tim-icons icon-single-02",
-    component: UserProfile,
-    layout: "",
-  },
-  {
     path: "/profile-editor",
     name: "Profile Editor",
     rtlName: "ملف تعريفي للمستخدم",
@@ -69,6 +61,14 @@ var routes = [
     rtlName: "ملف تعريفي للمستخدم",
     icon: "tim-icons icon-send",
     component: Contact,
+    layout: "",
+  },
+  {
+    path: "/about",
+    name: "About Us",
+    rtlName: "ملف تعريفي للمستخدم",
+    icon: "tim-icons icon-single-02",
+    component: UserProfile,
     layout: "",
   }
 

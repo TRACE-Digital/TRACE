@@ -15,11 +15,13 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import { useEffect, useState } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 
-import { clearDb, setupReplication, teardownReplication, EXTENSION_VERSION } from 'trace-search';
+import { resetDb, resetRemoteDb, setRemoteUser, EXTENSION_VERSION } from 'trace-search';
+
+import SyncToggle from 'components/SyncToggle/SyncToggle';
 
 // reactstrap components
 import {
@@ -38,73 +40,44 @@ import {
   NavbarToggler,
   ModalHeader,
 } from "reactstrap";
-import ToggleButton from 'react-toggle-button';
 import { Link } from "react-router-dom";
-
-import { Auth } from 'aws-amplify';
+import Auth from "@aws-amplify/auth";
 
 async function signOut() {
-  console.log('before')
-  console.log(await Auth.currentAuthenticatedUser())
   try {
-    const currentUser = Auth.userPool.getCurrentUser();
-    await currentUser.signOut();
-    console.log('after');
-    console.log(await Auth.currentAuthenticatedUser());
-    localStorage.removeItem('user');
-    window.location.href = '/login';
+    await Auth.signOut();
     } catch (error) {
       console.log('error signing out: ', error);
-      localStorage.removeItem('user');
-      window.location.href = '/login';
     }
 }
 
 function AdminNavbar(props) {
-  const [collapseOpen, setcollapseOpen] = React.useState(false);
-  const [modalSearch, setmodalSearch] = React.useState(false);
-  const [color, setcolor] = React.useState("navbar-transparent");
-  const [isLoggedIn, setIsLoggedIn] = React.useState((localStorage.getItem('user')));
-  const [replicate, setReplicate] = React.useState(false);
+  const [collapseOpen, setcollapseOpen] = useState(false);
+  const [modalSearch, setmodalSearch] = useState(false);
+  const [color, setcolor] = useState("navbar-transparent");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Setup replication
-  React.useEffect(() => {
-    async function handleReplication() {
-      if (replicate) {
-        try {
-          const obj = await setupReplication();
-          const replicator = obj.TODO_replication;
-
-          replicator.on('error', (e) => {
-            alert(`Replication error!\n\n${e}`);
-            console.error(e);
-            setReplicate(false);
-          });
-        } catch(e) {
-          alert(`Replication error!\n\n${e}`);
-          console.error(e);
-          setReplicate(false);
-          return;
-        }
-      } else {
-        try {
-          await teardownReplication();
-        } catch (e) {
-          console.error(e);
-          return;
-        }
-      }
-    }
-    handleReplication();
-  }, [replicate]);
-
-  React.useEffect(() => {
+  useEffect(() => {
     window.addEventListener("resize", updateColor);
     // Specify how to clean up after this effect:
     return function cleanup() {
       window.removeEventListener("resize", updateColor);
     };
   });
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const user = await Auth.currentUserPoolUser();
+        console.log(user);
+        setIsLoggedIn(true);
+      }
+      catch {
+        setIsLoggedIn(false);
+      }
+    })();
+  });
+
   // function that adds color white/transparent to the navbar on resize (this is for the collapse)
   const updateColor = () => {
     if (window.innerWidth < 993 && collapseOpen) {
@@ -154,15 +127,7 @@ function AdminNavbar(props) {
           <Collapse navbar isOpen={collapseOpen}>
             <Nav className="ml-auto" navbar>
               <UncontrolledDropdown nav>
-                <div style={{ textAlign: 'center' }}>
-                  Sync
-                <ToggleButton
-                    inactiveLabel={<span>Off</span>}
-                    activeLabel={<span>On</span>}
-                    value={replicate || false}
-                    onToggle={() => setReplicate(prev => !prev) }
-                  />
-                </div>
+                <SyncToggle/>
               </UncontrolledDropdown>
               <UncontrolledDropdown nav>
                 <DropdownToggle
@@ -181,6 +146,8 @@ function AdminNavbar(props) {
                   <NavLink tag="li">
                     <DropdownItem className="nav-item">Profile</DropdownItem>
                   </NavLink>
+                  <DropdownItem divider tag="li" />
+
                   <NavLink tag="li">
                     <DropdownItem className="nav-item">Settings</DropdownItem>
                   </NavLink>
@@ -195,8 +162,17 @@ function AdminNavbar(props) {
                   </NavLink>
                   <NavLink tag="li">
                     <DropdownItem className="nav-item" onClick={async () => {
+                      const confirmation = window.confirm('Are you sure? This action is irreversible and will delete ALL your data.');
+                      if (!confirmation) {
+                        return;
+                      }
+
                       try {
-                        await clearDb();
+                        await resetDb();
+                        if (isLoggedIn) {
+                          await setRemoteUser(await Auth.currentUserPoolUser());
+                          await resetRemoteDb();
+                        }
                         window.location.reload();
                       } catch (e) {
                         console.error(e);
@@ -212,6 +188,7 @@ function AdminNavbar(props) {
                   <NavLink onClick={() => {
                     signOut();
                     setIsLoggedIn(!isLoggedIn);
+                    window.location.href = "/landing";
                     }} tag="li">)
                     <DropdownItem className="nav-item">Log Out</DropdownItem>
                   </NavLink>}
