@@ -125,7 +125,7 @@ const Editor = () => {
     };
     loadProfile();
 
-  }, []);
+  }, [colorScheme]);
 
   return (
     <>

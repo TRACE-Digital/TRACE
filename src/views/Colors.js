@@ -17,7 +17,7 @@ function Colors(props) {
     const [currentButton, setCurrentButton] = useState("Title");
     const [showThemeFeature, setThemeFeature] = useState(false);
     const [showSiteFeature, setSiteFeature] = useState(true);
-    const [colorProps, setColorProps] = useState([{
+    const [colorProps, ] = useState([{
         "titleColor": "#FFFFFF",
         "backgroundColor": "#1E1D2A",
         "siteColor": "#26283A",
