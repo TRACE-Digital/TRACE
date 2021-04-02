@@ -18,12 +18,19 @@
 import React from "react";
 // nodejs library that concatenates classes
 
-import { ClaimedAccount, ManualAccount, ThirdPartyAccount } from "trace-search";
+import Popup from '../components/AddSitePopup/AddSitePopup';
+
+import { ThirdPartyAccount, ClaimedAccount, ManualAccount } from "trace-search";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import AccountCardList from "components/AccountCardList/AccountCardList";
 
 function Dashboard(props) {
+  const [showPopup, togglePopup] = React.useState(false);
+
+  const handleAddClick = () => {
+    togglePopup(!showPopup);
+  }
   const [, setPlsRender] = React.useState(false);
 
   // Load the initial accounts that we need and
@@ -69,33 +76,42 @@ function Dashboard(props) {
 
   return (
     <>
-      <div className="content">
-        <div className="header">
-          <h3 className="header-title">Claimed Accounts</h3>
-          <Link
-            className="btn btn-primary add-site-button"
-            color="primary"
-            to="/search"
-          >
-            Add New Site
-          </Link>
-        </div>
-
-        <hr></hr>
-
-        <div>
-            <AccountCardList
-              headerText="Your Accounts"
-              accounts={accountsToRender}
-              selectable={true}
-              actionable={false}
-              flippable={true}
-              showNames={true}
-              showTripleDot={true}
-            />
-        </div>
+    <div className="content">
+      <div className="header">
+        <h3 className="header-title">Claimed Accounts</h3>
+        <Link
+          className="btn btn-primary add-site-button"
+          color="primary"
+          onClick={handleAddClick}
+        >
+          Add New Site
+        </Link>
       </div>
-    </>
+
+      <hr></hr>
+
+      <div>
+          <AccountCardList
+            headerText="Your Accounts"
+            accounts={accountsToRender}
+            selectable={true}
+            actionable={false}
+            flippable={true}
+            showNames={true}
+            showTripleDot={true}
+          />
+      </div>
+    </div>
+    <div className="content">
+        {showPopup ?
+                <Popup
+                          text='Create New Site'
+                          closePopup={handleAddClick}
+                />
+                : null
+        }
+    </div>
+  </>
   );
 }
 
