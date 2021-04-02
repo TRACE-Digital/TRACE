@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Colors from "views/Colors.js";
 import { ThirdPartyAccount, accounts, AccountType, ProfilePage, pages } from "trace-search";
 import SiteCard from "components/SiteCard/SiteCard";
-import { EditText, EditTextarea } from 'react-edit-text';
 import { GridContextProvider, GridDropZone, GridItem, swap } from "react-grid-dnd";
 import { Link } from "react-router-dom";
 import { Row, Col } from "reactstrap";
@@ -62,7 +61,7 @@ const Editor = () => {
     console.log(myProfile.colorScheme.iconColor);
     saveData();
     setPlsRender(prev => !prev);
-   
+
   }
 
   /**
@@ -104,7 +103,7 @@ const Editor = () => {
   }, []);
 
   /**
-   * Monitors for the profile page sites 
+   * Monitors for the profile page sites
    */
   useEffect(() => {
 
