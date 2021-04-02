@@ -255,7 +255,7 @@ const Editor = () => {
     };
     loadProfile();
 
-  }, []);
+  }, [colorScheme]);
 
   let baseContent = (
     <>
