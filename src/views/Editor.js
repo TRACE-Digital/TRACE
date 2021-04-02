@@ -325,9 +325,6 @@ const Editor = () => {
               <NavLink tag="li">
                 <DropdownItem className="nav-item" onClick={addCustomURL} style={{color: "black"}}>Customize URL</DropdownItem>
               </NavLink>
-              <NavLink tag="li">
-                <DropdownItem className="nav-item" onClick={true} style={{color: "black"}}>Share</DropdownItem>
-              </NavLink>
             </DropdownMenu>
           </UncontrolledDropdown>
 
