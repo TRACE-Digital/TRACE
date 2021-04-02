@@ -94,7 +94,7 @@ const Popup = (props) => {
                 </Row>
                 <FormGroup>
                     <Label for="siteUrl">Account URL</Label><span className="asterisk">*</span>
-                    <Input type="text" name="url" id="input" placeholder="eg. www.instagram.com/coraychan" onChange={(e) => onUrlChange(`${e.target.value}`)}/>
+                    <Input type="text" name="url" id="input" placeholder="eg. http://www.instagram.com/coraychan" onChange={(e) => onUrlChange(`${e.target.value}`)}/>
                 </FormGroup>
                 <Label for="tags">Tags</Label>
                 <Row>
