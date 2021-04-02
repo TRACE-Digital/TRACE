@@ -399,7 +399,7 @@ function SearchComponent() {
       </div>
 
       {/* HISTORY */}
-      {historyVisible && <History/>}
+      {historyVisible && <History initialMax={3} onSelect={ (search) => setCurrentSearch(search) }/>}
 
       <div
         className={
