@@ -222,10 +222,10 @@ export const claimAccount = async (account, quiet) => {
   quiet = quiet !== undefined ? quiet : false;
   try {
     await account.claim();
-    !quiet && alert("Account successfully claimed!");
+    // !quiet && alert("Account successfully claimed!");
     return true;
   } catch (e) {
-    !quiet && alert("Account has already been claimed!");
+    // !quiet && alert("Account has already been claimed!");
     console.error(e);
     return false;
   }
@@ -239,7 +239,7 @@ export const rejectAccount = async (account, quiet) => {
   quiet = quiet !== undefined ? quiet : false;
   try {
     await account.reject();
-    !quiet && alert("Account successfully rejected!");
+    // !quiet && alert("Account successfully rejected!");
     return true;
   } catch (e) {
     console.error(e);

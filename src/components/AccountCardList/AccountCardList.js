@@ -27,7 +27,7 @@ function AccountCardList(props) {
         count++;
       }
     }
-    alert(`Claimed ${count} accounts`);
+    alert(`Claimed ${count} accounts.`);
     return count;
   };
 
@@ -40,7 +40,7 @@ function AccountCardList(props) {
         count++;
       }
     }
-    alert(`Rejected ${count} accounts`);
+    alert(`Rejected ${count} accounts.`);
     return count;
   };
 

@@ -21,13 +21,11 @@ const History = (props) => {
     const loadHistory = async () => {
       try {
         // Load what we need from the database into memory
-        const res = await SearchDefinition.loadAll();
-        console.log(res);
+        await SearchDefinition.loadAll();
       } catch (e) {
         console.error('Failed to load history from the database!');
         console.error(e);
       }
-      console.log(SearchDefinition.cache.items);
 
       sortHistory();
       SearchDefinition.cache.events.on('change', sortHistory);
@@ -47,7 +45,7 @@ const History = (props) => {
       <div className='dropdownVis history'>
         <h3>Recent Searches</h3>
 
-        {sortHistory.length === 0 && <h4>None yet!</h4>}
+        {sortedHistory.length === 0 && <h4>None yet!</h4>}
         {sortedHistory.slice(0, maxVisible).map((definition) => {
           return (
             <div key={definition.id}>
