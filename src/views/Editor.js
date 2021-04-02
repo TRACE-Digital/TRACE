@@ -46,25 +46,14 @@ const Editor = () => {
     "iconColor": "Default"
   }])
 
-  /**
-   * Called when the edit button is clicked and sets isOpen to the opposite
-   */
-  const togglePopup = (e) => {
-    if (e.target.className === "tim-icons icon-pencil icon") {
-      setIsOpen(!isOpen);
-    }
-  }
 
   /**
    * Function is called when there is a change on the site grid and updates the order
    */
   function onChange(sourceId, sourceIndex, targetIndex, targetId) {
-    console.log(myProfile.accounts);
     const items = myProfile.accounts;
     const nextState = swap(items, sourceIndex, targetIndex);
-    console.log(nextState);
     myProfile.accounts = nextState;
-    console.log(myProfile.accounts);
     saveData();
     setPlsRender(prev => !prev);
   }
@@ -88,6 +77,9 @@ const Editor = () => {
     myProfile.colorScheme.backgroundColor = colorScheme[0].backgroundColor;
     myProfile.colorScheme.siteColor = colorScheme[0].siteColor;
     myProfile.colorScheme.iconColor = colorScheme[0].iconColor;
+    console.log(myProfile.colorScheme.iconColor);
+    saveData();
+    setPlsRender(prev => !prev);
    
   }
 
@@ -109,9 +101,10 @@ const Editor = () => {
     }
     else {
       setTitle(e.target.value);
-      myProfile.title = title;
+      myProfile.title = e.target.value;
     }
     saveData();
+    setPlsRender(prev => !prev);
   }
 
   /**
@@ -128,7 +121,6 @@ const Editor = () => {
     }
     isLoggedIn();
   }, []);
-
 
   /**
    * Monitors for user login before accessing profile page
@@ -253,6 +245,7 @@ const Editor = () => {
         setTitle(results[0].title);
       }
       setProfileData(results[0]);
+      setHeightSize(8); // temp for now
       // saveData();
 
     };
@@ -289,11 +282,9 @@ const Editor = () => {
   let editorContent = (
     <>
       {isOpen ? <Colors onSelectLanguage={handleLanguage} closePopup={handleAddClick} page={myProfile} /> : null}
-      <div onClick={togglePopup} className={isOpen ? `content blur` : `content`}>
+      <div className={isOpen ? `content blur` : `content`}>
         <div className={`editor-background`} style={{ backgroundColor: `${colorScheme[0].backgroundColor}` }}>
-
           <div className={"editor-title"} style={{ color: `${colorScheme[0].titleColor}` }}>
-
 
             <input
               className="editor-input"
@@ -342,7 +333,7 @@ const Editor = () => {
                 id="items"
                 boxesPerRow={4}
                 rowHeight={330}
-                style={{ height: `${(heightSize / 4) * 330}px` }}>
+                style={{ height: `${(heightSize / 3) * 330}px` }}>
                 {myProfile.accounts.map(item => (
                   <GridItem className="boxes" key={item.id}>
                     <div
@@ -350,7 +341,7 @@ const Editor = () => {
                         width: "100%",
                         height: "100%",
                       }}>
-                      {<SiteCard editorColor={colorScheme[0].siteColor} account={item} page="editor" />}
+                      {<SiteCard editorColor={colorScheme[0].siteColor} iconColor={colorScheme[0].iconColor} account={item} page="editor" />}
                     </div>
                   </GridItem>
                 ))}
