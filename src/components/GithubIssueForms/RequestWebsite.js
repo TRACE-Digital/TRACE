@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Octokit } from "@octokit/core";
-
+import axios from "axios";
 import { Button, Row, Col, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 
 // Github stuff
@@ -8,13 +7,10 @@ const owner = "TRACE-Digital"
 const repo = "TRACE";
 const labels = ["trace users"];
 const team = ["jmcker", "charlorr", "isabelbattag", "cchan207", "jlmolskness", "cohenchris"]
-const token =  'token {personal_access_token}'; // TODO: get the token from AWS
 
 const issueAlert = "Thank you for contacting us. Our team has been alerted. Your Github issue has been created at https://github.com/TRACE-Digital/TRACE/issues. \n\nClick OK to open your issue in another tab, CANCEL to stay.";
 
-const RequestWebsiteForm = (props) => {
-    const octokit = new Octokit({auth: token})
-    
+const RequestWebsiteForm = (props) => {    
     const [title, setTitle] = useState('');
     const [website, setWebsite] = useState('');
     const [other, setOther] = useState('');
@@ -41,14 +37,17 @@ const RequestWebsiteForm = (props) => {
             "\n\n**Additional context**\n", other);
 
         try {
-            await octokit.request('POST /repos/{owner}/{repo}/issues', {
-                owner: owner,
-                repo: repo,
-                title: title,
-                body: description,
-                assignees: team,
-                labels: labels
-            })
+            await axios.post(
+                "https://yfv9ur3vth.execute-api.us-east-2.amazonaws.com/prod/issue",
+                {
+                  owner: owner,
+                  repo: repo,
+                  title: title,
+                  body: description,
+                  assignees: team,
+                  labels: labels,
+                }
+              );
         } catch (error) {
             console.log(error);
         }
@@ -71,7 +70,7 @@ const RequestWebsiteForm = (props) => {
 
         if (title && website) {
             setShowError(false);
-            // createIssue();
+            createIssue();
             clearInputs();
             if (window.confirm(issueAlert)) {
                 window.open("https://github.com/TRACE-Digital/TRACE/issues");
