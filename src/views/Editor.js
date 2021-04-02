@@ -292,10 +292,10 @@ const Editor = () => {
               value={title}
               maxLength={30}
               onChange={updateTitle}
-              style={{ color: `${colorScheme[0].titleColor}`, backgroundColor: `${colorScheme[0].backgroundColor}`, border: "none", outline: "none" }}
+              style={{width:"600px", color: `${colorScheme[0].titleColor}`, backgroundColor: `${colorScheme[0].backgroundColor}`, border: "none", outline: "none" }}
             />
 
-          <Link
+          <Link style={{display: "inline-block", float: "right"}}
               className="btn btn-primary editor-button"
               color="primary"
               onClick={handleAddClick}
@@ -303,11 +303,11 @@ const Editor = () => {
               Edit Page
           </Link>
 
-          <UncontrolledDropdown>
+          <UncontrolledDropdown style={{display: "inline-block", float: "right"}}>
             <DropdownToggle className="btn btn-primary public-options-button">
               Page Options
             </DropdownToggle>
-            <DropdownMenu className="dropdown-navbar" right tag="ul" style={{marginTop: "45px", marginRight: "10px"}}>
+            <DropdownMenu className="dropdown-navbar" right tag="ul" style={{marginRight: "10px"}}>
               <NavLink tag="li">
                 <DropdownItem className="nav-item" onClick={publishPublicPage} style={{color: "black"}}>Publish Page</DropdownItem>
               </NavLink>
