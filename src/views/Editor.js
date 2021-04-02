@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Colors from "views/Colors.js";
 import { Auth } from 'aws-amplify';
+import { renderToStaticMarkup } from 'react-dom/server'
+import ShareButtons from "views/ShareButtons.js";
 
 // reactstrap components
 import {
@@ -40,6 +41,29 @@ const togglePopup = (e) => {
   }
 }
 
+const publishPublicPage = (e) => {
+  Auth.currentUserInfo().then((value) => {
+
+    let strippedContent = gridContent;
+    // Need to remove unwanted components here
+
+    let url = 'https://76gjqug5j8.execute-api.us-east-2.amazonaws.com/prod/update?username=' + value.attributes.sub;
+    let csslink = 'https://tracedigital.tk/static/css/main.2e0404d2.chunk.css';
+    let fetchbody = '<!DOCTYPE html><html><head><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"><link href="'
+      + csslink
+      + '" rel="stylesheet"></head><body>'
+      + renderToStaticMarkup(strippedContent)
+      + '</body></html>';
+    fetch(url, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'text/html' },
+      body: fetchbody
+    });
+
+    window.open('https://76gjqug5j8.execute-api.us-east-2.amazonaws.com/prod/get?username=' + value.attributes.sub, '_blank');
+  });
+}
+
 useEffect(() => {
  async function isLoggedIn () {
   try {
@@ -52,68 +76,84 @@ useEffect(() => {
  isLoggedIn();
 }, []);
 
-  return (
+  let gridContent = (
+    <div>
+      <Row>
+        {tempData.map(site => (
+          <Col lg="3">
 
+            <Card className="card-user">
+              <CardBody>
+                <div>
+
+                <UncontrolledDropdown>
+                <DropdownToggle
+                  caret
+                  className="btn-icon dot"
+                  color="link"
+                  type="button"
+                >
+                <i class="fas fa-ellipsis-h"></i>
+                </DropdownToggle>
+                <DropdownMenu className="dropdown-menu-right">
+                  <DropdownItem
+                    href="#pablo"
+                    onClick={(e) => e.preventDefault()}
+                  >
+                    REMOVE
+                  </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
+                  <div className = "editor"> <i className={site.iconClass}></i></div>
+                  <div className = "editor-handle-name"> {site.userName}</div>
+                  <div className = "editor-link"> {site.prettyUrl} </div>
+                </div>
+              </CardBody>
+            </Card>
+          </Col>
+        ))}
+        <Col lg="3">
+          <a id="new" href="#new">
+            <Card className="card-user add-to-edit">
+                <CardBody>
+                  <div className= "edit-text">
+                  <span className="icon">
+                    <i class="fas fa-plus"></i>
+                  </span>
+                  </div>
+                </CardBody>
+              </Card>
+          </a>
+        </Col>
+      </Row>
+    </div>
+  );
+
+  let editorContent = (
     <>
     <div onClick={togglePopup} className={isOpen ? "content blur" : "content"}>
 
       <div className="editor-title">
-        {name}<i class="tim-icons icon-pencil icon"></i>
+        <span>
+          {name}<i className="tim-icons icon-pencil icon"></i>
+        </span>
+        
+        <button onClick={publishPublicPage} id='publish-public-page-button'
+            className="btn btn-primary create-public-page-button"
+            color="primary"
+          >
+            Publish and Go To Public Page
+        </button>
       </div>
-      <div>
-        <Row>
-          {tempData.map(site => (
-            <Col lg="3">
-
-              <Card className="card-user">
-                <CardBody>
-                  <div>
-
-                  <UncontrolledDropdown>
-                  <DropdownToggle
-                    caret
-                    className="btn-icon dot"
-                    color="link"
-                    type="button"
-                  >
-                  <i class="fas fa-ellipsis-h"></i>
-                  </DropdownToggle>
-                  <DropdownMenu className="dropdown-menu-right">
-                    <DropdownItem
-                      href="#pablo"
-                      onClick={(e) => e.preventDefault()}
-                    >
-                      REMOVE
-                    </DropdownItem>
-                  </DropdownMenu>
-                </UncontrolledDropdown>
-                    <div className = "editor"> <i className={site.iconClass}></i></div>
-                    <div className = "editor-handle-name"> {site.userName}</div>
-                    <div className = "editor-link"> {site.prettyUrl} </div>
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-          ))}
-          <Col lg="3">
-            <a id="new" href="#new">
-              <Card className="card-user add-to-edit">
-                  <CardBody>
-                    <div className= "edit-text">
-                    <span className="icon">
-                      <i class="fas fa-plus"></i>
-                    </span>
-                    </div>
-                  </CardBody>
-                </Card>
-            </a>
-          </Col>
-        </Row>
-      </div>
+      {gridContent}
     </div>
-    <div className="content">{isOpen ?  <Colors/>  : null}  </div>
+    <div className="content">{isOpen ?  <ShareButtons/>  : null}  </div>
     </>
   );
+
+  console.log(renderToStaticMarkup(gridContent));
+
+  return editorContent;
 }
 
 export default Editor;

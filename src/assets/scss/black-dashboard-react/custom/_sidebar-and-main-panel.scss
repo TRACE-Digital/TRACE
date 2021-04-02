@@ -540,6 +540,12 @@
         transform: translateY(-20%);
         transition: transform ease-in-out 350ms;
       }
+
+      >.create-public-page-button {
+        width: 220px;
+        display: block;
+        float: right;
+      }
     }
 
     > .search-title{
@@ -1077,4 +1083,11 @@
         padding-top:4px;
       }
     }
+  }
+
+  .share-button{
+    width: 150px;
+    height: 150px;
+    margin: 25px;
+    margin-top: 50px;
   }
