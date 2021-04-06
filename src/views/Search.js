@@ -33,17 +33,16 @@ const testSiteNames = [
 ];
 
 function SearchComponent() {
-  const [isVisible, setVisible] = useState(false);
-  const [keywordsEntered, setKeywordsEntered] = useState(false);
-  const [tagsEntered, setTagsEntered] = useState(false);
+  const [refineVisible, setVisible] = useState(false);
+  const [historyVisible, setHistoryVisible] = useState(false);
+  const [currentSearch, setCurrentSearch] = useState(null);
   const [userNames, setUserNames] = useState([]);
   const [firstNames, setFirstNames] = useState([]);
   const [lastNames, setLastNames] = useState([]);
+  const [selectedTags, setSelectedTags] = useState(tags.slice());
   const [progress, setProgress] = useState(-1);
-  const [categories, setCategories] = useState(tags.slice());
   const [activeTab, setActiveTab] = useState("discovered");
-  const [currentSearch, setCurrentSearch] = useState(null);
-  const [historyVisible, setHistoryVisible] = useState(false);
+  const [error, setError] = useState('');
   const [, setPlsRender] = React.useState(false);
 
   // Register for changes to any search results
@@ -93,7 +92,7 @@ function SearchComponent() {
   }, [currentSearch]);
 
   const handleRefineClick = () => {
-    setVisible(!isVisible);
+    setVisible(!refineVisible);
   };
 
   const handleHistoryClick = () => {
@@ -116,17 +115,17 @@ function SearchComponent() {
     if (currentSearch) {
       const search = await currentSearch.definition.new();
       setCurrentSearch(search);
+      setSelectedTags(search.definition.tags.slice());
       return search;
     }
   };
 
-  const selectAll = () => {
-    setCategories(tags.slice());
-    setTagsEntered(false);
+  const selectAllTags = () => {
+    setSelectedTags(tags.slice());
   };
 
-  const unselectAll = () => {
-    setCategories([]);
+  const deselectAllTags = () => {
+    setSelectedTags([]);
   };
 
   // Function to handle keypresses for first and last name refine search functionality
@@ -152,10 +151,11 @@ function SearchComponent() {
   }
 
   function addUserName(userName) {
-    if (!userNames.includes(userName) && userName !== "") {
+    userName = userName || '';
+    userName = userName.trim();
+    if (!userNames.includes(userName) && userName.length > 0) {
       userNames.push(userName.trim());
       setUserNames([...userNames]);
-      setKeywordsEntered(false);
     }
     document.getElementById("search-bar").value = "";
   }
@@ -164,6 +164,7 @@ function SearchComponent() {
     if (e.keyCode === 32) {
       // SPACE
       addUserName(e.target.value);
+      e.preventDefault();
     } else if (e.keyCode === 8 && e.target.value === "") {
       // BACKSPACE
       userNames.splice(userNames.length - 1, 1);
@@ -176,14 +177,13 @@ function SearchComponent() {
   }
 
   async function submitSearch(e) {
+    setError('');
+
     if (userNames.length === 0) {
-      setKeywordsEntered(true);
-      console.log("no keywords entered");
-    } else if (categories.length === 0) {
-      setTagsEntered(true);
-      console.log("no tags entered");
+      setError('please enter at least one user name');
+    } else if (selectedTags.length === 0) {
+      setError('please select at least one tag');
     } else {
-      console.log("Submit Searches");
 
       let searchDef;
       let search;
@@ -200,17 +200,20 @@ function SearchComponent() {
       // but they will apply to all supportedSites
       // Calculate this on our own since we want to limit the search to just test sites
       const testSites = testSiteNames.map((name) => supportedSites[name]);
-      const taggedSites = filterSitesByTags(testSites, categories);
+      const taggedSites = filterSitesByTags(testSites, selectedTags);
 
       searchDef.includedSites = taggedSites;
       searchDef.userNames = userNames;
       searchDef.firstNames = firstNames;
       searchDef.lastNames = lastNames;
+      searchDef.tags = selectedTags;
 
       await searchDef.save();
 
       console.log(search);
       await search.start();
+
+      setProgress(search.progress);
     }
   }
 
@@ -232,17 +235,17 @@ function SearchComponent() {
   }
 
   function typing() {
-    setKeywordsEntered(false);
+    setError('');
   }
 
   function handleClickCheckbox(e) {
-    if (categories.includes(e.target.value)) {
-      categories.splice(categories.indexOf(e.target.value), 1);
-      setCategories([...categories]);
+    if (selectedTags.includes(e.target.value)) {
+      selectedTags.splice(tags.indexOf(e.target.value), 1);
+      setSelectedTags([...selectedTags]);
     } else {
-      setTagsEntered(false);
-      categories.push(e.target.value);
-      setCategories([...categories]);
+      setError('');
+      selectedTags.push(e.target.value);
+      setSelectedTags([...selectedTags]);
     }
   }
 
@@ -314,8 +317,8 @@ function SearchComponent() {
       </div>
 
       {/* REFINE SEARCH */}
-      <div className={isVisible ? "dropdownVis" : "dropdownNotVis"}>
-        {/* Search categories section of refine dropdown goes here */}
+      <div className={refineVisible ? "dropdownVis" : "dropdownNotVis"}>
+        {/* Search tags section of refine dropdown goes here */}
         <h1>CATEGORIES</h1>
         <Row>
           {tags.map((tag) => (
@@ -324,16 +327,16 @@ function SearchComponent() {
                 type="checkbox"
                 value={tag}
                 onChange={handleClickCheckbox}
-                checked={categories.includes(tag)}
+                checked={selectedTags.includes(tag)}
               />
               <span className="checkbox-name">{tag}</span>
             </Col>
           ))}
         </Row>
-        <Button className="categories-button" onClick={selectAll}>
+        <Button className="categories-button" onClick={selectAllTags}>
           Select All
         </Button>
-        <Button className="categories-button" onClick={unselectAll}>
+        <Button className="categories-button" onClick={deselectAllTags}>
           Deselect All
         </Button>
 
@@ -397,20 +400,8 @@ function SearchComponent() {
       {/* HISTORY */}
       {historyVisible && <History initialMax={3} onSelect={ (search) => setCurrentSearch(search) }/>}
 
-      <div
-        className={
-          keywordsEntered
-            ? "error-message-visible"
-            : tagsEntered
-            ? "error-message-visible"
-            : "error-not-visible"
-        }
-      >
-        {keywordsEntered
-          ? "please enter at least one keyword"
-          : tagsEntered
-          ? "please enter at least one tag"
-          : ""}
+      <div className={error ? "error-message-visible" : "error-not-visible"}>
+        {error}
       </div>
 
       {progress >= 0 && (
