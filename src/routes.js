@@ -15,62 +15,61 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import Dashboard from "views/Dashboard.js";
-import Search from "views/Search.js";
-import Analytics from "views/Analytics.js";
-import UserProfile from "views/UserProfile.js";
-import Editor from "views/Editor.js";
-import Contact from "views/Contact.js";
+import Dashboard from 'views/Dashboard.js';
+import Search from 'views/Search.js';
+import Analytics from 'views/Analytics.js';
+import UserProfile from 'views/UserProfile.js';
+import Editor from 'views/Editor.js';
+import Contact from 'views/Contact.js';
 
 var routes = [
   {
-    path: "/dashboard",
-    name: "Dashboard",
-    rtlName: "لوحة القيادة",
-    icon: "tim-icons icon-laptop",
+    path: '/dashboard',
+    name: 'Dashboard',
+    rtlName: 'لوحة القيادة',
+    icon: 'tim-icons icon-laptop',
     component: Dashboard,
-    layout: "",
+    layout: '',
   },
   {
-    path: "/search",
-    name: "Search",
-    rtlName: "لوحة القيادة",
-    icon: "tim-icons icon-zoom-split",
+    path: '/search',
+    name: 'Search',
+    rtlName: 'لوحة القيادة',
+    icon: 'tim-icons icon-zoom-split',
     component: Search,
-    layout: "",
+    layout: '',
   },
   {
-    path: "/analytics",
-    name: "Analytics",
-    rtlName: "إخطارات",
-    icon: "tim-icons icon-chart-bar-32",
+    path: '/analytics',
+    name: 'Analytics',
+    rtlName: 'إخطارات',
+    icon: 'tim-icons icon-chart-bar-32',
     component: Analytics,
-    layout: "",
+    layout: '',
   },
   {
-    path: "/profile-editor",
-    name: "Profile Editor",
-    rtlName: "ملف تعريفي للمستخدم",
-    icon: "tim-icons icon-pencil",
+    path: '/profile-editor',
+    name: 'Profile Editor',
+    rtlName: 'ملف تعريفي للمستخدم',
+    icon: 'tim-icons icon-pencil',
     component: Editor,
-    layout: "",
+    layout: '',
   },
   {
-    path: "/contact",
-    name: "Contact Us",
-    rtlName: "ملف تعريفي للمستخدم",
-    icon: "tim-icons icon-send",
+    path: '/contact',
+    name: 'Contact Us',
+    rtlName: 'ملف تعريفي للمستخدم',
+    icon: 'tim-icons icon-send',
     component: Contact,
-    layout: "",
+    layout: '',
   },
   {
-    path: "/about",
-    name: "About Us",
-    rtlName: "ملف تعريفي للمستخدم",
-    icon: "tim-icons icon-single-02",
+    path: '/about',
+    name: 'About Us',
+    rtlName: 'ملف تعريفي للمستخدم',
+    icon: 'tim-icons icon-single-02',
     component: UserProfile,
-    layout: "",
-  }
-
+    layout: '',
+  },
 ];
 export default routes;

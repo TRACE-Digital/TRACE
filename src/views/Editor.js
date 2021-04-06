@@ -1,30 +1,28 @@
-import React, { useState, useEffect } from "react";
-import Colors from "views/Colors.js";
-import { ProfilePage } from "trace-search";
-import SiteCard from "components/SiteCard/SiteCard";
-import { GridContextProvider, GridDropZone, GridItem, swap } from "react-grid-dnd";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import Colors from 'views/Colors.js';
+import { ProfilePage } from 'trace-search';
+import SiteCard from 'components/SiteCard/SiteCard';
+import { GridContextProvider, GridDropZone, GridItem, swap } from 'react-grid-dnd';
+import { Link } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
 
-
-
 const Editor = () => {
-
   /**
    * Initialize constants
    */
   const [myProfile, setProfileData] = useState(null);
-  const [title, setTitle] = useState("Enter Title");
+  const [title, setTitle] = useState('Enter Title');
   const [isOpen, setIsOpen] = useState(false);
-  const [heightSize, setHeightSize] = useState("");
+  const [heightSize, setHeightSize] = useState('');
   const [, setPlsRender] = useState(false);
-  const [colorScheme, setColorScheme] = useState([{
-    "titleColor": "#FFFFFF",
-    "backgroundColor": "#1E1D2A",
-    "siteColor": "#26283A",
-    "iconColor": "Default"
-  }])
-
+  const [colorScheme, setColorScheme] = useState([
+    {
+      titleColor: '#FFFFFF',
+      backgroundColor: '#1E1D2A',
+      siteColor: '#26283A',
+      iconColor: 'Default',
+    },
+  ]);
 
   /**
    * Function is called when there is a change on the site grid and updates the order
@@ -59,7 +57,6 @@ const Editor = () => {
     console.log(myProfile.colorScheme.iconColor);
     saveData();
     setPlsRender(prev => !prev);
-
   }
 
   /**
@@ -68,17 +65,16 @@ const Editor = () => {
   const handleAddClick = () => {
     setIsOpen(!isOpen);
     saveData();
-  }
+  };
 
   /**
    * Function called when title is edited and saves
    */
   function updateTitle(e) {
-    if (e.target.value === "") {
-      setTitle("");
-      myProfile.title = "";
-    }
-    else {
+    if (e.target.value === '') {
+      setTitle('');
+      myProfile.title = '';
+    } else {
       setTitle(e.target.value);
       myProfile.title = title;
     }
@@ -92,8 +88,7 @@ const Editor = () => {
     async function isLoggedIn() {
       try {
         await Auth.currentUserPoolUser();
-      }
-      catch {
+      } catch {
         window.location.href = '/login';
       }
     }
@@ -104,14 +99,12 @@ const Editor = () => {
    * Monitors for the profile page sites
    */
   useEffect(() => {
-
     const loadProfile = async () => {
       const results = await ProfilePage.loadAll();
       if (results.length === 0) {
         const page = new ProfilePage();
         results.push(page);
-      }
-      else {
+      } else {
         colorScheme[0].backgroundColor = results[0].colorScheme.backgroundColor;
         colorScheme[0].titleColor = results[0].colorScheme.titleColor;
         colorScheme[0].siteColor = results[0].colorScheme.siteColor;
@@ -121,10 +114,8 @@ const Editor = () => {
       setProfileData(results[0]);
       setHeightSize(results[0].accounts.length);
       // saveData();
-
     };
     loadProfile();
-
   }, []);
 
   return (
@@ -132,49 +123,55 @@ const Editor = () => {
       {isOpen ? <Colors onSelectLanguage={handleLanguage} closePopup={handleAddClick} page={myProfile} /> : null}
       <div className={isOpen ? `content blur` : `content`}>
         <div className={`editor-background`} style={{ backgroundColor: `${colorScheme[0].backgroundColor}` }}>
-
-          <div className={"editor-title"} style={{ color: `${colorScheme[0].titleColor}` }}>
-
-
+          <div className={'editor-title'} style={{ color: `${colorScheme[0].titleColor}` }}>
             <input
               className="editor-input"
               type="text"
               value={title}
               maxLength={30}
               onChange={updateTitle}
-              style={{ color: `${colorScheme[0].titleColor}`, backgroundColor: `${colorScheme[0].backgroundColor}`, border: "none", outline: "none" }}
+              style={{
+                color: `${colorScheme[0].titleColor}`,
+                backgroundColor: `${colorScheme[0].backgroundColor}`,
+                border: 'none',
+                outline: 'none',
+              }}
             />
 
-            <Link
-              className="btn btn-primary editor-button"
-              color="primary"
-              onClick={handleAddClick}
-            >
+            <Link className="btn btn-primary editor-button" color="primary" onClick={handleAddClick}>
               Edit Page
-          </Link>
-
-
+            </Link>
           </div>
-          {myProfile &&
+          {myProfile && (
             <GridContextProvider onChange={onChange}>
               <GridDropZone
                 id="items"
                 boxesPerRow={4}
                 rowHeight={330}
-                style={{ height: `${(heightSize / 3) * 330}px` }}>
+                style={{ height: `${(heightSize / 3) * 330}px` }}
+              >
                 {myProfile.accounts.map(item => (
                   <GridItem className="boxes" key={item.id}>
                     <div
                       style={{
-                        width: "100%",
-                        height: "100%",
-                      }}>
-                      {<SiteCard editorColor={colorScheme[0].siteColor} iconColor={colorScheme[0].iconColor} account={item} page="editor" />}
+                        width: '100%',
+                        height: '100%',
+                      }}
+                    >
+                      {
+                        <SiteCard
+                          editorColor={colorScheme[0].siteColor}
+                          iconColor={colorScheme[0].iconColor}
+                          account={item}
+                          page="editor"
+                        />
+                      }
                     </div>
                   </GridItem>
                 ))}
               </GridDropZone>
-            </GridContextProvider>}
+            </GridContextProvider>
+          )}
         </div>
       </div>
     </>

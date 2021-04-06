@@ -3,7 +3,7 @@ import { Button } from 'reactstrap';
 import { SearchDefinition } from 'trace-search';
 import './History.css';
 
-const History = (props) => {
+const History = props => {
   const [maxVisible, setMaxVisible] = useState(props.initialMax);
   const [sortedHistory, setSortedHistory] = useState([]);
 
@@ -15,7 +15,7 @@ const History = (props) => {
       return 0;
     });
     setSortedHistory(items);
-  }
+  };
 
   useEffect(() => {
     const loadHistory = async () => {
@@ -42,34 +42,28 @@ const History = (props) => {
 
   return (
     <>
-      <div className='dropdownVis history'>
+      <div className="dropdownVis history">
         <h3>Recent Searches</h3>
 
         {sortedHistory.length === 0 && <h4>None yet!</h4>}
-        {sortedHistory.slice(0, maxVisible).map((definition) => {
+        {sortedHistory.slice(0, maxVisible).map(definition => {
           return (
             <div key={definition.id}>
-              <Button
-                style={{ textAlign: 'left', width: '100%' }}
-                onClick={() => props.onSelect(definition.lastRun)}
-              >
+              <Button style={{ textAlign: 'left', width: '100%' }} onClick={() => props.onSelect(definition.lastRun)}>
+                <h4>
+                  {definition.name} – {definition.lastEditedAt.toLocaleDateString()}{' '}
+                  {definition.lastEditedAt.toLocaleTimeString()} – {definition.lastRun?.results.length || 0} results
+                </h4>
 
-              <h4>
-                {definition.name} – {definition.lastEditedAt.toLocaleDateString()} {definition.lastEditedAt.toLocaleTimeString()} – {definition.lastRun?.results.length || 0} results
-              </h4>
-
-              <p>User names:   {definition.userNames.slice(0, 5).join(', ')}</p>
-
+                <p>User names: {definition.userNames.slice(0, 5).join(', ')}</p>
               </Button>
             </div>
           );
         })}
 
-        {maxVisible < sortedHistory.length &&
-          <Button onClick={() => setMaxVisible(prev => Math.min(prev + 5, sortedHistory.length))}>
-            Load More
-          </Button>
-        }
+        {maxVisible < sortedHistory.length && (
+          <Button onClick={() => setMaxVisible(prev => Math.min(prev + 5, sortedHistory.length))}>Load More</Button>
+        )}
       </div>
     </>
   );
@@ -78,6 +72,6 @@ const History = (props) => {
 History.defaultProps = {
   initialMax: 5,
   onSelect: () => {},
-}
+};
 
 export default History;

@@ -15,22 +15,22 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React from 'react';
 // nodejs library that concatenates classes
 
 import Popup from '../components/AddSitePopup/AddSitePopup';
 
-import { ThirdPartyAccount, ClaimedAccount, ManualAccount } from "trace-search";
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
-import AccountCardList from "components/AccountCardList/AccountCardList";
+import { ThirdPartyAccount, ClaimedAccount, ManualAccount } from 'trace-search';
+import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import AccountCardList from 'components/AccountCardList/AccountCardList';
 
 function Dashboard(props) {
   const [showPopup, togglePopup] = React.useState(false);
 
   const handleAddClick = () => {
     togglePopup(!showPopup);
-  }
+  };
   const [, setPlsRender] = React.useState(false);
 
   // Load the initial accounts that we need and
@@ -48,11 +48,11 @@ function Dashboard(props) {
 
         setPlsRender(prev => !prev);
       } catch (e) {
-        console.error("Failed to load accounts from the database!");
+        console.error('Failed to load accounts from the database!');
         console.error(e);
       }
       console.log(ThirdPartyAccount.accountCache.items);
-    }
+    };
 
     ClaimedAccount.accountCache.events.on('change', triggerRender);
     ManualAccount.accountCache.events.on('change', triggerRender);
@@ -68,29 +68,23 @@ function Dashboard(props) {
   }, []);
 
   // Combine Claimed and Manual accounts for display
-  const accountsToRender = [].concat(
-    Object.values(ClaimedAccount.accounts)
-  ).concat(
-    Object.values(ManualAccount.accounts)
-  );
+  const accountsToRender = []
+    .concat(Object.values(ClaimedAccount.accounts))
+    .concat(Object.values(ManualAccount.accounts));
 
   return (
     <>
-    <div className="content">
-      <div className="header">
-        <h3 className="header-title">Claimed Accounts</h3>
-        <Link
-          className="btn btn-primary add-site-button"
-          color="primary"
-          onClick={handleAddClick}
-        >
-          Add New Site
-        </Link>
-      </div>
+      <div className="content">
+        <div className="header">
+          <h3 className="header-title">Claimed Accounts</h3>
+          <Link className="btn btn-primary add-site-button" color="primary" onClick={handleAddClick}>
+            Add New Site
+          </Link>
+        </div>
 
-      <hr></hr>
+        <hr></hr>
 
-      <div>
+        <div>
           <AccountCardList
             headerText="Your Accounts"
             accounts={accountsToRender}
@@ -100,18 +94,10 @@ function Dashboard(props) {
             showNames={true}
             showTripleDot={true}
           />
+        </div>
       </div>
-    </div>
-    <div className="content">
-        {showPopup ?
-                <Popup
-                          text='Create New Site'
-                          closePopup={handleAddClick}
-                />
-                : null
-        }
-    </div>
-  </>
+      <div className="content">{showPopup ? <Popup text="Create New Site" closePopup={handleAddClick} /> : null}</div>
+    </>
   );
 }
 

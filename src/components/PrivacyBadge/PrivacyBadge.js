@@ -11,11 +11,9 @@ import d from './privacy_badges/d.png';
 import e from './privacy_badges/e.png';
 import none from './privacy_badges/false.png';
 
-
 export default function PrivacyBadge(props) {
-
   const [siteId, setSiteId] = useState(props.account.site.name);
-  const [grade, setGrade] = useState('Loading...')
+  const [grade, setGrade] = useState('Loading...');
 
   useEffect(() => {
     (async () => {
@@ -57,7 +55,7 @@ export default function PrivacyBadge(props) {
         } else {
           throw new Error('Could not process API response. Format may have changed.');
         }
-      } catch(e) {
+      } catch (e) {
         console.debug('ToSDR API call failed:');
         console.debug(e);
 
@@ -75,24 +73,42 @@ export default function PrivacyBadge(props) {
   );
 }
 
-
 const getLogo = (serviceUrl, grade) => {
-  if (grade === "a") {
-    return <a href={serviceUrl} title="Privacy Rating A" target="_blank" rel="noreferrer"><img src={a} alt="Privacy Rating A" /></a>
+  if (grade === 'a') {
+    return (
+      <a href={serviceUrl} title="Privacy Rating A" target="_blank" rel="noreferrer">
+        <img src={a} alt="Privacy Rating A" />
+      </a>
+    );
+  } else if (grade === 'b') {
+    return (
+      <a href={serviceUrl} title="Privacy Rating B" target="_blank" rel="noreferrer">
+        <img src={b} alt="Privacy Rating B" />
+      </a>
+    );
+  } else if (grade === 'c') {
+    return (
+      <a href={serviceUrl} title="Privacy Rating C" target="_blank" rel="noreferrer">
+        <img src={c} alt="Privacy Rating C" />
+      </a>
+    );
+  } else if (grade === 'd') {
+    return (
+      <a href={serviceUrl} title="Privacy Rating D" target="_blank" rel="noreferrer">
+        <img src={d} alt="Privacy Rating D" />
+      </a>
+    );
+  } else if (grade === 'e') {
+    return (
+      <a href={serviceUrl} title="Privacy Rating E" target="_blank" rel="noreferrer">
+        <img src={e} alt="Privacy Rating E" />
+      </a>
+    );
+  } else {
+    return (
+      <a href={serviceUrl} title="No Privacy Rating Yet" target="_blank" rel="noreferrer">
+        <img src={none} alt="No Privacy Rating Yet" />
+      </a>
+    );
   }
-  else if (grade === "b") {
-    return <a href={serviceUrl} title="Privacy Rating B" target="_blank" rel="noreferrer"><img src={b} alt="Privacy Rating B" /></a>
-  }
-  else if (grade === "c") {
-    return <a href={serviceUrl} title="Privacy Rating C" target="_blank" rel="noreferrer"><img src={c} alt="Privacy Rating C" /></a>
-  }
-  else if (grade === "d") {
-    return <a href={serviceUrl} title="Privacy Rating D" target="_blank" rel="noreferrer"><img src={d} alt="Privacy Rating D" /></a>
-  }
-  else if (grade === "e") {
-    return <a href={serviceUrl} title="Privacy Rating E" target="_blank" rel="noreferrer"><img src={e} alt="Privacy Rating E" /></a>
-  }
-  else {
-    return <a href={serviceUrl} title="No Privacy Rating Yet" target="_blank" rel="noreferrer"><img src={none} alt="No Privacy Rating Yet" /></a>
-  }
-}
+};

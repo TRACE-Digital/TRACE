@@ -1,8 +1,8 @@
-import React, { useState, useEffect, Fragment } from "react";
-import History from "components/History/History";
+import React, { useState, useEffect, Fragment } from 'react';
+import History from 'components/History/History';
 
 // reactstrap components
-import classNames from "classnames";
+import classNames from 'classnames';
 
 import {
   SearchDefinition,
@@ -11,25 +11,25 @@ import {
   supportedSites,
   tags,
   filterSitesByTags,
-} from "trace-search";
-import { Button, ButtonGroup, Row, Col } from "reactstrap";
-import AccountCardList from "components/AccountCardList/AccountCardList.js";
+} from 'trace-search';
+import { Button, ButtonGroup, Row, Col } from 'reactstrap';
+import AccountCardList from 'components/AccountCardList/AccountCardList.js';
 
 const testSiteNames = [
-  "GitHub",
-  "Reddit",
-  "Apple Discussions",
-  "Facebook",
-  "BitBucket",
-  "GitLab",
-  "npm",
-  "Wikipedia",
-  "TripAdvisor",
-  "HackerNews",
-  "Steam",
-  "Keybase",
-  "last.fm",
-  "Twitch",
+  'GitHub',
+  'Reddit',
+  'Apple Discussions',
+  'Facebook',
+  'BitBucket',
+  'GitLab',
+  'npm',
+  'Wikipedia',
+  'TripAdvisor',
+  'HackerNews',
+  'Steam',
+  'Keybase',
+  'last.fm',
+  'Twitch',
 ];
 
 function SearchComponent() {
@@ -41,7 +41,7 @@ function SearchComponent() {
   const [lastNames, setLastNames] = useState([]);
   const [selectedTags, setSelectedTags] = useState(tags.slice());
   const [progress, setProgress] = useState(-1);
-  const [activeTab, setActiveTab] = useState("discovered");
+  const [activeTab, setActiveTab] = useState('discovered');
   const [error, setError] = useState('');
   const [, setPlsRender] = React.useState(false);
 
@@ -50,18 +50,15 @@ function SearchComponent() {
   // This catches those changes and forces a rerender
   useEffect(() => {
     const triggerRender = () => {
-      setPlsRender((prev) => !prev);
+      setPlsRender(prev => !prev);
     };
 
     // This may cause a few extra rerenders since it's results for all searches,
     // but the user is not likely to have many searches running at once
-    ThirdPartyAccount.resultCache.events.on("change", triggerRender);
+    ThirdPartyAccount.resultCache.events.on('change', triggerRender);
 
     const cleanup = () => {
-      ThirdPartyAccount.resultCache.events.removeListener(
-        "change",
-        triggerRender
-      );
+      ThirdPartyAccount.resultCache.events.removeListener('change', triggerRender);
     };
 
     return cleanup;
@@ -73,7 +70,7 @@ function SearchComponent() {
       return;
     }
 
-    const handle = (id) => {
+    const handle = id => {
       // We don't care about the resultIds since
       // this triggers a rerender
       setProgress(search.progress);
@@ -82,10 +79,10 @@ function SearchComponent() {
     // Preserve the state of currentSearch
     const search = currentSearch;
     // Register for notification of new results
-    search.events.on("result", handle);
+    search.events.on('result', handle);
 
     const cleanup = () => {
-      search.events.removeListener("result", handle);
+      search.events.removeListener('result', handle);
     };
 
     return cleanup;
@@ -132,20 +129,20 @@ function SearchComponent() {
   function nameKeyPress(e) {
     if (e.keyCode === 13) {
       // keycode for Enter
-      if (e.target.id === "firstName") {
+      if (e.target.id === 'firstName') {
         // Handle enter for firstName input
-        if (!firstNames.includes(e.target.value) && e.target.value !== "") {
+        if (!firstNames.includes(e.target.value) && e.target.value !== '') {
           firstNames.push(e.target.value);
           setFirstNames([...firstNames]);
         }
-        e.target.value = "";
-      } else if (e.target.id === "lastName") {
+        e.target.value = '';
+      } else if (e.target.id === 'lastName') {
         // Handle enter for last name input
-        if (!lastNames.includes(e.target.value) && e.target.value !== "") {
+        if (!lastNames.includes(e.target.value) && e.target.value !== '') {
           lastNames.push(e.target.value);
           setLastNames([...lastNames]);
         }
-        e.target.value = "";
+        e.target.value = '';
       }
     }
   }
@@ -157,7 +154,7 @@ function SearchComponent() {
       userNames.push(userName.trim());
       setUserNames([...userNames]);
     }
-    document.getElementById("search-bar").value = "";
+    document.getElementById('search-bar').value = '';
   }
 
   function keyPress(e) {
@@ -165,7 +162,7 @@ function SearchComponent() {
       // SPACE
       addUserName(e.target.value);
       e.preventDefault();
-    } else if (e.keyCode === 8 && e.target.value === "") {
+    } else if (e.keyCode === 8 && e.target.value === '') {
       // BACKSPACE
       userNames.splice(userNames.length - 1, 1);
       setUserNames([...userNames]);
@@ -184,7 +181,6 @@ function SearchComponent() {
     } else if (selectedTags.length === 0) {
       setError('please select at least one tag');
     } else {
-
       let searchDef;
       let search;
       if (currentSearch) {
@@ -199,7 +195,7 @@ function SearchComponent() {
       // Tags can be passed into the SearchDefinition constructor
       // but they will apply to all supportedSites
       // Calculate this on our own since we want to limit the search to just test sites
-      const testSites = testSiteNames.map((name) => supportedSites[name]);
+      const testSites = testSiteNames.map(name => supportedSites[name]);
       const taggedSites = filterSitesByTags(testSites, selectedTags);
 
       searchDef.includedSites = taggedSites;
@@ -223,14 +219,14 @@ function SearchComponent() {
   }
 
   function deleteNameEntry(entry, type) {
-    if (type === "first") {
+    if (type === 'first') {
       firstNames.splice(firstNames.indexOf(entry), 1);
       setFirstNames([...firstNames]);
-    } else if (type === "last") {
+    } else if (type === 'last') {
       lastNames.splice(lastNames.indexOf(entry), 1);
       setLastNames([...lastNames]);
     } else {
-      console.error("Invalid deleteNameEntry entry type!");
+      console.error('Invalid deleteNameEntry entry type!');
     }
   }
 
@@ -256,22 +252,17 @@ function SearchComponent() {
         <>
           <div className="search-title">TRACE</div>
           <div className="search-info">
-            Find your digital footprint. Manage your online presence. Our
-            service allows you to increase your social media engagement while
-            keeping your privacy a priority. Sync your information or work
-            locally.
+            Find your digital footprint. Manage your online presence. Our service allows you to increase your social
+            media engagement while keeping your privacy a priority. Sync your information or work locally.
           </div>
         </>
       )}
 
       <div className="one">
         <div className="three">
-          {userNames.map((item) => (
+          {userNames.map(item => (
             <div className="entered" key={item}>
-              <i
-                className="icon fas fa-times"
-                onClick={() => deleteEntry(item)}
-              ></i>
+              <i className="icon fas fa-times" onClick={() => deleteEntry(item)}></i>
               {item}
             </div>
           ))}
@@ -317,18 +308,13 @@ function SearchComponent() {
       </div>
 
       {/* REFINE SEARCH */}
-      <div className={refineVisible ? "dropdownVis" : "dropdownNotVis"}>
+      <div className={refineVisible ? 'dropdownVis' : 'dropdownNotVis'}>
         {/* Search tags section of refine dropdown goes here */}
         <h1>CATEGORIES</h1>
         <Row>
-          {tags.map((tag) => (
+          {tags.map(tag => (
             <Col lg="3" key={tag}>
-              <input
-                type="checkbox"
-                value={tag}
-                onChange={handleClickCheckbox}
-                checked={selectedTags.includes(tag)}
-              />
+              <input type="checkbox" value={tag} onChange={handleClickCheckbox} checked={selectedTags.includes(tag)} />
               <span className="checkbox-name">{tag}</span>
             </Col>
           ))}
@@ -349,20 +335,13 @@ function SearchComponent() {
         {/* Text box input */}
         <Row className="name" id="firstName">
           <div className="nameEntryInput" id="firstName">
-            <input
-              id="firstName"
-              placeholder="first name/nickname"
-              onKeyDown={nameKeyPress}
-            ></input>
+            <input id="firstName" placeholder="first name/nickname" onKeyDown={nameKeyPress}></input>
           </div>
           {/* Currently entered firstNames */}
           <Col className="nameList">
-            {firstNames.map((item) => (
+            {firstNames.map(item => (
               <div className="entered" key={item}>
-                <i
-                  className="icon fas fa-times"
-                  onClick={() => deleteNameEntry(item, "first")}
-                ></i>
+                <i className="icon fas fa-times" onClick={() => deleteNameEntry(item, 'first')}></i>
                 {item}
               </div>
             ))}
@@ -375,20 +354,13 @@ function SearchComponent() {
         {/* Text box input */}
         <Row className="name" id="lastName">
           <div className="nameEntryInput" id="lastName">
-            <input
-              id="lastName"
-              placeholder="last name/maiden name"
-              onKeyDown={nameKeyPress}
-            ></input>
+            <input id="lastName" placeholder="last name/maiden name" onKeyDown={nameKeyPress}></input>
           </div>
           {/* Currently entered lastNames */}
           <Col className="nameList">
-            {lastNames.map((item) => (
+            {lastNames.map(item => (
               <div className="entered" key={item}>
-                <i
-                  className="icon fas fa-times"
-                  onClick={() => deleteNameEntry(item, "last")}
-                ></i>
+                <i className="icon fas fa-times" onClick={() => deleteNameEntry(item, 'last')}></i>
                 {item}
               </div>
             ))}
@@ -398,20 +370,18 @@ function SearchComponent() {
       </div>
 
       {/* HISTORY */}
-      {historyVisible && <History initialMax={3} onSelect={ (search) => setCurrentSearch(search) }/>}
+      {historyVisible && <History initialMax={3} onSelect={search => setCurrentSearch(search)} />}
 
-      <div className={error ? "error-message-visible" : "error-not-visible"}>
-        {error}
-      </div>
+      <div className={error ? 'error-message-visible' : 'error-not-visible'}>{error}</div>
 
       {progress >= 0 && (
-        <div style={{ width: "100%", textAlign: "center" }}>
+        <div style={{ width: '100%', textAlign: 'center' }}>
           <div>{progress}%</div>
           <div
             style={{
               width: `${progress}%`,
-              backgroundColor: "#1d8cf8", // $info
-              background: "linear-gradient(to right, #1d8cf8, #3358f4)",
+              backgroundColor: '#1d8cf8', // $info
+              background: 'linear-gradient(to right, #1d8cf8, #3358f4)',
               borderRadius: 50,
             }}
           >
@@ -424,21 +394,19 @@ function SearchComponent() {
 
       {currentSearch && currentSearch.state !== SearchState.CREATED && (
         <>
-          <div style={{ textAlign: "center" }}>
+          <div style={{ textAlign: 'center' }}>
             <ButtonGroup className="btn-group-toggle" data-toggle="buttons">
               <Button
                 tag="label"
-                className={classNames("btn-simple", {
-                  active: activeTab === "discovered",
+                className={classNames('btn-simple', {
+                  active: activeTab === 'discovered',
                 })}
                 color="info"
                 id="0"
                 size="md"
-                onClick={() => setActiveTab("discovered")}
+                onClick={() => setActiveTab('discovered')}
               >
-                <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                  Discovered
-                </span>
+                <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">Discovered</span>
                 <span className="d-block d-sm-none">
                   <i className="tim-icons icon-single-02" />
                 </span>
@@ -448,14 +416,12 @@ function SearchComponent() {
                 id="1"
                 size="md"
                 tag="label"
-                className={classNames("btn-simple", {
-                  active: activeTab === "unregistered",
+                className={classNames('btn-simple', {
+                  active: activeTab === 'unregistered',
                 })}
-                onClick={() => setActiveTab("unregistered")}
+                onClick={() => setActiveTab('unregistered')}
               >
-                <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                  Unregistered
-                </span>
+                <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">Unregistered</span>
                 <span className="d-block d-sm-none">
                   <i className="tim-icons icon-gift-2" />
                 </span>
@@ -465,14 +431,12 @@ function SearchComponent() {
                 id="2"
                 size="md"
                 tag="label"
-                className={classNames("btn-simple", {
-                  active: activeTab === "inconclusive",
+                className={classNames('btn-simple', {
+                  active: activeTab === 'inconclusive',
                 })}
-                onClick={() => setActiveTab("inconclusive")}
+                onClick={() => setActiveTab('inconclusive')}
               >
-                <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                  Inconclusive
-                </span>
+                <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">Inconclusive</span>
                 <span className="d-block d-sm-none">
                   <i className="tim-icons icon-tap-02" />
                 </span>
@@ -482,7 +446,7 @@ function SearchComponent() {
             <br />
           </div>
 
-          {activeTab === "discovered" && (
+          {activeTab === 'discovered' && (
             <AccountCardList
               headerText="Discovered Accounts"
               accounts={currentSearch?.registeredResults}
@@ -493,7 +457,7 @@ function SearchComponent() {
               showTripleDot={false}
             />
           )}
-          {activeTab === "unregistered" && (
+          {activeTab === 'unregistered' && (
             <AccountCardList
               headerText="Unregistered Accounts"
               accounts={currentSearch?.unregisteredResults}
@@ -504,7 +468,7 @@ function SearchComponent() {
               showTripleDot={false}
             />
           )}
-          {activeTab === "inconclusive" && (
+          {activeTab === 'inconclusive' && (
             <AccountCardList
               headerText="Inconclusive Accounts"
               accounts={currentSearch?.inconclusiveResults}

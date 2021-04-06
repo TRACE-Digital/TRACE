@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import ToggleButton from 'react-toggle-button';
 import { setRemoteUser, setupReplication, teardownReplication } from 'trace-search';
-import Auth from "@aws-amplify/auth";
+import Auth from '@aws-amplify/auth';
 
 function SyncToggle() {
   const [replicate, setReplicate] = useState(false);
@@ -12,8 +12,7 @@ function SyncToggle() {
       try {
         await Auth.currentUserPoolUser();
         setIsLoggedIn(true);
-      }
-      catch {
+      } catch {
         setIsLoggedIn(false);
       }
     })();
@@ -35,12 +34,12 @@ function SyncToggle() {
           const obj = await setupReplication();
           const replicator = obj.TODO_replication;
 
-          replicator.on('error', (e) => {
+          replicator.on('error', e => {
             alert(`Replication error: ${e.message || e}`);
             console.error(e);
             setReplicate(false);
           });
-        } catch(e) {
+        } catch (e) {
           alert(`Replication error: ${e.message || e}`);
           console.error(e);
           setReplicate(false);
@@ -58,15 +57,15 @@ function SyncToggle() {
     handleReplication();
   }, [replicate, isLoggedIn]);
 
-  return(
+  return (
     <div style={{ textAlign: 'center' }}>
       Sync
-        <ToggleButton
-          inactiveLabel={<span>Off</span>}
-          activeLabel={<span>On</span>}
-          value={replicate || false}
-          onToggle={() => setReplicate(prev => !prev) }
-          />
+      <ToggleButton
+        inactiveLabel={<span>Off</span>}
+        activeLabel={<span>On</span>}
+        value={replicate || false}
+        onToggle={() => setReplicate(prev => !prev)}
+      />
     </div>
   );
 }

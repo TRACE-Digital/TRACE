@@ -15,9 +15,9 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 // nodejs library that concatenates classes
-import classNames from "classnames";
+import classNames from 'classnames';
 
 import { resetDb, resetRemoteDb, setRemoteUser } from 'trace-search';
 
@@ -39,29 +39,29 @@ import {
   Modal,
   NavbarToggler,
   ModalHeader,
-} from "reactstrap";
-import { Link } from "react-router-dom";
-import Auth from "@aws-amplify/auth";
+} from 'reactstrap';
+import { Link } from 'react-router-dom';
+import Auth from '@aws-amplify/auth';
 
 async function signOut() {
   try {
     await Auth.signOut();
-    } catch (error) {
-      console.log('error signing out: ', error);
-    }
+  } catch (error) {
+    console.log('error signing out: ', error);
+  }
 }
 
 function AdminNavbar(props) {
   const [collapseOpen, setcollapseOpen] = useState(false);
   const [modalSearch, setmodalSearch] = useState(false);
-  const [color, setcolor] = useState("navbar-transparent");
+  const [color, setcolor] = useState('navbar-transparent');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    window.addEventListener("resize", updateColor);
+    window.addEventListener('resize', updateColor);
     // Specify how to clean up after this effect:
     return function cleanup() {
-      window.removeEventListener("resize", updateColor);
+      window.removeEventListener('resize', updateColor);
     };
   });
 
@@ -71,8 +71,7 @@ function AdminNavbar(props) {
         const user = await Auth.currentUserPoolUser();
         console.log(user);
         setIsLoggedIn(true);
-      }
-      catch {
+      } catch {
         setIsLoggedIn(false);
       }
     })();
@@ -81,17 +80,17 @@ function AdminNavbar(props) {
   // function that adds color white/transparent to the navbar on resize (this is for the collapse)
   const updateColor = () => {
     if (window.innerWidth < 993 && collapseOpen) {
-      setcolor("bg-white");
+      setcolor('bg-white');
     } else {
-      setcolor("navbar-transparent");
+      setcolor('navbar-transparent');
     }
   };
   // this function opens and closes the collapse on small devices
   const toggleCollapse = () => {
     if (collapseOpen) {
-      setcolor("navbar-transparent");
+      setcolor('navbar-transparent');
     } else {
-      setcolor("bg-white");
+      setcolor('bg-white');
     }
     setcollapseOpen(!collapseOpen);
   };
@@ -101,11 +100,11 @@ function AdminNavbar(props) {
   };
   return (
     <>
-      <Navbar className={classNames("navbar-absolute", color)} expand="lg">
+      <Navbar className={classNames('navbar-absolute', color)} expand="lg">
         <Container fluid>
           <div className="navbar-wrapper">
             <div
-              className={classNames("navbar-toggle d-inline", {
+              className={classNames('navbar-toggle d-inline', {
                 toggled: props.sidebarOpened,
               })}
             >
@@ -115,7 +114,7 @@ function AdminNavbar(props) {
                 <span className="navbar-toggler-bar bar3" />
               </NavbarToggler>
             </div>
-            <NavbarBrand href="#pablo" onClick={(e) => e.preventDefault()}>
+            <NavbarBrand href="#pablo" onClick={e => e.preventDefault()}>
               {props.brandText}
             </NavbarBrand>
           </div>
@@ -127,14 +126,16 @@ function AdminNavbar(props) {
           <Collapse navbar isOpen={collapseOpen}>
             <Nav className="ml-auto" navbar>
               <UncontrolledDropdown nav>
-                <SyncToggle/>
+                <SyncToggle />
               </UncontrolledDropdown>
               <UncontrolledDropdown nav>
                 <DropdownToggle
                   caret
                   color="default"
                   nav
-                  onClick={async (e) => { e.preventDefault() }}
+                  onClick={async e => {
+                    e.preventDefault();
+                  }}
                 >
                   <div className="photo">
                     <i className="tim-icons icon-single-02" />
@@ -151,47 +152,57 @@ function AdminNavbar(props) {
                   <NavLink tag="li">
                     <DropdownItem className="nav-item">Settings</DropdownItem>
                   </NavLink>
-                  <DropdownItem tag="li" className="">
-
-                  </DropdownItem>
+                  <DropdownItem tag="li" className=""></DropdownItem>
                   <DropdownItem divider tag="li" />
                   <NavLink tag="li">
                     <DropdownItem className="nav-item">
-                      Extension version: v{ window.__TRACE_EXTENSION_HOOK__?.getVersionStr() || 'Not installed' }
+                      Extension version: v{window.__TRACE_EXTENSION_HOOK__?.getVersionStr() || 'Not installed'}
                     </DropdownItem>
                   </NavLink>
                   <NavLink tag="li">
-                    <DropdownItem className="nav-item" onClick={async () => {
-                      const confirmation = window.confirm('Are you sure? This action is irreversible and will delete ALL your data.');
-                      if (!confirmation) {
-                        return;
-                      }
-
-                      try {
-                        await resetDb();
-                        if (isLoggedIn) {
-                          await setRemoteUser(await Auth.currentUserPoolUser());
-                          await resetRemoteDb();
+                    <DropdownItem
+                      className="nav-item"
+                      onClick={async () => {
+                        const confirmation = window.confirm(
+                          'Are you sure? This action is irreversible and will delete ALL your data.',
+                        );
+                        if (!confirmation) {
+                          return;
                         }
-                        window.location.reload();
-                      } catch (e) {
-                        console.error(e);
-                      }
-                    }}>Delete my data</DropdownItem>
+
+                        try {
+                          await resetDb();
+                          if (isLoggedIn) {
+                            await setRemoteUser(await Auth.currentUserPoolUser());
+                            await resetRemoteDb();
+                          }
+                          window.location.reload();
+                        } catch (e) {
+                          console.error(e);
+                        }
+                      }}
+                    >
+                      Delete my data
+                    </DropdownItem>
                   </NavLink>
                   <DropdownItem divider tag="li" />
-                  {!isLoggedIn &&
-                  <NavLink to="/login" tag={Link}>
-                    <DropdownItem className="nav-item">Log In</DropdownItem>
-                  </NavLink>}
-                  {isLoggedIn &&
-                  <NavLink onClick={() => {
-                    signOut();
-                    setIsLoggedIn(!isLoggedIn);
-                    window.location.href = "/landing";
-                    }} tag="li">)
-                    <DropdownItem className="nav-item">Log Out</DropdownItem>
-                  </NavLink>}
+                  {!isLoggedIn && (
+                    <NavLink to="/login" tag={Link}>
+                      <DropdownItem className="nav-item">Log In</DropdownItem>
+                    </NavLink>
+                  )}
+                  {isLoggedIn && (
+                    <NavLink
+                      onClick={() => {
+                        signOut();
+                        setIsLoggedIn(!isLoggedIn);
+                        window.location.href = '/landing';
+                      }}
+                      tag="li"
+                    >
+                      )<DropdownItem className="nav-item">Log Out</DropdownItem>
+                    </NavLink>
+                  )}
                 </DropdownMenu>
               </UncontrolledDropdown>
               <li className="separator d-lg-none" />
@@ -199,18 +210,10 @@ function AdminNavbar(props) {
           </Collapse>
         </Container>
       </Navbar>
-      <Modal
-        modalClassName="modal-search"
-        isOpen={modalSearch}
-        toggle={toggleModalSearch}
-      >
+      <Modal modalClassName="modal-search" isOpen={modalSearch} toggle={toggleModalSearch}>
         <ModalHeader>
           <Input placeholder="SEARCH" type="text" />
-          <button
-            aria-label="Close"
-            className="close"
-            onClick={toggleModalSearch}
-          >
+          <button aria-label="Close" className="close" onClick={toggleModalSearch}>
             <i className="tim-icons icon-simple-remove" />
           </button>
         </ModalHeader>

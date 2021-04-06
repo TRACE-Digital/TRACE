@@ -6,14 +6,14 @@ import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'react
 import { tags } from 'trace-search';
 
 function AccountCardList(props) {
-  const [sortMethod, setSortMethod] = useState("new");
+  const [sortMethod, setSortMethod] = useState('new');
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
   const [actionsDropdownOpen, setActionsDropdownOpen] = useState(false);
   const [sortedAccounts, setSortedAccounts] = useState([]);
   const [selection, setSelection] = useState([]);
 
-  const toggleSortDropdown = () => setSortDropdownOpen((prevState) => !prevState);
-  const toggleActionsDropdown = () => setActionsDropdownOpen((prevState) => !prevState);
+  const toggleSortDropdown = () => setSortDropdownOpen(prevState => !prevState);
+  const toggleActionsDropdown = () => setActionsDropdownOpen(prevState => !prevState);
 
   const selectAll = () => setSelection(props.accounts.map(account => account.id));
   const deselectAll = () => setSelection([]);
@@ -44,20 +44,18 @@ function AccountCardList(props) {
     return count;
   };
 
-  const sortByCategory = (array) => {
+  const sortByCategory = array => {
     console.log(tags);
     let result = [];
     for (const tag of tags) {
-      const temp = array.filter(
-        (account) => account.site.tags.includes(tag)
-      );
+      const temp = array.filter(account => account.site.tags.includes(tag));
       if (temp.length !== 0) {
         result.push(tag);
         result = result.concat(temp);
       }
     }
     return result;
-  }
+  };
 
   /**
    * This useEffect monitors sortMethod, which changes whenever a new sort method is selected.
@@ -65,19 +63,19 @@ function AccountCardList(props) {
    *
    * If either of these things happen, the displayed data is re-sorted and re-rendered with the current sortMethod.
    */
-   useEffect(() => {
+  useEffect(() => {
     // Sort an array passed in
-    const sortArray = (array) => {
+    const sortArray = array => {
       let sorted = [...array];
 
-      if (sortMethod === "new") {
+      if (sortMethod === 'new') {
         // sort by age, newest found first
         // this happens by default
-      } else if (sortMethod === "old") {
+      } else if (sortMethod === 'old') {
         // sort by age, oldest found first
         // since array is sorted by new by default, just reverse the array
         sorted.reverse();
-      } else if (sortMethod === "az") {
+      } else if (sortMethod === 'az') {
         // sort alphabetically by site name, A-Z
         sorted.sort((a, b) => {
           return a.site.name.toUpperCase() < b.site.name.toUpperCase()
@@ -86,7 +84,7 @@ function AccountCardList(props) {
             ? 1
             : 0;
         });
-      } else if (sortMethod === "za") {
+      } else if (sortMethod === 'za') {
         // sort alphabetically by site name, Z-A
         sorted.sort((a, b) => {
           return a.site.name.toUpperCase() > b.site.name.toUpperCase()
@@ -95,16 +93,12 @@ function AccountCardList(props) {
             ? 1
             : 0;
         });
-      } else if (sortMethod === "confidence") {
+      } else if (sortMethod === 'confidence') {
         // sort by confidence level, highest first
         sorted.sort((a, b) => {
-          return a.confidence < b.confidence
-            ? -1
-            : a.confidence > b.confidence
-            ? 1
-            : 0;
+          return a.confidence < b.confidence ? -1 : a.confidence > b.confidence ? 1 : 0;
         });
-      } else if (sortMethod === "category") {
+      } else if (sortMethod === 'category') {
         sorted = sortByCategory(sorted);
       } else {
         // invalid sort method
@@ -121,89 +115,80 @@ function AccountCardList(props) {
 
   return (
     <>
-      <span style={{display: "inline", float: "right"}}>
+      <span style={{ display: 'inline', float: 'right' }}>
         {/* SORT DROPDOWN */}
-        <Dropdown isOpen={sortDropdownOpen} toggle={toggleSortDropdown} style={{display: "inline", marginRight: "10px"}}>
-          <DropdownToggle caret>Sort By
-            <b className="caret d-none d-lg-block d-xl-block" style={{marginLeft: "-15px", marginTop: "-11px"}} />
+        <Dropdown
+          isOpen={sortDropdownOpen}
+          toggle={toggleSortDropdown}
+          style={{ display: 'inline', marginRight: '10px' }}
+        >
+          <DropdownToggle caret>
+            Sort By
+            <b className="caret d-none d-lg-block d-xl-block" style={{ marginLeft: '-15px', marginTop: '-11px' }} />
           </DropdownToggle>
-          <DropdownMenu style={{marginTop: "15px"}}>
-            <DropdownItem onClick={() => setSortMethod("az")}>
-              Alphabetical A-Z
-            </DropdownItem>
+          <DropdownMenu style={{ marginTop: '15px' }}>
+            <DropdownItem onClick={() => setSortMethod('az')}>Alphabetical A-Z</DropdownItem>
             <DropdownItem divider tag="li" />
-            <DropdownItem onClick={() => setSortMethod("za")}>
-              Alphabetical Z-A
-            </DropdownItem>
+            <DropdownItem onClick={() => setSortMethod('za')}>Alphabetical Z-A</DropdownItem>
             <DropdownItem divider tag="li" />
-            <DropdownItem onClick={() => setSortMethod("category")}>
-              Category
-            </DropdownItem>
+            <DropdownItem onClick={() => setSortMethod('category')}>Category</DropdownItem>
             <DropdownItem divider tag="li" />
-            <DropdownItem onClick={() => setSortMethod("confidence")}>
-              Confidence
-            </DropdownItem>
+            <DropdownItem onClick={() => setSortMethod('confidence')}>Confidence</DropdownItem>
             <DropdownItem divider tag="li" />
-            <DropdownItem onClick={() => setSortMethod("new")}>
-              Newest
-            </DropdownItem>
+            <DropdownItem onClick={() => setSortMethod('new')}>Newest</DropdownItem>
             <DropdownItem divider tag="li" />
-            <DropdownItem onClick={() => setSortMethod("old")}>
-              Oldest
-            </DropdownItem>
+            <DropdownItem onClick={() => setSortMethod('old')}>Oldest</DropdownItem>
           </DropdownMenu>
         </Dropdown>
         {/* ACTIONS */}
         {props.actionable && (
-        <Dropdown isOpen={actionsDropdownOpen} toggle={toggleActionsDropdown} style={{display: "inline"}}>
-          <DropdownToggle caret>Actions
-            <b className="caret d-none d-lg-block d-xl-block" style={{marginLeft: "-15px", marginTop: "-11px"}} />
-          </DropdownToggle>
-          <DropdownMenu style={{marginTop: "15px", fontWeight: "normal"}}>
-            <DropdownItem onClick={() => selectAll()}>
-              Select All
-            </DropdownItem>
-            <DropdownItem divider tag="li" />
-            <DropdownItem onClick={() => deselectAll()}>
-              Deselect All
-            </DropdownItem>
-            <DropdownItem divider tag="li" />
-            <DropdownItem onClick={() => claimSelected()}>
-              Claim Selected
-            </DropdownItem>
-            <DropdownItem divider tag="li" />
-            <DropdownItem onClick={() => rejectSelected()}>
-              Reject Selected
-            </DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
+          <Dropdown isOpen={actionsDropdownOpen} toggle={toggleActionsDropdown} style={{ display: 'inline' }}>
+            <DropdownToggle caret>
+              Actions
+              <b className="caret d-none d-lg-block d-xl-block" style={{ marginLeft: '-15px', marginTop: '-11px' }} />
+            </DropdownToggle>
+            <DropdownMenu style={{ marginTop: '15px', fontWeight: 'normal' }}>
+              <DropdownItem onClick={() => selectAll()}>Select All</DropdownItem>
+              <DropdownItem divider tag="li" />
+              <DropdownItem onClick={() => deselectAll()}>Deselect All</DropdownItem>
+              <DropdownItem divider tag="li" />
+              <DropdownItem onClick={() => claimSelected()}>Claim Selected</DropdownItem>
+              <DropdownItem divider tag="li" />
+              <DropdownItem onClick={() => rejectSelected()}>Reject Selected</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         )}
-        <br/>
+        <br />
       </span>
 
       <div>
-        <h2>{props.headerText} - {props.accounts.length} result{(props.accounts.length === 1) ? '': 's'}</h2>
+        <h2>
+          {props.headerText} - {props.accounts.length} result{props.accounts.length === 1 ? '' : 's'}
+        </h2>
       </div>
       <Row>
-        {sortedAccounts.map((account) => (
+        {sortedAccounts.map(account => (
           <>
-          {typeof account !== "string" && (<AccountCard
-            key={account.id}
-            account={account}
-            selectable={props.selectable}
-            actionable={props.actionable}
-            flippable={props.flippable}
-            showNames={props.showNames}
-            showTripleDot={props.showTripleDot}
-            selected={selection.includes(account.id)}
-            onSelected={() => setSelection(prev => prev.concat(account.id))}
-					  onDeselected={() => setSelection(prev => prev.filter(id => id !== account.id))}
-          />)}
-          {typeof account === "string" &&
-            <div key={account} className='category-divider'>
-              <h3>{account}</h3>
-              <hr/>
-            </div>}
+            {typeof account !== 'string' && (
+              <AccountCard
+                key={account.id}
+                account={account}
+                selectable={props.selectable}
+                actionable={props.actionable}
+                flippable={props.flippable}
+                showNames={props.showNames}
+                showTripleDot={props.showTripleDot}
+                selected={selection.includes(account.id)}
+                onSelected={() => setSelection(prev => prev.concat(account.id))}
+                onDeselected={() => setSelection(prev => prev.filter(id => id !== account.id))}
+              />
+            )}
+            {typeof account === 'string' && (
+              <div key={account} className="category-divider">
+                <h3>{account}</h3>
+                <hr />
+              </div>
+            )}
           </>
         ))}
       </Row>
@@ -214,6 +199,6 @@ function AccountCardList(props) {
 AccountCardList.defaultProps = {
   accounts: [],
   accountIds: [],
-}
+};
 
 export default AccountCardList;
