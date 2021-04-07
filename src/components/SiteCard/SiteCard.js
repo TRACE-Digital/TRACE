@@ -1,7 +1,7 @@
 import PrivacyBadge from "components/PrivacyBadge/PrivacyBadge";
 import React, { useState } from "react";
 import ReactCardFlip from "react-card-flip";
-import { Card, CardBody, Button, Col } from "reactstrap";
+import { Card, CardBody, Button } from "reactstrap";
 import { IconButton } from "@material-ui/core";
 import { AccountType } from "trace-search";
 
@@ -80,7 +80,7 @@ const SiteCard = (props) => {
         flipSpeedFrontToBack="1"
       >
         {/* FRONT OF CARD */}
-        <Card className = {props.page == "editor" ? `card-user ${colors}` : "card-user" } style={props.page == "editor" ? { backgroundColor: `${editorColor}` } : null}>
+        <Card className = {props.page === "editor" ? `card-user ${colors}` : "card-user" } style={props.page === "editor" ? { backgroundColor: `${editorColor}` } : null}>
         {/* <Card className="card-user"> */}
           <CardBody className="card-body">
             {/* ICON */}
@@ -88,7 +88,7 @@ const SiteCard = (props) => {
               {" "}
               <i
                 className={ account.site.logoClass !== "fa-question-circle" ? "fab " + account.site.logoClass : "fas " + account.site.logoClass}
-                style={props.page == "editor" ? (iconColor == "Default" ? null : { color: `${iconColor}` } ) : null}
+                style={props.page === "editor" ? (iconColor === "Default" ? null : { color: `${iconColor}` } ) : null}
 
               ></i>
             </div>

@@ -45,10 +45,10 @@ function SearchComponent() {
   const [lastNames, setLastNames] = useState([]);
   const [progress, setProgress] = useState(-1);
   const [categories, setCategories] = useState(tags.slice());
-  const [dropdownOpen, setDropdownOpen] = useState(false); // used for filter
-  const [sortMethod, setSortMethod] = useState("new"); // used for filter
-  const [discoveredSites, setDiscoveredSites] = useState([]); // used for filter
-  const [unregisteredSites, setUnregisteredSites] = useState([]); // used for filter
+  // const [dropdownOpen, setDropdownOpen] = useState(false); // used for filter
+  // const [sortMethod, setSortMethod] = useState("new"); // used for filter
+  // const [discoveredSites, setDiscoveredSites] = useState([]); // used for filter
+  // const [unregisteredSites, setUnregisteredSites] = useState([]); // used for filter
   const [activeTab, setActiveTab] = useState("discovered");
   const [currentSearch, setCurrentSearch] = useState(null);
   const [, setPlsRender] = React.useState(false);

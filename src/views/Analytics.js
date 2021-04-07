@@ -55,8 +55,6 @@ import {
   chartExample7,
 } from "variables/charts.js";
 
-
-
 function Dashboard(props) {
   const [bigChartData, setbigChartData] = React.useState("data1");
   const [page, setPage] = useState(null);
