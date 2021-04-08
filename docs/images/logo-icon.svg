@@ -13,10 +13,10 @@
    y="0px"
    viewBox="0 0 700.00002 700.00002"
    xml:space="preserve"
-   sodipodi:docname="logo-square.svg"
-   inkscape:export-filename="D:\dev\repos\TRACE\docs\images\logo-small.png"
-   inkscape:export-xdpi="558.13953"
-   inkscape:export-ydpi="558.13953"
+   sodipodi:docname="logo-icon.svg"
+   inkscape:export-filename="C:\Users\Charlene\TRACE\docs\images\logo-icon.png"
+   inkscape:export-xdpi="68.571426"
+   inkscape:export-ydpi="68.571426"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
    width="700"
    height="700"><metadata
@@ -38,16 +38,17 @@
          style="fill:#ff00ff;fill-opacity:1;stroke-width:1.39348435" /></g></clipPath><clipPath
      clipPathUnits="userSpaceOnUse"
      id="clipPath6499"><text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:17.40644646px;line-height:1.25;font-family:sans-serif;letter-spacing:-0.18649755px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:2.33121943"
-       x="-13.353073"
-       y="19.85331"
-       id="text6503"><tspan
-         sodipodi:role="line"
-         id="tspan6501"
-         x="-13.353073"
-         y="19.85331"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:17.40644646px;font-family:'Lucida Sans Typewriter';-inkscape-font-specification:'Lucida Sans Typewriter';stroke-width:2.33121943">TRACE</tspan></text>
+   xml:space="preserve"
+   style="font-style:normal;font-weight:normal;font-size:17.40644646px;line-height:1.25;font-family:sans-serif;letter-spacing:-0.18649755px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:2.33121943"
+   x="-13.353073"
+   y="19.85331"
+   id="text6503"><tspan
+     sodipodi:role="line"
+     id="tspan6501"
+     x="-13.353073"
+     y="19.85331"
+     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:17.40644646px;font-family:'Lucida Sans Typewriter';-inkscape-font-specification:'Lucida Sans Typewriter';stroke-width:2.33121943">TRACE</tspan></text>
+
 </clipPath></defs><sodipodi:namedview
    pagecolor="#ffffff"
    bordercolor="#666666"
@@ -62,7 +63,7 @@
    id="namedview37"
    showgrid="false"
    inkscape:zoom="0.16"
-   inkscape:cx="210.23605"
+   inkscape:cx="-855.38895"
    inkscape:cy="-396.43979"
    inkscape:window-x="-8"
    inkscape:window-y="-8"
@@ -85,15 +86,16 @@
    inkscape:label="Foot"
    style="display:inline"
    transform="translate(-1430.3889,3115.1968)"><text
-     xml:space="preserve"
-     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2666.66674805px;line-height:1.25;font-family:'Lucida Console';-inkscape-font-specification:'Lucida Console';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+   xml:space="preserve"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2666.66674805px;line-height:1.25;font-family:'Lucida Console';-inkscape-font-specification:'Lucida Console';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+   x="4262.5"
+   y="-261.70001"
+   id="text6543"><tspan
+     sodipodi:role="line"
+     id="tspan6541"
      x="4262.5"
-     y="-261.70001"
-     id="text6543"><tspan
-       sodipodi:role="line"
-       id="tspan6541"
-       x="4262.5"
-       y="2184.9404"></tspan></text>
+     y="2184.9404" /></text>
+
 </g><g
    inkscape:groupmode="layer"
    id="layer4"
@@ -105,15 +107,16 @@
    inkscape:label="Text"
    style="display:inline"
    transform="translate(-1430.3889,3115.1968)"><text
-     xml:space="preserve"
-     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2666.66674805px;line-height:1.25;font-family:'Lucida Console';-inkscape-font-specification:'Lucida Console';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+   xml:space="preserve"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2666.66674805px;line-height:1.25;font-family:'Lucida Console';-inkscape-font-specification:'Lucida Console';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+   x="4668.75"
+   y="-2036.7"
+   id="text6539"><tspan
+     sodipodi:role="line"
+     id="tspan6537"
      x="4668.75"
-     y="-2036.7"
-     id="text6539"><tspan
-       sodipodi:role="line"
-       id="tspan6537"
-       x="4668.75"
-       y="409.94043"></tspan></text>
+     y="409.94043" /></text>
+
 </g><g
    inkscape:groupmode="layer"
    id="layer1"
