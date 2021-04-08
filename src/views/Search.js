@@ -19,6 +19,8 @@ import {
 } from "reactstrap";
 import AccountCardList from "components/AccountCardList/AccountCardList.js";
 
+import mainLogo from '../assets/img/trace.png';
+
 const testSiteNames = [
   "GitHub",
   "Reddit",
@@ -244,11 +246,14 @@ function SearchComponent() {
     <div className="content">
     {currentSearch === null && (
       <>
-      <div className="search-title">TRACE</div>
-      <div className="search-info">
-        Find your digital footprint. Manage your online presence. Our service
-        allows you to increase your social media engagement while keeping your
-        privacy a priority. Sync your information or work locally.
+      {/* <div className="search-title">TRACE</div> */}
+      <div className="search">
+        <img src={mainLogo} className="logo"/>
+        <div className="search-info">
+          Find your digital footprint. Manage your online presence. Our service
+          allows you to increase your social media engagement while keeping your
+          privacy a priority. Sync your information or work locally.
+        </div>
       </div>
       </>
     )}
