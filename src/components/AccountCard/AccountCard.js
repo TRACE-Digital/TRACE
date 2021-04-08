@@ -95,7 +95,6 @@ const AccountCard = (props) => {
             </div>
             )}
 
-
             {/* ICON */}
             <div className="editor">
               {" "}
@@ -110,7 +109,12 @@ const AccountCard = (props) => {
 
             <div className="editor-handle-name" style={{fontWeight: "bold"}}>{props.account.site.name}</div>
             <div className="editor-link">
-              <a href={props.account.url} target="blank">@{props.account.userName}</a>
+              <div
+                onClick={(e) => {e.stopPropagation(); window.open(props.account.url);}}
+                target="blank"
+              >
+                @{props.account.userName}
+              </div>
             </div>
 
             {props.actionable && (
