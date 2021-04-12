@@ -9,11 +9,11 @@ const ConfidenceMeter = (props) => {
       if (strength <= 3) {
         return "danger"
       }
-      else if (strength <= 6) {
+      else if (strength <= 5) {
         return "warning"
       }
-      else if (strength <= 9) {
-        return ""
+      else if (strength <= 8) {
+        return "info"
       }
       else {
         return "success"
