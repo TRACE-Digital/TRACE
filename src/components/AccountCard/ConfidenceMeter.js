@@ -23,9 +23,7 @@ const ConfidenceMeter = (props) => {
     const confidence = props.confidence;
   
     let color = getColor(confidence)
-  
-    console.log(color)
-  
+    
     return <Progress value={confidence} max={10} className="progressBar" color={color}>{`${confidence * 10}%`}</Progress>
   };
 

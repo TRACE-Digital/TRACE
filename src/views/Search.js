@@ -47,6 +47,7 @@ function SearchComponent() {
   const [showResume, setShowResume] = useState(false);
   const [showCancel, setShowCancel] = useState(true);
   const [showPause, setShowPause] = useState(true);
+  const [showClear, setShowClear] = useState(false);    // used to show clear button if search has been cancelled
   const [, setPlsRender] = React.useState(false);
 
   // Register for changes to any search results
@@ -104,25 +105,29 @@ function SearchComponent() {
   };
 
   const handleCancelClick = async () => {
-    await currentSearch.cancel();
-    // TODO: await handleClearClick() ??
-
     setShowResume(false);
     setShowPause(false);
+    setShowCancel(false);
+    setShowClear(true);
+    await currentSearch.cancel();
   };
 
   const handleResumeClick = async () => {
-    await currentSearch.resume();
-
     setShowResume(false);
     setShowPause(true);
+    setShowCancel(true);
+    setShowClear(false);
+
+    await currentSearch.resume();
   };
 
   const handlePauseClick = async () => {
-    await currentSearch.pause();
-
     setShowPause(false);
     setShowResume(true);
+    setShowCancel(true);
+    setShowClear(false);
+
+    await currentSearch.pause();
   };
 
   /**
@@ -131,6 +136,7 @@ function SearchComponent() {
    * (if a definition is present).
    */
   const handleClearClick = async () => {
+    setShowClear(false);
     // Clear old results
     setProgress(-1);
     if (currentSearch) {
@@ -230,6 +236,11 @@ function SearchComponent() {
       await searchDef.save();
 
       console.log(search);
+
+      setShowResume(false);
+      setShowCancel(true);
+      setShowPause(true);
+      setShowClear(false);
       await search.start();
     }
   }
@@ -342,7 +353,7 @@ function SearchComponent() {
         )}
         </div>
         <div className="refine-search">
-        {progress === 100 && (
+        {(progress === 100 || showClear) && (
           <span className="the-text cancel" onClick={handleClearClick}>
             clear
           </span>
