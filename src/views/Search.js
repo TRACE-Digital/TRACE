@@ -44,6 +44,9 @@ function SearchComponent() {
   const [activeTab, setActiveTab] = useState("discovered");
   const [currentSearch, setCurrentSearch] = useState(null);
   const [historyVisible, setHistoryVisible] = useState(false);
+  const [showResume, setShowResume] = useState(false);
+  const [showCancel, setShowCancel] = useState(true);
+  const [showPause, setShowPause] = useState(true);
   const [, setPlsRender] = React.useState(false);
 
   // Register for changes to any search results
@@ -103,6 +106,23 @@ function SearchComponent() {
   const handleCancelClick = async () => {
     await currentSearch.cancel();
     // TODO: await handleClearClick() ??
+
+    setShowResume(false);
+    setShowPause(false);
+  };
+
+  const handleResumeClick = async () => {
+    await currentSearch.resume();
+
+    setShowResume(false);
+    setShowPause(true);
+  };
+
+  const handlePauseClick = async () => {
+    await currentSearch.pause();
+
+    setShowPause(false);
+    setShowResume(true);
   };
 
   /**
@@ -300,12 +320,28 @@ function SearchComponent() {
           history
         </span>
       </div>
-      <div className="refine-search">
-        {progress > 0 && progress < 100 && (
+        <div className="refine-search">
+        {progress > 0 && progress < 100 && showPause && (
+          <span className="the-text cancel" onClick={handlePauseClick}>
+            pause
+          </span>
+        )}
+        </div>
+        <div className="refine-search">
+        {progress > 0 && progress < 100 && showResume && (
+          <span className="the-text cancel" onClick={handleResumeClick}>
+            resume
+          </span>
+        )}
+        </div>
+        <div className="refine-search">
+        {progress > 0 && progress < 100 && showCancel && (
           <span className="the-text cancel" onClick={handleCancelClick}>
             cancel
           </span>
         )}
+        </div>
+        <div className="refine-search">
         {progress === 100 && (
           <span className="the-text cancel" onClick={handleClearClick}>
             clear
@@ -395,7 +431,12 @@ function SearchComponent() {
       </div>
 
       {/* HISTORY */}
-      {historyVisible && <History initialMax={3} onSelect={ (search) => setCurrentSearch(search) }/>}
+      {historyVisible && (
+        <History
+          initialMax={3}
+          onSelect={(search) => setCurrentSearch(search)}
+        />
+      )}
 
       <div
         className={
