@@ -156,6 +156,11 @@ function AdminNavbar(props) {
                   </DropdownItem>
                   <DropdownItem divider tag="li" />
                   <NavLink tag="li">
+                    <DropdownItem className="nav-item">
+                      Extension version: {window.__TRACE_EXTENSION_HOOK__?.getVersionStr() || 'Not installed' }
+                    </DropdownItem>
+                  </NavLink>
+                  <NavLink tag="li">
                     <DropdownItem className="nav-item" onClick={async () => {
                       const confirmation = window.confirm('Are you sure? This action is irreversible and will delete ALL your data.');
                       if (!confirmation) {

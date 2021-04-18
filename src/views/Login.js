@@ -47,9 +47,8 @@ function Login() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(window.location.href.includes('login'));
 
-  //
   const welcomeElement = (
     <>
       <CardTitle className='welcome'>

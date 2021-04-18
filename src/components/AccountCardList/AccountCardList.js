@@ -27,7 +27,7 @@ function AccountCardList(props) {
         count++;
       }
     }
-    alert(`Claimed ${count} accounts`);
+    alert(`Claimed ${count} accounts.`);
     return count;
   };
 
@@ -40,7 +40,7 @@ function AccountCardList(props) {
         count++;
       }
     }
-    alert(`Rejected ${count} accounts`);
+    alert(`Rejected ${count} accounts.`);
     return count;
   };
 
@@ -200,7 +200,7 @@ function AccountCardList(props) {
 					  onDeselected={() => setSelection(prev => prev.filter(id => id !== account.id))}
           />)}
           {typeof account === "string" &&
-            <div className='category-divider'>
+            <div key={account} className='category-divider'>
               <h3>{account}</h3>
               <hr/>
             </div>}
