@@ -114,7 +114,7 @@ const AccountCard = (props) => {
                   <Label for="tags">Tags</Label>
                   <Multiselect
                     options={tags} // Options to display in the dropdown
-                    selectedValues={props.account.site.tags} // Preselected value to persist in dropdown
+                    selectedValues={accountTags} // Preselected value to persist in dropdown
                     onSelect={handleSelect} // Function will trigger on select event
                     onRemove={handleRemove} // Function will trigger on remove event
                     displayValue="key" // Property name to display in the dropdown options
