@@ -106,6 +106,7 @@ function SearchComponent() {
   };
 
   const handleCancelClick = async () => {
+    setShowSearchIcon(true);
     setShowResume(false);
     setShowPause(false);
     setShowCancel(false);
@@ -114,6 +115,7 @@ function SearchComponent() {
   };
 
   const handleResumeClick = async () => {
+    setShowSearchIcon(false);
     setShowResume(false);
     setShowPause(true);
     setShowCancel(true);
@@ -123,6 +125,7 @@ function SearchComponent() {
   };
 
   const handlePauseClick = async () => {
+    setShowSearchIcon(true);
     setShowPause(false);
     setShowResume(true);
     setShowCancel(true);
@@ -238,6 +241,7 @@ function SearchComponent() {
 
       console.log(search);
 
+      setShowSearchIcon(false);
       setShowResume(false);
       setShowCancel(true);
       setShowPause(true);
@@ -352,16 +356,6 @@ function SearchComponent() {
               />
             </>
           )}
-          {/* CLEAR */}
-          {/* {(progress === 100 || showClear) && (
-                <>
-                &nbsp; &nbsp;
-                <i
-                  className="tim-icons icon-trash-simple"
-                  onClick={handleClearClick}
-                />
-              </>
-        )} */}
         </div>
       </div>
 
@@ -380,7 +374,7 @@ function SearchComponent() {
       <div className="refine-search">
         {(progress === 100 || showClear) && (
           <span className="the-text cancel" onClick={handleClearClick}>
-            clear
+            clear results
           </span>
         )}
       </div>
