@@ -80,15 +80,24 @@ const AccountCard = (props) => {
     setAccountTags(selectedList);
   }
 
-  const handleInfoSubmit = (e) => {
-    // Save to database
+  async function handleInfoSubmit(e) {
     console.log(siteName);
     console.log(userName);
     console.log(url);
+
+    // TODO: convert to manual account
+    props.account.site.name = siteName;
+    props.account.userName = userName;
+    props.account.site.url = url;
+    await props.account.save();
   }
 
-  const handleTagSubmit = (e) => {
+  async function handleTagSubmit(e) {
     console.log(accountTags);
+
+    // TODO: convert to manual account
+    props.account.site.tags = accountTags;
+    await props.account.save();
   }
 
   return (
@@ -204,7 +213,7 @@ const AccountCard = (props) => {
                         <i className="fas fa-ellipsis-h"></i>
                       </DropdownToggle>
                       <DropdownMenu className="dropdown-menu-right">
-                        {props.account && (
+                        {props.account instanceof ManualAccount && (
                           <>
                         <DropdownItem onClick={
                                   (e) => {
