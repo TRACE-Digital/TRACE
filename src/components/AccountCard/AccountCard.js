@@ -24,7 +24,8 @@ import { ManualAccount, tags } from 'trace-search';
  * @returns
  */
 const AccountCard = (props) => {
-  const [isEdit, setIsEdit] = React.useState(false);
+  const [isInfoEdit, setIsInfoEdit] = React.useState(false);
+  const [isTagEdit, setIsTagEdit] = React.useState(false);
   const [flipped, setFlipped] = useState(false);
 
   const [siteName, setSiteName] = useState(props.account.site.name);
@@ -79,18 +80,22 @@ const AccountCard = (props) => {
     setAccountTags(selectedList);
   }
 
-  const handleSubmit = (e) => {
+  const handleInfoSubmit = (e) => {
     // Save to database
     console.log(siteName);
     console.log(userName);
     console.log(url);
+  }
+
+  const handleTagSubmit = (e) => {
     console.log(accountTags);
   }
 
   return (
     <>
-      {isEdit ?
-        <Col lg="3" key={props.account.id}>
+      {/* INFO EDIT */}
+      {isInfoEdit && !isTagEdit &&
+       ( <Col lg="3" key={props.account.id}>
           <Card
             className={'card-user edit-card'}
             title={props.account.reason /* Display error for FailedAccounts */}
@@ -111,6 +116,34 @@ const AccountCard = (props) => {
                     <Label for="siteUrl">Site URL</Label>
                     <Input type="text" className="input" defaultValue={props.account.url} onChange={(e) => handleUrl(`${e.target.value}`)}></Input>
                   </FormGroup>
+                </Form>
+              </div>
+
+              <div className="save-button">
+                <Button onClick={(e) => {
+                  setIsInfoEdit(false);
+                  handleInfoSubmit();
+                }}>
+                  Save
+                </Button>
+              </div>
+            </CardBody>
+          </Card>
+        </Col>
+       )}
+
+       {/* TAG EDIT */}
+       {isTagEdit && !isInfoEdit &&
+          ( <Col lg="3" key={props.account.id}>
+          <Card
+            className={'card-user edit-card'}
+            title={props.account.reason /* Display error for FailedAccounts */}
+          >
+            <CardBody className="card-body">
+
+              <div className="edit-info">
+                <Form>
+                  <FormGroup>
                   <Label for="tags">Tags</Label>
                   <Multiselect
                     options={tags} // Options to display in the dropdown
@@ -121,15 +154,17 @@ const AccountCard = (props) => {
                     avoidHighlightFirstOption={true}
                     showCheckbox={true}
                     isObject={false}
-                    style={{optionContainer: {background: "#27293d"}, option: {fontSize: 12}}}
+                    closeOnSelect={false}
+                    style={{optionContainer: {background: "#27293d"}, option: {fontSize: 12},  inputField: {color: "white"}}}
                   />
+                  </FormGroup>
                 </Form>
               </div>
 
               <div className="save-button">
                 <Button onClick={(e) => {
-                  setIsEdit(false);
-                  handleSubmit();
+                  setIsTagEdit(false);
+                  handleTagSubmit();
                 }}>
                   Save
                 </Button>
@@ -137,11 +172,12 @@ const AccountCard = (props) => {
             </CardBody>
           </Card>
         </Col>
+        )}
 
-        :
-
-        // IF NOT EDIT
-        <Col lg="3" key={props.account.id}>
+        {/* NOT ON EDIT */}
+        {!isInfoEdit && !isTagEdit &&
+        
+         (<Col lg="3" key={props.account.id}>
           <ReactCardFlip
             isFlipped={props.flippable && flipped}
             flipSpeedBackToFront=".8"
@@ -168,6 +204,28 @@ const AccountCard = (props) => {
                         <i className="fas fa-ellipsis-h"></i>
                       </DropdownToggle>
                       <DropdownMenu className="dropdown-menu-right">
+                        {props.account && (
+                          <>
+                        <DropdownItem onClick={
+                                  (e) => {
+                                    e.stopPropagation();
+                                    setIsInfoEdit(true);
+                                  }
+                                }>
+                                  Edit Info
+                        </DropdownItem>
+                        <DropdownItem divider tag="li" />
+                        <DropdownItem onClick={
+                                  (e) => {
+                                    e.stopPropagation();
+                                    setIsTagEdit(true);
+                                  }
+                                }>
+                                  Edit Tags
+                        </DropdownItem>
+                        <DropdownItem divider tag="li" />
+                          </>
+                        )}
                         <DropdownItem onClick={
                           async (e) => {
                             e.stopPropagation()
@@ -176,20 +234,7 @@ const AccountCard = (props) => {
                           }
                         }>
                           Remove
-                    </DropdownItem>
-                        {props.account && (
-                          <>
-                            <DropdownItem divider tag="li" />
-                            <DropdownItem onClick={
-                              (e) => {
-                                e.stopPropagation();
-                                setIsEdit(true);
-                              }
-                            }>
-                              Edit
-                      </DropdownItem>
-                          </>
-                        )}
+                        </DropdownItem>
                       </DropdownMenu>
                     </UncontrolledDropdown>
                   </div>
@@ -301,7 +346,7 @@ const AccountCard = (props) => {
             )}
           </ReactCardFlip>
         </Col>
-      }
+      )}
     </>
   );
 };
