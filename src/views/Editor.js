@@ -5,6 +5,23 @@ import SiteCard from "components/SiteCard/SiteCard";
 import { GridContextProvider, GridDropZone, GridItem, swap } from "react-grid-dnd";
 import { Link } from "react-router-dom";
 import { Auth } from 'aws-amplify';
+import { renderToStaticMarkup } from 'react-dom/server'
+import {
+  Collapse,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  UncontrolledDropdown,
+  Input,
+  NavbarBrand,
+  Navbar,
+  NavLink,
+  Nav,
+  Container,
+  Modal,
+  NavbarToggler,
+  ModalHeader,
+} from "reactstrap";
 
 
 
@@ -19,6 +36,7 @@ const Editor = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [heightSize, setHeightSize] = useState("");
   const [, setPlsRender] = useState(false);
+  const [hasPublished, setHasPublished] = useState(false);
   const [colorScheme, setColorScheme] = useState([{
     "titleColor": "#FFFFFF",
     "backgroundColor": "#1E1D2A",
@@ -63,6 +81,11 @@ const Editor = () => {
 
   }
 
+  const updatePage = () => {
+    saveData();
+    setPlsRender(prev => !prev);
+  }
+
   /**
    * Function called when the add button is clicked for a site
    */
@@ -81,9 +104,10 @@ const Editor = () => {
     }
     else {
       setTitle(e.target.value);
-      myProfile.title = title;
+      myProfile.title = e.target.value;
     }
     saveData();
+    setPlsRender(prev => !prev);
   }
 
   /**
@@ -102,7 +126,111 @@ const Editor = () => {
   }, []);
 
   /**
-   * Monitors for the profile page sites
+   * Monitors for user login before accessing profile page
+   */
+  useEffect(() => {
+    async function isLoggedIn() {
+      try {
+        await Auth.currentUserPoolUser();
+      }
+      catch {
+        window.location.href = '/login';
+      }
+    }
+    isLoggedIn();
+  }, []);
+
+  /* Calls the API to publish the user's page */
+  const publishPublicPage = (e) => {
+    Auth.currentUserInfo().then(async (value) => {
+  
+      let url = 'https://76gjqug5j8.execute-api.us-east-2.amazonaws.com/prod/update?username=' + value.attributes.sub;
+      let csslink = 'https://tracedigital.tk/static/css/main.2e0404d2.chunk.css';
+      let fetchbody = '<!DOCTYPE html><html><head><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"><link href="'
+        + csslink
+        + '" rel="stylesheet"></head><body>'
+        + renderToStaticMarkup(baseContent)
+        + '</body></html>';
+
+      fetch(url, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'text/html' },
+        body: fetchbody
+      });
+
+      alert("Your page has been published!");
+
+      myProfile.hasPublished = true;
+      await myProfile.save();
+    });
+  }
+
+  const goToPublicPage = (e) => {
+    if (myProfile.hasPublished) {
+      Auth.currentUserInfo().then((value) => {
+        window.open('https://76gjqug5j8.execute-api.us-east-2.amazonaws.com/prod/' 
+          + (myProfile.hasPassword ? 'getpassword' : 'get')
+          + '?username=' 
+          + value.attributes.sub, '_blank');
+      });
+    } else {
+      alert('Please publish your page before navigating to it.')
+    }
+  }
+
+  const addPublicPagePassword = (e) => {
+    Auth.currentUserInfo().then( async (value) => {
+      let newpassword = window.prompt("What do you want your new password to be?");
+
+      let url = 'https://76gjqug5j8.execute-api.us-east-2.amazonaws.com/prod/createpassword?username='
+        + value.attributes.sub
+        + '&password='
+        + newpassword;
+      fetch(url, {
+        method: 'PUT'
+      });
+
+      alert('Your new password has been set!');
+
+      myProfile.hasPassword = true;
+      await myProfile.save();
+    });
+  }
+
+  const addCustomURL = (e) => {
+    if (myProfile.hasPublished) {
+      Auth.currentUserInfo().then((value) => {
+        let customurl = window.prompt("What do you want the last part of your URL to be?");
+
+        let url = 'https://76gjqug5j8.execute-api.us-east-2.amazonaws.com/prod/custom/create?username='
+          + value.attributes.sub
+          + '&customurl='
+          + customurl;
+        
+        fetch(url, {
+          method: 'PUT'
+        }).then(async (value) => {
+          console.log(value.status);
+
+          if (value.status == 502) {
+            alert('Sorry, this URL is already taken. Please choose a new one.');
+          } else {
+            alert('Your custom URL has been created!');
+            alert('You can visit your page at https://public.tracedigital.tk/u/' + customurl);
+          }
+
+          myProfile.hasCustomURL = true;
+          myProfile.customURL = customurl;
+          await myProfile.save;
+        });
+      });
+    } else {
+      alert("Please publish your page before customizing your URL.")
+    }
+  }
+
+  /**
+   * Monitors for the profile page sites 
    */
   useEffect(() => {
 
@@ -120,22 +248,47 @@ const Editor = () => {
         setTitle(results[0].title);
       }
       setProfileData(results[0]);
-      setHeightSize(results[0].accounts.length);
+      setHeightSize(8); // temp for now
       // saveData();
 
     };
     loadProfile();
 
-  }, []);
+  }, [colorScheme]);
 
-  return (
+  let baseContent = (
     <>
-      {isOpen ? <Colors onSelectLanguage={handleLanguage} closePopup={handleAddClick} page={myProfile} /> : null}
+    <div className={`editor-background`} style={{ backgroundColor: `${colorScheme[0].backgroundColor}` }}>
+      <div className={"editor-title"} style={{ color: `${colorScheme[0].titleColor}` }}>
+        <input
+          className="editor-input"
+          type="text"
+          value={title}
+          maxLength={30}
+          onChange={updateTitle}
+          style={{ color: `${colorScheme[0].titleColor}`, backgroundColor: `${colorScheme[0].backgroundColor}`, border: "none", outline: "none" }}
+        />
+      </div>
+      <div>
+        <Row>
+      {myProfile &&
+            myProfile.accounts.map(item => (
+              <Col lg="3">
+                <SiteCard editorColor={colorScheme[0].siteColor} account={item} page="editor" />
+              </Col>
+            ))}
+            </Row>
+            </div>
+            </div>
+      </>
+  );
+
+  let editorContent = (
+    <>
+      {isOpen ? <Colors onSelectLanguage={handleLanguage} closePopup={handleAddClick} onUpdatePage={updatePage} page={myProfile} /> : null}
       <div className={isOpen ? `content blur` : `content`}>
         <div className={`editor-background`} style={{ backgroundColor: `${colorScheme[0].backgroundColor}` }}>
-
           <div className={"editor-title"} style={{ color: `${colorScheme[0].titleColor}` }}>
-
 
             <input
               className="editor-input"
@@ -143,10 +296,10 @@ const Editor = () => {
               value={title}
               maxLength={30}
               onChange={updateTitle}
-              style={{ color: `${colorScheme[0].titleColor}`, backgroundColor: `${colorScheme[0].backgroundColor}`, border: "none", outline: "none" }}
+              style={{width:"600px", color: `${colorScheme[0].titleColor}`, backgroundColor: `${colorScheme[0].backgroundColor}`, border: "none", outline: "none" }}
             />
 
-            <Link
+          <Link style={{display: "inline-block", float: "right"}}
               className="btn btn-primary editor-button"
               color="primary"
               onClick={handleAddClick}
@@ -154,6 +307,25 @@ const Editor = () => {
               Edit Page
           </Link>
 
+          <UncontrolledDropdown style={{display: "inline-block", float: "right"}}>
+            <DropdownToggle className="btn btn-primary public-options-button">
+              Page Options
+            </DropdownToggle>
+            <DropdownMenu className="dropdown-navbar" right tag="ul" style={{marginRight: "10px"}}>
+              <NavLink tag="li">
+                <DropdownItem className="nav-item" onClick={publishPublicPage} style={{color: "black"}}>Publish Page</DropdownItem>
+              </NavLink>
+              <NavLink tag="li">
+                <DropdownItem className="nav-item" onClick={goToPublicPage} style={{color: "black"}}>Go To Page</DropdownItem>
+              </NavLink>
+              <NavLink tag="li">
+                <DropdownItem className="nav-item" onClick={addPublicPagePassword} style={{color: "black"}}>Add Password</DropdownItem>
+              </NavLink>
+              <NavLink tag="li">
+                <DropdownItem className="nav-item" onClick={addCustomURL} style={{color: "black"}}>Customize URL</DropdownItem>
+              </NavLink>
+            </DropdownMenu>
+          </UncontrolledDropdown>
 
           </div>
           {myProfile &&
@@ -178,8 +350,24 @@ const Editor = () => {
             </GridContextProvider>}
         </div>
       </div>
+        <div>
+            <a href="http://www.facebook.com" target="_blank">
+                <img src="https://facebookbrand.com/wp-content/uploads/2019/04/f_logo_RGB-Hex-Blue_512.png?w=512&h=512" alt="Facebook Logo" className="share-button" style={{width: "80px", marginLeft: "calc((110% - 440px)/2)"}}/>
+            </a>
+            <a href="http://www.twitter.com" target="_blank">
+                <img src="https://cdn4.iconfinder.com/data/icons/social-media-icons-the-circle-set/48/twitter_circle-512.png" alt="Twitter Logo" className="share-button" style={{width: "80px", marginLeft: "40px"}}/>
+            </a>
+            <a href="http://www.reddit.com" target="_blank">
+                <img src="https://cdn3.iconfinder.com/data/icons/2018-social-media-logotypes/1000/2018_social_media_popular_app_logo_reddit-512.png" alt="Reddit Logo" className="share-button" style={{width: "80px", marginLeft: "40px"}}/>
+            </a>
+            <a href="http://www.linkedin.com" target="_blank">
+                <img src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-512.png" alt="LinkedIn Logo" className="share-button" style={{width: "80px", marginLeft: "40px"}}/>
+            </a>
+        </div>
     </>
   );
+
+  return editorContent;
 };
 
 export default Editor;

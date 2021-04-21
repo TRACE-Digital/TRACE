@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, Fragment } from "react";
+import History from "components/History/History";
 
 // reactstrap components
 import classNames from "classnames";
@@ -11,12 +12,7 @@ import {
   tags,
   filterSitesByTags,
 } from "trace-search";
-import {
-  Button,
-  ButtonGroup,
-  Row,
-  Col,
-} from "reactstrap";
+import { Button, ButtonGroup, Row, Col } from "reactstrap";
 import AccountCardList from "components/AccountCardList/AccountCardList.js";
 
 const testSiteNames = [
@@ -51,6 +47,7 @@ function SearchComponent() {
   // const [unregisteredSites, setUnregisteredSites] = useState([]); // used for filter
   const [activeTab, setActiveTab] = useState("discovered");
   const [currentSearch, setCurrentSearch] = useState(null);
+  const [historyVisible, setHistoryVisible] = useState(false);
   const [, setPlsRender] = React.useState(false);
 
   // Register for changes to any search results
@@ -58,15 +55,18 @@ function SearchComponent() {
   // This catches those changes and forces a rerender
   useEffect(() => {
     const triggerRender = () => {
-      setPlsRender(prev => !prev);
+      setPlsRender((prev) => !prev);
     };
 
     // This may cause a few extra rerenders since it's results for all searches,
     // but the user is not likely to have many searches running at once
-    ThirdPartyAccount.resultCache.events.on('change', triggerRender);
+    ThirdPartyAccount.resultCache.events.on("change", triggerRender);
 
     const cleanup = () => {
-      ThirdPartyAccount.resultCache.events.removeListener('change', triggerRender);
+      ThirdPartyAccount.resultCache.events.removeListener(
+        "change",
+        triggerRender
+      );
     };
 
     return cleanup;
@@ -87,10 +87,10 @@ function SearchComponent() {
     // Preserve the state of currentSearch
     const search = currentSearch;
     // Register for notification of new results
-    search.events.on('result', handle);
+    search.events.on("result", handle);
 
     const cleanup = () => {
-      search.events.removeListener('result', handle);
+      search.events.removeListener("result", handle);
     };
 
     return cleanup;
@@ -98,6 +98,10 @@ function SearchComponent() {
 
   const handleRefineClick = () => {
     setVisible(!isVisible);
+  };
+
+  const handleHistoryClick = () => {
+    setHistoryVisible(!historyVisible);
   };
 
   const handleCancelClick = async () => {
@@ -114,11 +118,11 @@ function SearchComponent() {
     // Clear old results
     setProgress(-1);
     if (currentSearch) {
-      const search = await currentSearch.definition.new()
+      const search = await currentSearch.definition.new();
       setCurrentSearch(search);
       return search;
     }
-  }
+  };
 
   const selectAll = () => {
     setCategories(tags.slice());
@@ -161,12 +165,15 @@ function SearchComponent() {
   }
 
   function keyPress(e) {
-    if (e.keyCode === 32) { // SPACE
+    if (e.keyCode === 32) {
+      // SPACE
       addUserName(e.target.value);
-    } else if (e.keyCode === 8 && e.target.value === "") { // BACKSPACE
+    } else if (e.keyCode === 8 && e.target.value === "") {
+      // BACKSPACE
       userNames.splice(userNames.length - 1, 1);
       setUserNames([...userNames]);
-    } else if (e.keyCode === 13) { // ENTER
+    } else if (e.keyCode === 13) {
+      // ENTER
       addUserName(e.target.value);
       submitSearch(e);
     }
@@ -246,16 +253,17 @@ function SearchComponent() {
   return (
     // TITLE AND SEARCH BAR
     <div className="content">
-    {currentSearch === null && (
-      <>
-      <div className="search-title">TRACE</div>
-      <div className="search-info">
-        Find your digital footprint. Manage your online presence. Our service
-        allows you to increase your social media engagement while keeping your
-        privacy a priority. Sync your information or work locally.
-      </div>
-      </>
-    )}
+      {currentSearch === null && (
+        <>
+          <div className="search-title">TRACE</div>
+          <div className="search-info">
+            Find your digital footprint. Manage your online presence. Our
+            service allows you to increase your social media engagement while
+            keeping your privacy a priority. Sync your information or work
+            locally.
+          </div>
+        </>
+      )}
 
       <div className="one">
         <div className="three">
@@ -276,8 +284,9 @@ function SearchComponent() {
             placeholder="enter keyword"
             onKeyDown={keyPress}
             onChange={typing}
-          ></input>
+          />
         </div>
+
         <div className="four">
           <i onClick={submitSearch} className="fas fa-search"></i>
         </div>
@@ -288,6 +297,11 @@ function SearchComponent() {
       <div className="refine-search">
         <span className="the-text refine" onClick={handleRefineClick}>
           refine search
+        </span>
+      </div>
+      <div className="refine-search">
+        <span className="the-text refine" onClick={handleHistoryClick}>
+          history
         </span>
       </div>
       <div className="refine-search">
@@ -327,7 +341,9 @@ function SearchComponent() {
           Deselect All
         </Button>
 
-        <br /><br /><br />
+        <br />
+        <br />
+        <br />
         <h1>NAMES</h1>
         {/* First Name section for refine search dropdown goes here*/}
         <h6>Enter First Names / Nicknames:</h6>
@@ -382,6 +398,9 @@ function SearchComponent() {
         <br />
       </div>
 
+      {/* HISTORY */}
+      {historyVisible && <History initialMax={3} onSelect={ (search) => setCurrentSearch(search) }/>}
+
       <div
         className={
           keywordsEntered
@@ -398,7 +417,7 @@ function SearchComponent() {
           : ""}
       </div>
 
-      {(progress >= 0 ) && (
+      {progress >= 0 && (
         <div style={{ width: "100%", textAlign: "center" }}>
           <div>{progress}%</div>
           <div
@@ -414,106 +433,102 @@ function SearchComponent() {
         </div>
       )}
 
-      <br/>
+      <br />
 
       {currentSearch && currentSearch.state !== SearchState.CREATED && (
-      <>
-      <div style={{textAlign: "center"}}>
+        <>
+          <div style={{ textAlign: "center" }}>
+            <ButtonGroup className="btn-group-toggle" data-toggle="buttons">
+              <Button
+                tag="label"
+                className={classNames("btn-simple", {
+                  active: activeTab === "discovered",
+                })}
+                color="info"
+                id="0"
+                size="md"
+                onClick={() => setActiveTab("discovered")}
+              >
+                <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
+                  Discovered
+                </span>
+                <span className="d-block d-sm-none">
+                  <i className="tim-icons icon-single-02" />
+                </span>
+              </Button>
+              <Button
+                color="info"
+                id="1"
+                size="md"
+                tag="label"
+                className={classNames("btn-simple", {
+                  active: activeTab === "unregistered",
+                })}
+                onClick={() => setActiveTab("unregistered")}
+              >
+                <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
+                  Unregistered
+                </span>
+                <span className="d-block d-sm-none">
+                  <i className="tim-icons icon-gift-2" />
+                </span>
+              </Button>
+              <Button
+                color="info"
+                id="2"
+                size="md"
+                tag="label"
+                className={classNames("btn-simple", {
+                  active: activeTab === "inconclusive",
+                })}
+                onClick={() => setActiveTab("inconclusive")}
+              >
+                <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
+                  Inconclusive
+                </span>
+                <span className="d-block d-sm-none">
+                  <i className="tim-icons icon-tap-02" />
+                </span>
+              </Button>
+            </ButtonGroup>
+            <br />
+            <br />
+          </div>
 
-        <ButtonGroup
-          className="btn-group-toggle"
-          data-toggle="buttons"
-        >
-          <Button
-            tag="label"
-            className={classNames("btn-simple", {
-              active: activeTab === "discovered",
-            })}
-            color="info"
-            id="0"
-            size="md"
-            onClick={() => setActiveTab("discovered")}
-          >
-            <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-              Discovered
-            </span>
-            <span className="d-block d-sm-none">
-              <i className="tim-icons icon-single-02" />
-            </span>
-          </Button>
-          <Button
-            color="info"
-            id="1"
-            size="md"
-            tag="label"
-            className={classNames("btn-simple", {
-              active: activeTab === "unregistered",
-            })}
-            onClick={() => setActiveTab("unregistered")}
-          >
-            <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-              Unregistered
-            </span>
-            <span className="d-block d-sm-none">
-              <i className="tim-icons icon-gift-2" />
-            </span>
-          </Button>
-          <Button
-            color="info"
-            id="2"
-            size="md"
-            tag="label"
-            className={classNames("btn-simple", {
-              active: activeTab === "inconclusive",
-            })}
-            onClick={() => setActiveTab("inconclusive")}
-          >
-            <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-              Inconclusive
-            </span>
-            <span className="d-block d-sm-none">
-              <i className="tim-icons icon-tap-02" />
-            </span>
-          </Button>
-        </ButtonGroup>
-        <br/>
-        <br/>
-      </div>
-
-      {(activeTab === "discovered") &&
-        <AccountCardList
-          headerText="Discovered Accounts"
-          accounts={currentSearch?.registeredResults}
-          selectable={true}
-          actionable={true}
-          flippable={true}
-          showNames={true}
-          showTripleDot={false}
-        />
-      }
-      {(activeTab === "unregistered") &&
-        <AccountCardList
-          headerText="Unregistered Accounts"
-          accounts={currentSearch?.unregisteredResults}
-          selectable={true}
-          actionable={true}
-          flippable={true}
-          showNames={true}
-          showTripleDot={false}
-        />
-      }
-      {(activeTab === "inconclusive") &&
-        <AccountCardList
-          headerText="Inconclusive Accounts"
-          accounts={currentSearch?.inconclusiveResults}
-          selectable={true}
-          actionable={true}
-          flippable={true}
-          showNames={true}
-          showTripleDot={false}
-        />
-      }
-      </>
+          {activeTab === "discovered" && (
+            <AccountCardList
+              headerText="Discovered Accounts"
+              accounts={currentSearch?.registeredResults}
+              selectable={true}
+              actionable={true}
+              flippable={true}
+              showNames={true}
+              showTripleDot={false}
+            />
+          )}
+          {activeTab === "unregistered" && (
+            <AccountCardList
+              headerText="Unregistered Accounts"
+              accounts={currentSearch?.unregisteredResults}
+              selectable={true}
+              actionable={true}
+              flippable={true}
+              showNames={true}
+              showTripleDot={false}
+            />
+          )}
+          {activeTab === "inconclusive" && (
+            <AccountCardList
+              headerText="Inconclusive Accounts"
+              accounts={currentSearch?.inconclusiveResults}
+              selectable={true}
+              actionable={true}
+              flippable={true}
+              showNames={true}
+              showTripleDot={false}
+            />
+          )}
+        </>
       )}
     </div>
   );

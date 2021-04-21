@@ -16,16 +16,13 @@
 
 */
 import React, { useEffect, useState, } from "react";
-// nodejs library that concatenates classes
-import classNames from "classnames";
 // react plugin used to create charts
-import { Line, Bar } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 import { ProfilePage } from 'trace-search';
 
 // reactstrap components
 import {
   Button,
-  ButtonGroup,
   Card,
   CardHeader,
   CardBody,
@@ -34,14 +31,8 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  UncontrolledDropdown,
-  Label,
-  FormGroup,
-  Input,
-  Table,
   Row,
   Col,
-  UncontrolledTooltip,
 } from "reactstrap";
 
 // core components
@@ -57,12 +48,12 @@ import {
 
 function Dashboard(props) {
   const [bigChartData, setbigChartData] = React.useState("data1");
-  const [page, setPage] = useState(null);
+  const [, setPage] = useState(null);
   const [timeDropdownOpen, setTimeDropdownOpen] = useState(false);
   const [totalGraph, setTotalGraph] = useState("1 Year");
-  const [oneGraph, setOneGraph] = useState("6 Months");
-  const [secondGraph, setSecondGraph] = useState("6 Months");
-  const [thirdGraph, setThirdGraph] = useState("6 Months");
+  // const [oneGraph, setOneGraph] = useState("6 Months");
+  // const [secondGraph, setSecondGraph] = useState("6 Months");
+  // const [thirdGraph, setThirdGraph] = useState("6 Months");
 
   const toggleTimeDropdown = () => setTimeDropdownOpen((prevState) => !prevState);
 
@@ -78,6 +69,7 @@ function Dashboard(props) {
       } else {
         setPage(null);
       }
+      setBgChartData("data1");
     })();
   }, []);
 
