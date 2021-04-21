@@ -30,7 +30,6 @@ const Editor = () => {
   /**
    * Initialize constants
    */
-  // const [claimedAccounts, setClaimedAccounts] = useState({});
   const [myProfile, setProfileData] = useState(null);
   const [title, setTitle] = useState("Enter Title");
   const [isOpen, setIsOpen] = useState(false);
