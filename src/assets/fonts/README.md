@@ -6,40 +6,44 @@ Could have used https://github.com/soul-wish/font-awesome-v5-icons instead of ge
 1. Run the following in the developer console:
 
 ```javascript
-// Navigate to the regular page
-document.querySelectorAll('a[href$="cheatsheet/free/regular"]')[0].click();
-
-// Wait a bit
-setTimeout(() => {
-    let results = {};
-
-    console.log('Collecting regular icon names...');
+function addNames(type, results) {
+    console.log(`Collecting ${type} icon names...`);
 
     // Grab all the names
     document.getElementsByClassName('icon-name').forEach(elem => {
         let name = elem.innerText.trim();
-        name = name.replace('-', ' ');
-        console.assert(!(name in results), `Duplicate name '${name}'!`);
-        results[name] = `far fa-${elem.innerText.trim()}`;
+        let index = name.replace('-', ' ');
+
+        if (index in results) {
+            index = `${type} ${index}`;
+        }
+
+        console.assert(!(index in results), `Duplicate name '${index}'!`);
+        results[index] = `fa${type[0]} fa-${name}`;
     });
+}
 
-    // Navigate to the brands
-    document.querySelectorAll('a[href$="cheatsheet/free/brands"]')[0].click();
+// Navigate to the solid page
+document.querySelectorAll('a[href$="cheatsheet/free/solid"]')[0].click();
+setTimeout(() => {
+    let results = {};
 
-    // Wait a bit
+    addNames('solid', results);
+
+    // Navigate to the regular
+    document.querySelectorAll('a[href$="cheatsheet/free/regular"]')[0].click();
     setTimeout(() => {
-        console.log('Collecting brand icon names...');
+        addNames('regular', results);
 
-        document.getElementsByClassName('icon-name').forEach(elem => {
-            let name = elem.innerText.trim();
-            name = name.replace('-', ' ');
-            console.assert(!(name in results), `Duplicate name '${name}'!`);
-            results[name] = `fab fa-${elem.innerText.trim()}`;
-        });
+        // Navigate to the brands
+        document.querySelectorAll('a[href$="cheatsheet/free/brands"]')[0].click();
+        setTimeout(() => {
+            addNames('brands', results);
 
-        // Dump the final thing formatted for TypeScript
-        console.log(results);
-        console.log(JSON.stringify(results));
+            // Dump the final thing formatted for TypeScript
+            console.log(results);
+            console.log(JSON.stringify(results));
+        }, 3000);
     }, 3000);
 }, 3000);
 ```
