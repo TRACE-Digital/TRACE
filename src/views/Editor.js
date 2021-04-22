@@ -2,9 +2,12 @@ import React, { useState, useEffect } from "react";
 import Colors from "views/Colors.js";
 import { ThirdPartyAccount, accounts, AccountType, ProfilePage, pages } from "trace-search";
 import SiteCard from "components/SiteCard/SiteCard";
+import classNames from "classnames";
 import { GridContextProvider, GridDropZone, GridItem, swap } from "react-grid-dnd";
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Link } from "react-router-dom";
 import { Row, Col } from "reactstrap";
+import { Button, ButtonGroup } from "reactstrap";
 import { Auth } from 'aws-amplify';
 import { renderToStaticMarkup } from 'react-dom/server'
 import {
@@ -37,6 +40,8 @@ const Editor = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [heightSize, setHeightSize] = useState("");
   const [, setPlsRender] = useState(false);
+  const [showBlockTheme, setBlockFeature] = useState(true); // SET TO WHATEVER THEY SET IT AS PREVIOUSLY
+  const [showListTheme, setListFeature] = useState(false);
   const [hasPublished, setHasPublished] = useState(false);
   const [colorScheme, setColorScheme] = useState([{
     "titleColor": "#FFFFFF",
@@ -55,6 +60,14 @@ const Editor = () => {
     myProfile.accounts = nextState;
     saveData();
     setPlsRender(prev => !prev);
+  }
+
+  function handleBlock(){
+    setBlockFeature(true);
+  }
+
+  function handleList(){
+    setBlockFeature(false);
   }
 
   /**
@@ -252,6 +265,8 @@ const Editor = () => {
       setHeightSize(8); // temp for now
       // saveData();
 
+      console.log(results[0]);
+
     };
     loadProfile();
 
@@ -300,6 +315,49 @@ const Editor = () => {
               style={{width:"600px", color: `${colorScheme[0].titleColor}`, backgroundColor: `${colorScheme[0].backgroundColor}`, border: "none", outline: "none" }}
             />
 
+              <div className="toggle-container" style={{display: "inline-block", float: "right"}}>
+                    <ButtonGroup
+                    
+                        className="btn-group-toggle"
+                        data-toggle="buttons"
+                    >
+                        <Button
+                            tag="label"
+                            className={classNames("btn btn-primary")}
+                            color="info"
+                            id="0"
+                            onClick={handleList}
+                            style={{height:"40px", "margin-bottom": "15px", "padding-top": "10px"}}
+                            size="sm"
+                            
+                        >
+                            <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
+                                List View
+                            </span>
+                            <span className="d-block d-sm-none">
+                                <i className="tim-icons icon-single-02" />
+                            </span>
+                        </Button>
+                        <Button
+                            color="info"
+                            id="1"
+                            style={{height:"40px", "margin-bottom": "15px", "padding-top": "10px"}}
+                            size="sm"
+                            tag="label"
+                            onClick={handleBlock}
+                            className={classNames("btn btn-primary")}
+                          
+                        >
+                            <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
+                                Block View
+                            </span>
+                            <span className="d-block d-sm-none">
+                                <i className="tim-icons icon-gift-2" />
+                            </span>
+                        </Button>
+                    </ButtonGroup>
+                </div>
+
           <Link style={{display: "inline-block", float: "right"}}
               className="btn btn-primary editor-button"
               color="primary"
@@ -330,7 +388,8 @@ const Editor = () => {
 
           </div>
           {myProfile &&
-            <GridContextProvider onChange={onChange}>
+            (showBlockTheme ? 
+              <GridContextProvider onChange={onChange}>
               <GridDropZone
                 id="items"
                 boxesPerRow={4}
@@ -348,7 +407,50 @@ const Editor = () => {
                   </GridItem>
                 ))}
               </GridDropZone>
-            </GridContextProvider>}
+            </GridContextProvider>
+            : 
+              <GridContextProvider onChange={onChange}>
+                <GridDropZone
+                  id="items"
+                  boxesPerRow={1}
+                  rowHeight={90}
+                  style={{"margin-top":"20px", "user-select":"none", height: `${(heightSize / 3) * 330}px` , "margin-left":"500px"}}>
+                  {myProfile.accounts.map(item => (
+                    <GridItem key={item.id}>
+                      <div
+                        className="siteTd" style={{ backgroundColor: `${colorScheme[0].siteColor}`, border:`${colorScheme[0].siteColor}` }}>
+                        <Row style={{"white-space":"nowrap", "overflow-x":"auto"}}>
+                                 
+                                 <Col lg="8" style={{display:"inline-block","text-align": "right", "max-width":"120px"}}>
+                                   <i
+                                     className={ item.site.logoClass !== "fa-question-circle" ? "fab " + item.site.logoClass : "fas " + item.site.logoClass}
+                                     style={{"font-size":"50px", "margin-left":"50px", color: `${colorScheme[0].iconColor}` }}
+                                   > </i>
+                                 </Col>
+                                 <Col lg="8" style={{display:"inline-block","margin-top":"10px", "font-weight":"600", "text-align": "left", "margin-right":"40px"}}>
+                                   <div style={{display:"inline-block","font-size":"20px"}}>{item.site.name}:</div>
+                                   <div style={{display:"inline-block","margin-left":"5px","font-size":"20px", "font-weight":"400"}}>
+
+                                   <a
+                                     href={item.site.url.replace("{}", item.userName)}
+                                     target="blank"
+                                   >
+                                     {item.site.prettyUrl ||
+                                       item.site.urlMain ||
+                                       item.site.url}
+                                   </a>
+
+                                   </div>
+                                 </Col>     
+
+                         </Row>
+                      </div>
+                    </GridItem>
+                  ))}
+                </GridDropZone>
+              </GridContextProvider>
+                
+            )}
         </div>
       </div>
         <div>

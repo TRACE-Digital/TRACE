@@ -867,6 +867,57 @@
       max-height:calc(95vh - 70px);
       padding:10px;
 
+
+      .siteTd{
+        height:70px;
+        width:550px !important;
+        color:black;
+        padding: 10px;
+        border:solid #525f7f;
+        border-radius: 15px;
+        text-align:left;}
+
+      // .sContainer{
+      //   font-size: 1rem;
+      //   display: flex;
+      //   justify-content: center;
+      //   text-align:center;
+      //   min-height:calc(95vh - 70px);;
+      //   overflow-y: scroll;
+      //   overflow-x:auto;
+      //   margin-top:10px;
+     
+      //   .siteTable{
+      //     width:auto;
+          
+      //     border-spacing: 5px 1rem;
+      //     border-radius: 15px;
+      //     border-collapse: separate;
+  
+      //     .siteTr{
+      //       border-radius: 15px;
+            
+      //       .siteTd{
+      //         height:70px;
+      //         min-width:550px;
+      //         color:black;
+      //         border:solid #525f7f;
+      //         border-radius: 15px;
+      //         text-align:left;
+              
+      //         .site-info{
+      //           font-weight: 600;
+               
+      //           margin-right:7px;
+      //           text-align:center;
+
+
+      //           >.userName{
+      //             font-weight:350 !important;
+      //           }
+      //         }
+      //       }}}}
+
       .boxes{
         padding-left:7px;
         padding-right:7px
