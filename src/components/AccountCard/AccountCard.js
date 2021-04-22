@@ -13,6 +13,7 @@ import {
 } from "reactstrap";
 import { IconButton } from "@material-ui/core";
 import { ManualAccount } from 'trace-search';
+
 /**
  * Displays a Card with information about the account passed in
  * @param props.account An Account object with relevant data for the account that it represents
@@ -99,13 +100,7 @@ const AccountCard = (props) => {
             {/* ICON */}
             <div className="editor">
               {" "}
-              <i
-                className={
-                  props.account.site.logoClass !== "fa-question-circle"
-                    ? "fab " + props.account.site.logoClass
-                    : "fas " + props.account.site.logoClass
-                }
-              ></i>
+              <i className={props.account.site.logoClass}></i>
             </div>
 
             <div className="editor-handle-name" style={{fontWeight: "bold"}}>{props.account.site.name}</div>

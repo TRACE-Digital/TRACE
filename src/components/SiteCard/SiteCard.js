@@ -87,9 +87,8 @@ const SiteCard = (props) => {
             <div className="editor">
               {" "}
               <i
-                className={ account.site.logoClass !== "fa-question-circle" ? "fab " + account.site.logoClass : "fas " + account.site.logoClass}
+                className={account.site.logoClass}
                 style={props.page === "editor" ? (iconColor === "Default" ? null : { color: `${iconColor}` } ) : null}
-
               ></i>
             </div>
 
