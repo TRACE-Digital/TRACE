@@ -76,7 +76,7 @@ function Dashboard(props) {
 
   return (
     <>
-    <div className="content">
+    <div className={showPopup ? "content blur" : "content"}>
       <div className="header">
         <h3 className="header-title">Claimed Accounts</h3>
         <Link

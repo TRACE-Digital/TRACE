@@ -157,7 +157,7 @@ function AdminNavbar(props) {
                   <DropdownItem divider tag="li" />
                   <NavLink tag="li">
                     <DropdownItem className="nav-item">
-                      Extension version: v{ window.__TRACE_EXTENSION_HOOK__?.getVersionStr() || 'Not installed' }
+                      Extension version: {window.__TRACE_EXTENSION_HOOK__?.getVersionStr() || 'Not installed' }
                     </DropdownItem>
                   </NavLink>
                   <NavLink tag="li">
