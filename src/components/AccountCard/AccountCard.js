@@ -101,7 +101,10 @@ const AccountCard = (props) => {
             {/* ICON */}
             <div className="editor">
               {" "}
-              <i className={props.account.site.logoClass}></i>
+              <i
+                className={props.account.site.logoClass}
+                style={props.account.site.logoColor ? { color: props.account.site.logoColor } : null}
+              ></i>
             </div>
 
             <div className="editor-handle-name" style={{ fontWeight: "bold" }}>{props.account.site.name}</div>
