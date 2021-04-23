@@ -33,8 +33,6 @@ const testSiteNames = [
 ];
 
 function SearchComponent() {
-  const [refineVisible, setVisible] = useState(false);
-  const [historyVisible, setHistoryVisible] = useState(false);
   const [currentSearch, setCurrentSearch] = useState(null);
   const [userNames, setUserNames] = useState([]);
   const [firstNames, setFirstNames] = useState([]);
@@ -42,18 +40,25 @@ function SearchComponent() {
   const [selectedTags, setSelectedTags] = useState(tags.slice());
   const [progress, setProgress] = useState(-1);
   const [activeTab, setActiveTab] = useState("discovered");
+  const [showRefine, setShowRefine] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [showResume, setShowResume] = useState(false);
+  const [showCancel, setShowCancel] = useState(true);
+  const [showPause, setShowPause] = useState(true);
+  const [showClear, setShowClear] = useState(false); // used to show clear button if search has been cancelled
+  const [showSearchIcon, setShowSearchIcon] = useState(true);
   const [error, setError] = useState('');
   const [, setPlsRender] = React.useState(false);
 
   // Register for changes to any search results
   // Results get updated as they are claimed/rejected
-  // This catches those changes and forces a rerender
+  // This catches those changes and forces a re-render
   useEffect(() => {
     const triggerRender = () => {
       setPlsRender((prev) => !prev);
     };
 
-    // This may cause a few extra rerenders since it's results for all searches,
+    // This may cause a few extra re-renders since it's results for all searches,
     // but the user is not likely to have many searches running at once
     ThirdPartyAccount.resultCache.events.on("change", triggerRender);
 
@@ -75,7 +80,7 @@ function SearchComponent() {
 
     const handle = (id) => {
       // We don't care about the resultIds since
-      // this triggers a rerender
+      // this triggers a re-render
       setProgress(search.progress);
     };
 
@@ -92,16 +97,40 @@ function SearchComponent() {
   }, [currentSearch]);
 
   const handleRefineClick = () => {
-    setVisible(!refineVisible);
+    setShowRefine(!showRefine);
   };
 
   const handleHistoryClick = () => {
-    setHistoryVisible(!historyVisible);
+    setShowHistory(!showHistory);
   };
 
   const handleCancelClick = async () => {
+    setShowSearchIcon(true);
+    setShowResume(false);
+    setShowPause(false);
+    setShowCancel(false);
+    setShowClear(true);
     await currentSearch.cancel();
-    // TODO: await handleClearClick() ??
+  };
+
+  const handleResumeClick = async () => {
+    setShowSearchIcon(false);
+    setShowResume(false);
+    setShowPause(true);
+    setShowCancel(true);
+    setShowClear(false);
+
+    await currentSearch.resume();
+  };
+
+  const handlePauseClick = async () => {
+    setShowSearchIcon(true);
+    setShowPause(false);
+    setShowResume(true);
+    setShowCancel(true);
+    setShowClear(false);
+
+    await currentSearch.pause();
   };
 
   /**
@@ -110,6 +139,7 @@ function SearchComponent() {
    * (if a definition is present).
    */
   const handleClearClick = async () => {
+    setShowClear(false);
     // Clear old results
     setProgress(-1);
     if (currentSearch) {
@@ -211,6 +241,14 @@ function SearchComponent() {
       await searchDef.save();
 
       console.log(search);
+
+      setShowSearchIcon(false);
+      setShowResume(false);
+      setShowCancel(true);
+      setShowPause(true);
+      setShowClear(false);
+      setShowHistory(false);
+      setShowRefine(false);
       await search.start();
 
       setProgress(search.progress);
@@ -287,7 +325,40 @@ function SearchComponent() {
         </div>
 
         <div className="four">
-          <i onClick={submitSearch} className="fas fa-search"></i>
+          {/* SEARCH */}
+          {showSearchIcon && (
+            <i className="tim-icons icon-zoom-split" onClick={submitSearch} />
+          )}
+          {/* RESUME */}
+          {progress > 0 && progress < 100 && showResume && (
+            <>
+              &nbsp; &nbsp;
+              <i
+                className="tim-icons icon-triangle-right-17"
+                onClick={handleResumeClick}
+              />
+            </>
+          )}
+          {/* PAUSE */}
+          {progress > 0 && progress < 100 && showPause && (
+            <>
+              &nbsp; &nbsp;
+              <i
+                className="tim-icons icon-button-pause"
+                onClick={handlePauseClick}
+              />
+            </>
+          )}
+          {/* CANCEL */}
+          {progress > 0 && progress < 100 && showCancel && (
+            <>
+              &nbsp; &nbsp;
+              <i
+                className="tim-icons icon-simple-remove"
+                onClick={handleCancelClick}
+              />
+            </>
+          )}
         </div>
       </div>
 
@@ -304,21 +375,16 @@ function SearchComponent() {
         </span>
       </div>
       <div className="refine-search">
-        {progress > 0 && progress < 100 && (
-          <span className="the-text cancel" onClick={handleCancelClick}>
-            cancel
-          </span>
-        )}
-        {progress === 100 && (
+        {(progress === 100 || showClear) && (
           <span className="the-text cancel" onClick={handleClearClick}>
-            clear
+            clear results
           </span>
         )}
       </div>
 
       {/* REFINE SEARCH */}
-      <div className={refineVisible ? "dropdownVis" : "dropdownNotVis"}>
-        {/* Search tags section of refine dropdown goes here */}
+      <div className={showRefine ? "dropdownVis" : "dropdownNotVis"}>
+        {/* Search categories section of refine dropdown goes here */}
         <h1>CATEGORIES</h1>
         <Row>
           {tags.map((tag) => (
@@ -398,7 +464,12 @@ function SearchComponent() {
       </div>
 
       {/* HISTORY */}
-      {historyVisible && <History initialMax={3} onSelect={ (search) => setCurrentSearch(search) }/>}
+      {showHistory && (
+        <History
+          initialMax={3}
+          onSelect={(search) => setCurrentSearch(search)}
+        />
+      )}
 
       <div className={error ? "error-message-visible" : "error-not-visible"}>
         {error}

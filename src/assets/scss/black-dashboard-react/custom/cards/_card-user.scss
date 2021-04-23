@@ -599,11 +599,24 @@
 }
 
 .additional-info {
-  font-size: 1.1rem;
+  font-size: 1rem;
   color:#ffffff;
   text-align: center;
 }
 
+.names {
+  font-size: 1em;
+}
+
+.confidence {
+  font-size: 1rem;
+  color:#ffffff;
+  text-align: center;
+}
+
+.progressBar {
+  height: 20px;
+}
 
 .card-user.editing:hover {
     background-color:#ff9900;
@@ -616,6 +629,14 @@
   right: 10px;
 }
 
-#flip-icon {
-  color: #ffffff;
+.tags {
+  margin-top: -30px;
+}
+
+.privacyBadge {
+  float: right;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  transform: scale(1.2);
 }
