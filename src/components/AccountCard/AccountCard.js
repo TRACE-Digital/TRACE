@@ -1,6 +1,7 @@
 import PrivacyBadge from "components/PrivacyBadge/PrivacyBadge";
 import React, { useState } from "react";
 import ReactCardFlip from "react-card-flip";
+import ConfidenceMeter from "./ConfidenceMeter"
 import {
   Card,
   CardBody,
@@ -61,38 +62,38 @@ const AccountCard = (props) => {
           <CardBody className="card-body">
 
             {props.showTripleDot && (
-            <div className="dashboard-parent">
-              <UncontrolledDropdown>
-                <DropdownToggle
-                  caret
-                  className="btn-icon dot"
-                  color="link"
-                  type="button"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <i className="fas fa-ellipsis-h"></i>
-                </DropdownToggle>
-                <DropdownMenu className="dropdown-menu-right">
-                  <DropdownItem onClick={
-                    async (e) => {
-                      e.stopPropagation()
-                      await props.account.remove();
-                      // TODO: Trigger rerender
-                    }
-                  }>
-                    Remove
+              <div className="dashboard-parent">
+                <UncontrolledDropdown>
+                  <DropdownToggle
+                    caret
+                    className="btn-icon dot"
+                    color="link"
+                    type="button"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <i className="fas fa-ellipsis-h"></i>
+                  </DropdownToggle>
+                  <DropdownMenu className="dropdown-menu-right">
+                    <DropdownItem onClick={
+                      async (e) => {
+                        e.stopPropagation()
+                        await props.account.remove();
+                        // TODO: Trigger rerender
+                      }
+                    }>
+                      Remove
                   </DropdownItem>
-                  {props.account instanceof ManualAccount && (
-                  <>
-                    <DropdownItem divider tag="li" />
-                    <DropdownItem onClick={(e) => e.stopPropagation()}>
-                      Edit
+                    {props.account instanceof ManualAccount && (
+                      <>
+                        <DropdownItem divider tag="li" />
+                        <DropdownItem onClick={(e) => e.stopPropagation()}>
+                          Edit
                     </DropdownItem>
-                  </>
-                  )}
-                </DropdownMenu>
-              </UncontrolledDropdown>
-            </div>
+                      </>
+                    )}
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+              </div>
             )}
 
 
@@ -108,7 +109,7 @@ const AccountCard = (props) => {
               ></i>
             </div>
 
-            <div className="editor-handle-name" style={{fontWeight: "bold"}}>{props.account.site.name}</div>
+            <div className="editor-handle-name" style={{ fontWeight: "bold" }}>{props.account.site.name}</div>
             <div className="editor-link">
               <a href={props.account.url} target="blank">@{props.account.userName}</a>
             </div>
@@ -116,14 +117,14 @@ const AccountCard = (props) => {
             {props.actionable && (
               <div className="test">
                 <Button
-                  onClick={(e) => {e.stopPropagation(); claimAccount(props.account);}}
+                  onClick={(e) => { e.stopPropagation(); claimAccount(props.account); }}
                   className="claim-button"
                 >
                   <i className="tim-icons icon-check-2" />
                 </Button>
                 &nbsp;
                 <Button
-                  onClick={(e) => {e.stopPropagation(); rejectAccount(props.account);}}
+                  onClick={(e) => { e.stopPropagation(); rejectAccount(props.account); }}
                   className="claim-button"
                 >
                   <i className="tim-icons icon-simple-remove" />
@@ -131,73 +132,60 @@ const AccountCard = (props) => {
               </div>
             )}
             {props.flippable && (
-            <div className="flip-button">
-              <IconButton onClick={(e) => {e.stopPropagation(); setFlipped(true)}}>
-                <i className="tim-icons icon-refresh-01" style={{color: "#DDDDDD", transform: "scaleX(-1)"}}></i>
-              </IconButton>
-            </div>)}
+              <div className="flip-button">
+                <IconButton onClick={(e) => { e.stopPropagation(); setFlipped(true) }}>
+                <i className="tim-icons icon-refresh-01" style={{ color: "#DDDDDD", transform: "scale(0.75) scaleX(-1)" }}></i>
+                </IconButton>
+              </div>)}
 
           </CardBody>
         </Card>
 
         {props.flippable && (
-        <Card
-          className={'card-user site-card ' + (props.selected ? 'selected-site-card' : '')}
-          onClick={handleClick}
-        >
-          <CardBody className="card-body">
-            <h3>{props.account.site.name}</h3>
-
-            {/* CONFIDENCE LEVEL */}
-            {props.account.confidence > 0 && (
-              <div className="additional-info">
-                Confidence Level: {props.account.confidence}
+          <Card
+            className={'card-user site-card ' + (props.selected ? 'selected-site-card' : '')}
+            onClick={handleClick}
+          >
+            <CardBody className="card-body">
+              <h3>{props.account.site.name}</h3>
+              <div className="privacyBadge" >
+                <PrivacyBadge account={props.account} service={props.account.site.name} />
               </div>
-            )}
+              <h5 className="tags">{tags}</h5>
 
-            {/* PRIVACY RATING */}
-            <div className="additional-info">
-              Privacy Rating - {" "}
-              <PrivacyBadge account={props.account} service={props.account.site.name}></PrivacyBadge>
+
+              {/* NAMES */}
               <br/>
-            </div>
-
-            {/* FIRST NAMES */}
-            {firstNames.length > 0 && props.showNames && (
               <div className="additional-info">
-                First Name(s) Found  - {firstNames}
-                <br/>
+                {firstNames.length > 0 && props.showNames && (<p className="names">First Name(s): &nbsp; {firstNames}</p>)}
+                {lastNames.length > 0 && props.showNames && (<p className="names">Last Name(s): &nbsp; {lastNames}</p>)}
               </div>
-            )}
-
-            {/* LAST NAMES */}
-            {lastNames.length > 0 && props.showNames && (
-              <div className="additional-info">
-                Last Name(s) Found - {lastNames}
-                <br/>
-              </div>
-            )}
-
-            {/* TAGS (CATEGORIES) */}
-            <div className="additional-info">
-              Tags - {tags}
               <br/>
-            </div>
 
-            {/* ERROR FOR FAILED ACCOUNTS */}
-            {props.account.reason !== undefined && (
-              <div className="additional-info">
-                <br/><code>{props.account.reason}</code>
+              {/* ERROR FOR FAILED ACCOUNTS */}
+              {props.account.reason !== undefined && (
+                <div className="additional-info">
+                  <br /><code>{props.account.reason}</code>
+                </div>
+              )}
+
+              {/* CONFIDENCE LEVEL */}
+              <br />
+              {props.account.confidence > 0 && (
+                <div className="confidence">
+                  CONFIDENCE
+                  <ConfidenceMeter confidence={props.account.confidence} />
+                </div>
+              )}
+
+              <div className="flip-button">
+                <IconButton onClick={(e) => { e.stopPropagation(); setFlipped(false) }}>
+                <i className="tim-icons icon-refresh-01" style={{ color: "#DDDDDD", transform: "scale(0.75) scaleX(-1)" }}></i>
+                </IconButton>
               </div>
-            )}
 
-            <div className="flip-button">
-              <IconButton onClick={(e) => {e.stopPropagation(); setFlipped(false)}}>
-                <i className="tim-icons icon-refresh-01" style={{color: "#DDDDDD", transform: "scaleX(-1)"}}></i>
-              </IconButton>
-            </div>
-          </CardBody>
-        </Card>
+            </CardBody>
+          </Card>
         )}
       </ReactCardFlip>
     </Col>
@@ -211,8 +199,8 @@ AccountCard.defaultProps = {
   showNames: true,
   showTripleDot: true,
   selected: false,
-  onSelect: () => {},
-  onDeselect: () => {},
+  onSelect: () => { },
+  onDeselect: () => { },
 }
 
 /**
