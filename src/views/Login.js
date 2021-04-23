@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Auth } from 'aws-amplify';
 
 // reactstrap components
@@ -49,11 +49,28 @@ function Login() {
   const [error, setError] = useState(null);
   const [isLogin, setIsLogin] = useState(window.location.href.includes('login'));
 
+  useEffect(() => {
+    window.addEventListener('popstate', (popState) => {
+      setIsLogin(popState.state.includes('login'));
+    });
+  }, []);
+
   const welcomeElement = (
     <>
       <CardTitle className='welcome'>
         Welcome to TRACE!
       </CardTitle>
+      <div style={{ width: '100%', textAlign: 'center' }}>
+        <Link
+          className="btn btn-primary"
+          to="/dashboard"
+        >
+          Continue locally without an account
+        </Link>
+
+        <div class="titled-separator" style={{ padding: '30px' }}>or</div>
+
+      </div>
       {error && <Alert color="danger">{error}</Alert>}
     </>
   )
@@ -107,6 +124,7 @@ function Login() {
                   onClick={(e) => {
                     e.preventDefault();
                     setIsLogin(false);
+                    window.history.pushState('/signup', 'Sign Up', '/signup');
                   }}
                 >
                   Don't have an account? Sign Up
@@ -153,6 +171,7 @@ function Login() {
                   onClick={(e) => {
                     e.preventDefault();
                     setIsLogin(true);
+                    window.history.pushState('/login', 'Log In', '/login');
                   }}
                 >
                   Already have an account? Log In
