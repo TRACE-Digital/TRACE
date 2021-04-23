@@ -43,19 +43,11 @@ import {
 import { Link } from "react-router-dom";
 import Auth from "@aws-amplify/auth";
 
-async function signOut() {
-  try {
-    await Auth.signOut();
-    } catch (error) {
-      console.log('error signing out: ', error);
-    }
-}
-
 function AdminNavbar(props) {
   const [collapseOpen, setcollapseOpen] = useState(false);
   const [modalSearch, setmodalSearch] = useState(false);
   const [color, setcolor] = useState("navbar-transparent");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentUsername, setCurrentUsername] = useState(null);
 
   useEffect(() => {
     window.addEventListener("resize", updateColor);
@@ -70,13 +62,22 @@ function AdminNavbar(props) {
       try {
         const user = await Auth.currentUserPoolUser();
         console.log(user);
-        setIsLoggedIn(true);
+        setCurrentUsername(user.username);
       }
       catch {
-        setIsLoggedIn(false);
+        setCurrentUsername(null);
       }
     })();
   });
+
+  const signOut = async () => {
+    try {
+      await Auth.signOut();
+    } catch (error) {
+      console.log('error signing out: ', error);
+    }
+    setCurrentUsername(null);
+  }
 
   // function that adds color white/transparent to the navbar on resize (this is for the collapse)
   const updateColor = () => {
@@ -127,7 +128,7 @@ function AdminNavbar(props) {
           <Collapse navbar isOpen={collapseOpen}>
             <Nav className="ml-auto" navbar>
               <UncontrolledDropdown nav>
-                <SyncToggle/>
+                <SyncToggle />
               </UncontrolledDropdown>
               <UncontrolledDropdown nav>
                 <DropdownToggle
@@ -157,7 +158,7 @@ function AdminNavbar(props) {
                   <DropdownItem divider tag="li" />
                   <NavLink tag="li">
                     <DropdownItem className="nav-item">
-                      Extension version: {window.__TRACE_EXTENSION_HOOK__?.getVersionStr() || 'Not installed' }
+                      Extension version: {window.__TRACE_EXTENSION_HOOK__?.getVersionStr() || 'Not installed'}
                     </DropdownItem>
                   </NavLink>
                   <NavLink tag="li">
@@ -169,7 +170,7 @@ function AdminNavbar(props) {
 
                       try {
                         await resetDb();
-                        if (isLoggedIn) {
+                        if (currentUsername) {
                           await setRemoteUser(await Auth.currentUserPoolUser());
                           await resetRemoteDb();
                         }
@@ -180,18 +181,19 @@ function AdminNavbar(props) {
                     }}>Delete my data</DropdownItem>
                   </NavLink>
                   <DropdownItem divider tag="li" />
-                  {!isLoggedIn &&
-                  <NavLink to="/login" tag={Link}>
-                    <DropdownItem className="nav-item">Log In</DropdownItem>
-                  </NavLink>}
-                  {isLoggedIn &&
-                  <NavLink onClick={() => {
-                    signOut();
-                    setIsLoggedIn(!isLoggedIn);
-                    window.location.href = "/landing";
-                    }} tag="li">)
-                    <DropdownItem className="nav-item">Log Out</DropdownItem>
-                  </NavLink>}
+                  {!currentUsername &&
+                    <NavLink to="/login" tag={Link}>
+                      <DropdownItem className="nav-item">Log In</DropdownItem>
+                    </NavLink>}
+                  {currentUsername &&
+                    <NavLink onClick={() => {
+                      signOut();
+                      window.location.href = "/landing";
+                    }} tag="li">
+                    <DropdownItem className="nav-item">
+                      Log Out - {currentUsername}
+                    </DropdownItem>
+                    </NavLink>}
                 </DropdownMenu>
               </UncontrolledDropdown>
               <li className="separator d-lg-none" />
