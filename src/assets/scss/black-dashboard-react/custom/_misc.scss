@@ -244,12 +244,13 @@ code {
   display: flex;
   align-items: center;
   text-align: center;
+  color: rgba(255, 255, 255, 0.3);
 }
 .titled-separator::before,
 .titled-separator::after {
   content: '';
   flex: 1;
-  border-bottom: 2px solid $input-focus-border-color;
+  border-bottom: 2px solid #2B3553;
 }
 .titled-separator:not(:empty)::before {
   margin-right: .5em;
@@ -281,5 +282,5 @@ code {
 }
 
 .history .current-search {
-  border: 2px solid $white;
+  border: 1px solid $white;
 }

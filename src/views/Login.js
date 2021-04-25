@@ -63,12 +63,12 @@ function Login() {
       <div style={{ width: '100%', textAlign: 'center' }}>
         <Link
           className="btn btn-primary"
-          to="/dashboard"
+          to="/search"
         >
           Continue locally without an account
         </Link>
 
-        <div class="titled-separator" style={{ padding: '30px' }}>or</div>
+        <div className="titled-separator" style={{ padding: '30px' }}>or</div>
 
       </div>
       {error && <Alert color="danger">{error}</Alert>}
