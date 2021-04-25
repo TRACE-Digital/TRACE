@@ -15,23 +15,6 @@ import {
 import { Button, ButtonGroup, Row, Col } from "reactstrap";
 import AccountCardList from "components/AccountCardList/AccountCardList.js";
 
-const testSiteNames = [
-  "GitHub",
-  "Reddit",
-  "Apple Discussions",
-  "Facebook",
-  "BitBucket",
-  "GitLab",
-  "npm",
-  "Wikipedia",
-  "TripAdvisor",
-  "HackerNews",
-  "Steam",
-  "Keybase",
-  "last.fm",
-  "Twitch",
-];
-
 function SearchComponent() {
   const [currentSearch, setCurrentSearch] = useState(null);
   const [userNames, setUserNames] = useState([]);
@@ -48,14 +31,13 @@ function SearchComponent() {
   const [showClear, setShowClear] = useState(false); // used to show clear button if search has been cancelled
   const [showSearchIcon, setShowSearchIcon] = useState(true);
   const [error, setError] = useState('');
-  const [, setPlsRender] = React.useState(false);
 
   // Register for changes to any search results
   // Results get updated as they are claimed/rejected
   // This catches those changes and forces a re-render
   useEffect(() => {
     const triggerRender = () => {
-      setPlsRender((prev) => !prev);
+      setProgress(currentSearch?.progress || -1);
     };
 
     // This may cause a few extra re-renders since it's results for all searches,
@@ -67,30 +49,6 @@ function SearchComponent() {
         "change",
         triggerRender
       );
-    };
-
-    return cleanup;
-  }, []);
-
-  // Subscribe to results from our search
-  useEffect(() => {
-    if (currentSearch === null) {
-      return;
-    }
-
-    const handle = (id) => {
-      // We don't care about the resultIds since
-      // this triggers a re-render
-      setProgress(search.progress);
-    };
-
-    // Preserve the state of currentSearch
-    const search = currentSearch;
-    // Register for notification of new results
-    search.events.on("result", handle);
-
-    const cleanup = () => {
-      search.events.removeListener("result", handle);
     };
 
     return cleanup;
@@ -140,15 +98,22 @@ function SearchComponent() {
    */
   const handleClearClick = async () => {
     setShowClear(false);
-    // Clear old results
     setProgress(-1);
     if (currentSearch) {
       const search = await currentSearch.definition.new();
-      setCurrentSearch(search);
-      setSelectedTags(search.definition.tags.slice());
+      handleNewSearch(search);
       return search;
     }
   };
+
+  const handleNewSearch = (search) => {
+    setCurrentSearch(search);
+    setProgress(search.progress);
+    setUserNames(search.definition.userNames.slice());
+    setFirstNames(search.definition.firstNames.slice());
+    setLastNames(search.definition.lastNames.slice());
+    setSelectedTags(search.definition.tags.slice());
+  }
 
   const selectAllTags = () => {
     setSelectedTags(tags.slice());
@@ -218,19 +183,18 @@ function SearchComponent() {
       let searchDef;
       let search;
       if (currentSearch) {
+        if (currentSearch.state === SearchState.IN_PROGRESS) {
+          await currentSearch.cancel();
+        }
+
         searchDef = currentSearch.definition;
-        search = await handleClearClick();
+        search = await currentSearch.definition.new();
       } else {
         searchDef = new SearchDefinition(undefined, []);
         search = await searchDef.new();
-        setCurrentSearch(search);
       }
 
-      // Tags can be passed into the SearchDefinition constructor
-      // but they will apply to all supportedSites
-      // Calculate this on our own since we want to limit the search to just test sites
-      const testSites = testSiteNames.map((name) => supportedSites[name]);
-      const taggedSites = filterSitesByTags(testSites, selectedTags);
+      const taggedSites = filterSitesByTags(supportedSites, selectedTags);
 
       searchDef.includedSites = taggedSites;
       searchDef.userNames = userNames;
@@ -240,6 +204,7 @@ function SearchComponent() {
 
       await searchDef.save();
 
+      handleNewSearch(search);
       console.log(search);
 
       setShowSearchIcon(false);
@@ -467,7 +432,8 @@ function SearchComponent() {
       {showHistory && (
         <History
           initialMax={3}
-          onSelect={(search) => setCurrentSearch(search)}
+          currentSearchId={currentSearch?.id}
+          onSelect={(search) => handleNewSearch(search)}
         />
       )}
 
@@ -508,7 +474,7 @@ function SearchComponent() {
                 onClick={() => setActiveTab("discovered")}
               >
                 <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                  Discovered
+                  Discovered ({currentSearch?.registeredResults?.length || 0})
                 </span>
                 <span className="d-block d-sm-none">
                   <i className="tim-icons icon-single-02" />
@@ -525,7 +491,7 @@ function SearchComponent() {
                 onClick={() => setActiveTab("unregistered")}
               >
                 <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                  Unregistered
+                  Unregistered ({currentSearch?.unregisteredResults?.length || 0})
                 </span>
                 <span className="d-block d-sm-none">
                   <i className="tim-icons icon-gift-2" />
@@ -542,7 +508,7 @@ function SearchComponent() {
                 onClick={() => setActiveTab("inconclusive")}
               >
                 <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                  Inconclusive
+                  Inconclusive ({currentSearch?.inconclusiveResults?.length || 0})
                 </span>
                 <span className="d-block d-sm-none">
                   <i className="tim-icons icon-tap-02" />
