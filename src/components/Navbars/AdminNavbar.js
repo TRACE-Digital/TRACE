@@ -49,6 +49,13 @@ function AdminNavbar(props) {
   const [color, setcolor] = useState("navbar-transparent");
   const [currentUsername, setCurrentUsername] = useState(null);
 
+  const isChrome = window.navigator.userAgent.includes('Chrome');
+  const isFirefox = window.navigator.userAgent.includes('Firefox');
+
+  let extensionUrl = 'https://addons.mozilla.org/en-US/firefox/addon/trace-digital/';
+  if (isChrome) extensionUrl = 'https://chrome.google.com/webstore/detail/TRACE/klhmocgplcpemcdfeefpaikihedmikgk';
+  if (isFirefox) extensionUrl = 'https://addons.mozilla.org/en-US/firefox/addon/trace-digital/';
+
   useEffect(() => {
     window.addEventListener("resize", updateColor);
     // Specify how to clean up after this effect:
@@ -157,9 +164,14 @@ function AdminNavbar(props) {
                   </DropdownItem>
                   <DropdownItem divider tag="li" />
                   <NavLink tag="li">
-                    <DropdownItem className="nav-item">
-                      Extension version: {window.__TRACE_EXTENSION_HOOK__?.getVersionStr() || 'Not installed'}
-                    </DropdownItem>
+                    <a href={extensionUrl} target='blank'>
+                      <DropdownItem className="nav-item">
+                        {window.__TRACE_EXTENSION_HOOK__ ?
+                          'Extension version: ' + window.__TRACE_EXTENSION_HOOK__.getVersionStr() :
+                          'Install the extension'
+                        }
+                      </DropdownItem>
+                    </a>
                   </NavLink>
                   <NavLink tag="li">
                     <DropdownItem className="nav-item" onClick={async () => {
