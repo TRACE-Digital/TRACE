@@ -24,8 +24,8 @@ import { ManualAccount, tags } from 'trace-search';
  * @returns
  */
 const AccountCard = (props) => {
-  const [isInfoEdit, setIsInfoEdit] = React.useState(false);
-  const [isTagEdit, setIsTagEdit] = React.useState(false);
+  const [isEdit, setIsEdit] = React.useState(false);
+  // const [isTagEdit, setIsTagEdit] = React.useState(false);
   const [flipped, setFlipped] = useState(false);
 
   const [siteName, setSiteName] = useState(props.account.site.name);
@@ -80,30 +80,30 @@ const AccountCard = (props) => {
     setAccountTags(selectedList);
   }
 
-  async function handleInfoSubmit(e) {
-    console.log(siteName);
-    console.log(userName);
+  async function handleSubmit(e) {
+    // console.log(siteName);
+    // console.log(userName);
     console.log(url);
-
-    // TODO: convert to manual account
-    props.account.site.name = siteName;
-    props.account.userName = userName;
-    props.account.site.url = url;
-    await props.account.save();
-  }
-
-  async function handleTagSubmit(e) {
     console.log(accountTags);
 
-    // TODO: convert to manual account
+    props.account.site.url = url;
     props.account.site.tags = accountTags;
+    // TODO: logo
+
     await props.account.save();
   }
+
+  // async function handleTagSubmit(e) {
+  //   console.log(accountTags);
+
+  //   props.account.site.tags = accountTags;
+  //   await props.account.save();
+  // }
 
   return (
     <>
       {/* INFO EDIT */}
-      {isInfoEdit && !isTagEdit &&
+      {isEdit &&
        ( <Col lg="3" key={props.account.id}>
           <Card
             className={'card-user edit-card'}
@@ -113,6 +113,8 @@ const AccountCard = (props) => {
 
               <div className="edit-info">
                 <Form>
+                {/* {props.account instanceof ManualAccount && (
+                  <>
                   <FormGroup>
                     <Label for="siteName">Site Name</Label>
                     <Input type="text" className="input" defaultValue={props.account.site.name} onChange={(e) => handleSiteName(`${e.target.value}`)}></Input>
@@ -121,17 +123,34 @@ const AccountCard = (props) => {
                     <Label for="username">Username</Label>
                     <Input type="text" className="input" defaultValue={props.account.userName} onChange={(e) => handleUserName(`${e.target.value}`)}></Input>
                   </FormGroup>
+                  </>
+                  )} */}
                   <FormGroup>
                     <Label for="siteUrl">Site URL</Label>
                     <Input type="text" className="input" defaultValue={props.account.url} onChange={(e) => handleUrl(`${e.target.value}`)}></Input>
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for="tags">Tags</Label>
+                    <Multiselect
+                      options={tags} // Options to display in the dropdown
+                      selectedValues={accountTags} // Preselected value to persist in dropdown
+                      onSelect={handleSelect} // Function will trigger on select event
+                      onRemove={handleRemove} // Function will trigger on remove event
+                      displayValue="key" // Property name to display in the dropdown options
+                      avoidHighlightFirstOption={true}
+                      showCheckbox={true}
+                      isObject={false}
+                      closeOnSelect={false}
+                      style={{optionContainer: {background: "#27293d"}, option: {fontSize: 12},  inputField: {color: "white"}}}
+                    />
                   </FormGroup>
                 </Form>
               </div>
 
               <div className="save-button">
                 <Button onClick={(e) => {
-                  setIsInfoEdit(false);
-                  handleInfoSubmit();
+                  setIsEdit(false);
+                  handleSubmit();
                 }}>
                   Save
                 </Button>
@@ -141,51 +160,9 @@ const AccountCard = (props) => {
         </Col>
        )}
 
-       {/* TAG EDIT */}
-       {isTagEdit && !isInfoEdit &&
-          ( <Col lg="3" key={props.account.id}>
-          <Card
-            className={'card-user edit-card'}
-            title={props.account.reason /* Display error for FailedAccounts */}
-          >
-            <CardBody className="card-body">
-
-              <div className="edit-info">
-                <Form>
-                  <FormGroup>
-                  <Label for="tags">Tags</Label>
-                  <Multiselect
-                    options={tags} // Options to display in the dropdown
-                    selectedValues={accountTags} // Preselected value to persist in dropdown
-                    onSelect={handleSelect} // Function will trigger on select event
-                    onRemove={handleRemove} // Function will trigger on remove event
-                    displayValue="key" // Property name to display in the dropdown options
-                    avoidHighlightFirstOption={true}
-                    showCheckbox={true}
-                    isObject={false}
-                    closeOnSelect={false}
-                    style={{optionContainer: {background: "#27293d"}, option: {fontSize: 12},  inputField: {color: "white"}}}
-                  />
-                  </FormGroup>
-                </Form>
-              </div>
-
-              <div className="save-button">
-                <Button onClick={(e) => {
-                  setIsTagEdit(false);
-                  handleTagSubmit();
-                }}>
-                  Save
-                </Button>
-              </div>
-            </CardBody>
-          </Card>
-        </Col>
-        )}
-
         {/* NOT ON EDIT */}
-        {!isInfoEdit && !isTagEdit &&
-        
+        {!isEdit &&
+  
          (<Col lg="3" key={props.account.id}>
           <ReactCardFlip
             isFlipped={props.flippable && flipped}
@@ -213,26 +190,17 @@ const AccountCard = (props) => {
                         <i className="fas fa-ellipsis-h"></i>
                       </DropdownToggle>
                       <DropdownMenu className="dropdown-menu-right">
-                        {props.account instanceof ManualAccount && (
+                        {props.account && (
                           <>
-                        <DropdownItem onClick={
-                                  (e) => {
-                                    e.stopPropagation();
-                                    setIsInfoEdit(true);
-                                  }
-                                }>
-                                  Edit Info
-                        </DropdownItem>
-                        <DropdownItem divider tag="li" />
-                        <DropdownItem onClick={
-                                  (e) => {
-                                    e.stopPropagation();
-                                    setIsTagEdit(true);
-                                  }
-                                }>
-                                  Edit Tags
-                        </DropdownItem>
-                        <DropdownItem divider tag="li" />
+                          <DropdownItem onClick={
+                                    (e) => {
+                                      e.stopPropagation();
+                                      setIsEdit(true);
+                                    }
+                                  }>
+                                    Edit
+                          </DropdownItem>
+                          <DropdownItem divider tag="li" />
                           </>
                         )}
                         <DropdownItem onClick={

@@ -688,6 +688,7 @@
 
     &.landing{
       padding-left:30px !important;
+      text-align: center;
       .start-button{
         width: 200px !important;
         margin: auto;
@@ -915,15 +916,35 @@
       }
     }
 
-    > .search-title{
-      color:$white;
+    > .trace-logo{
       text-align: center;
-      position:relative;
-      font-size: 180px;
-      font-weight: 200;
+      margin-top: 5%;
+      margin-bottom: 50px;
+    }
+
+    >.search-info{
+      color: #ffffff;
+      text-align: center;
+      position: relative;
+      font-size: 15px;
       user-select:none;
-      margin-top:30px;
-      line-height: 1;
+      font-weight: 300;
+      margin-left:25%;
+      margin-bottom:20px;
+      margin-right:25%;
+      &.landing{
+        margin: 0px !important;
+      }
+      &.heading{
+        font-size: 30px !important;
+      }
+    }
+
+    .start-button {
+      display: inline !important;
+      margin-left: 5px !important;
+      margin-right: 5px !important;
+      margin-bottom: 10px !important;
     }
 
     >.search {
@@ -935,23 +956,6 @@
         width: 700px;
         margin-bottom: 30px;
         margin-top: 5%;
-      }
-
-      >.search-info{
-        color: #ffffff;
-        position: relative;
-        font-size: 15px;
-        user-select:none;
-        font-weight: 300;
-        margin-bottom:30px;
-        margin-left:25%;
-        margin-right:25%;
-        &.landing{
-          margin: 0px !important;
-        }
-        &.heading{
-          font-size: 30px !important;
-        }
       }
     }
 
@@ -1245,7 +1249,6 @@
     .main-panel{
       > .content{
         padding-left: 130px;
-
       }
     }
 
