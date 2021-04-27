@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Form, FormGroup, Label, Input } from 'reactstrap';
 import ReactCardFlip from "react-card-flip";
 import { Multiselect } from 'multiselect-react-dropdown';
+import ConfidenceMeter from "./ConfidenceMeter"
 import {
   Card,
   CardBody,
@@ -45,7 +46,7 @@ const AccountCard = (props) => {
   }
   if (tags) {
     for (var i = 0; i < tags.length; i++) {
-      options.push({key: tags[i], id: i});
+      options.push({ key: tags[i], id: i });
     }
   }
 
@@ -104,7 +105,7 @@ const AccountCard = (props) => {
     <>
       {/* INFO EDIT */}
       {isEdit &&
-       ( <Col lg="3" key={props.account.id}>
+        (<Col lg="3" key={props.account.id}>
           <Card
             className={'card-user edit-card'}
             title={props.account.reason /* Display error for FailedAccounts */}
@@ -113,7 +114,7 @@ const AccountCard = (props) => {
 
               <div className="edit-info">
                 <Form>
-                {/* {props.account instanceof ManualAccount && (
+                  {/* {props.account instanceof ManualAccount && (
                   <>
                   <FormGroup>
                     <Label for="siteName">Site Name</Label>
@@ -141,7 +142,7 @@ const AccountCard = (props) => {
                       showCheckbox={true}
                       isObject={false}
                       closeOnSelect={false}
-                      style={{optionContainer: {background: "#27293d"}, option: {fontSize: 12},  inputField: {color: "white"}}}
+                      style={{ optionContainer: { background: "#27293d" }, option: { fontSize: 12 }, inputField: { color: "white" } }}
                     />
                   </FormGroup>
                 </Form>
@@ -158,12 +159,12 @@ const AccountCard = (props) => {
             </CardBody>
           </Card>
         </Col>
-       )}
+        )}
 
-        {/* NOT ON EDIT */}
-        {!isEdit &&
-  
-         (<Col lg="3" key={props.account.id}>
+      {/* NOT ON EDIT */}
+      {!isEdit &&
+
+        (<Col lg="3" key={props.account.id}>
           <ReactCardFlip
             isFlipped={props.flippable && flipped}
             flipSpeedBackToFront=".8"
@@ -192,15 +193,15 @@ const AccountCard = (props) => {
                       <DropdownMenu className="dropdown-menu-right">
                         {props.account && (
                           <>
-                          <DropdownItem onClick={
-                                    (e) => {
-                                      e.stopPropagation();
-                                      setIsEdit(true);
-                                    }
-                                  }>
-                                    Edit
+                            <DropdownItem onClick={
+                              (e) => {
+                                e.stopPropagation();
+                                setIsEdit(true);
+                              }
+                            }>
+                              Edit
                           </DropdownItem>
-                          <DropdownItem divider tag="li" />
+                            <DropdownItem divider tag="li" />
                           </>
                         )}
                         <DropdownItem onClick={
@@ -258,10 +259,8 @@ const AccountCard = (props) => {
                       <i className="tim-icons icon-refresh-01" style={{ color: "#DDDDDD", transform: "scaleX(-1)" }}></i>
                     </IconButton>
                   </div>)}
-
               </CardBody>
             </Card>
-
             {props.flippable && (
               <Card
                 className={'card-user site-card ' + (props.selected ? 'selected-site-card' : '')}
@@ -269,42 +268,19 @@ const AccountCard = (props) => {
               >
                 <CardBody className="card-body">
                   <h3>{props.account.site.name}</h3>
-
-                  {/* CONFIDENCE LEVEL */}
-                  {props.account.confidence > 0 && (
-                    <div className="additional-info">
-                      Confidence Level: {props.account.confidence}
-                    </div>
-                  )}
-
-                  {/* PRIVACY RATING */}
-                  <div className="additional-info">
-                    Privacy Rating - {" "}
-                    <PrivacyBadge account={props.account} service={props.account.site.name}></PrivacyBadge>
-                    <br />
+                  <div className="privacyBadge" >
+                    <PrivacyBadge account={props.account} service={props.account.site.name} />
                   </div>
+                  <h5 className="tags">{tags}</h5>
 
-                  {/* FIRST NAMES */}
-                  {firstNames.length > 0 && props.showNames && (
-                    <div className="additional-info">
-                      First Name(s) Found  - {firstNames}
-                      <br />
-                    </div>
-                  )}
 
-                  {/* LAST NAMES */}
-                  {lastNames.length > 0 && props.showNames && (
-                    <div className="additional-info">
-                      Last Name(s) Found - {lastNames}
-                      <br />
-                    </div>
-                  )}
-
-                  {/* TAGS (CATEGORIES) */}
+                  {/* NAMES */}
+                  <br />
                   <div className="additional-info">
-                    Tags - {accountTags.join(", ")}
-                    <br />
+                    {firstNames.length > 0 && props.showNames && (<p className="names">First Name(s): &nbsp; {firstNames}</p>)}
+                    {lastNames.length > 0 && props.showNames && (<p className="names">Last Name(s): &nbsp; {lastNames}</p>)}
                   </div>
+                  <br />
 
                   {/* ERROR FOR FAILED ACCOUNTS */}
                   {props.account.reason !== undefined && (
@@ -313,17 +289,27 @@ const AccountCard = (props) => {
                     </div>
                   )}
 
+                  {/* CONFIDENCE LEVEL */}
+                  <br />
+                  {props.account.confidence > 0 && (
+                    <div className="confidence">
+                      CONFIDENCE
+                      <ConfidenceMeter confidence={props.account.confidence} />
+                    </div>
+                  )}
+
                   <div className="flip-button">
                     <IconButton onClick={(e) => { e.stopPropagation(); setFlipped(false) }}>
-                      <i className="tim-icons icon-refresh-01" style={{ color: "#DDDDDD", transform: "scaleX(-1)" }}></i>
+                      <i className="tim-icons icon-refresh-01" style={{ color: "#DDDDDD", transform: "scale(0.75) scaleX(-1)" }}></i>
                     </IconButton>
                   </div>
+
                 </CardBody>
               </Card>
             )}
           </ReactCardFlip>
         </Col>
-      )}
+        )}
     </>
   );
 };
