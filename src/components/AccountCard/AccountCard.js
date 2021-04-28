@@ -305,7 +305,7 @@ const AccountCard = (props) => {
                   <div className="privacyBadge" >
                     <PrivacyBadge account={props.account} service={props.account.site.name} />
                   </div>
-                  <h5 className="tags">{props.account.site.tags}</h5>
+                  <h5 className="tags">{props.account.site.tags.join(', ')}</h5>
 
 
                   {/* NAMES */}
