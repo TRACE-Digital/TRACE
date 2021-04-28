@@ -5,7 +5,7 @@ import SiteCard from "components/SiteCard/SiteCard";
 import { GridContextProvider, GridDropZone, GridItem, swap } from "react-grid-dnd";
 import { Link } from "react-router-dom";
 import { Row, Col } from "reactstrap";
-import { Auth } from 'aws-amplify';
+import { Auth, nav } from 'aws-amplify';
 import { renderToStaticMarkup } from 'react-dom/server'
 import {
   Collapse,
@@ -38,13 +38,14 @@ const Editor = () => {
   const [heightSize, setHeightSize] = useState("");
   const [, setPlsRender] = useState(false);
   const [hasPublished, setHasPublished] = useState(false);
+  const [hasPassword, setHasPassword] = useState(false);
+  const [customUrl, setCustomUrl] = useState(null);
   const [colorScheme, setColorScheme] = useState([{
     "titleColor": "#FFFFFF",
     "backgroundColor": "#1E1D2A",
     "siteColor": "#26283A",
     "iconColor": "Default"
   }])
-
 
   /**
    * Function is called when there is a change on the site grid and updates the order
@@ -141,6 +142,31 @@ const Editor = () => {
     isLoggedIn();
   }, []);
 
+  /**
+   * Queries CouchDB to see if the current user has a published page and 
+   * updates the value of hasPublished accordingly. If they do have a 
+   * public page, it also queries whether they have a password.
+   */
+   useEffect(() => {
+     if (myProfile != null) {
+      Auth.currentUserInfo().then( async (value) => {
+        let url = 'https://76gjqug5j8.execute-api.us-east-2.amazonaws.com/prod/status?username='
+          + value.attributes.sub;
+
+        fetch(url, { method: 'GET' })
+          .then(response => response.json())
+          .then(data => {
+            myProfile.hasPublished = (data.page_is_published == "yes");
+            myProfile.hasPassword = (data.password_required == "yes");
+            myProfile.customURL = String(data.customurl);
+            myProfile.save();
+          }).then(() => {
+            setPlsRender(prev => !prev);
+          });
+      });
+    }
+  }, [myProfile]);
+
   /* Calls the API to publish the user's page */
   const publishPublicPage = (e) => {
     Auth.currentUserInfo().then(async (value) => {
@@ -153,24 +179,48 @@ const Editor = () => {
         + renderToStaticMarkup(baseContent)
         + '</body></html>';
 
-      fetch(url, {
+      let response = await fetch(url, {
         method: 'PUT',
-        headers: { 'Content-Type': 'text/html' },
         body: fetchbody
       });
 
-      alert("Your page has been published!");
+      if (response.status > 202) {
+        alert('Opps, something went wront! Please try again.')
+      } else {
+        alert("Your page has been published!");
 
-      myProfile.hasPublished = true;
-      await myProfile.save();
+        myProfile.hasPublished = true;
+        await myProfile.save();
+        setPlsRender(prev => !prev);
+      }
+    });
+  }
+
+  const unpublishPublicPage = (e) => {
+    Auth.currentUserInfo().then(async (value) => {
+  
+      let url = 'https://76gjqug5j8.execute-api.us-east-2.amazonaws.com/prod/unpublish?username=' + value.attributes.sub;
+
+      let response = await fetch(url, {
+        method: 'GET'
+      });
+
+      if (response.status == 200) {
+        alert("Your page has been unpublished!");
+        myProfile.hasPublished = false;
+        myProfile.hasPassword = false;
+        await myProfile.save();
+        setPlsRender(prev => !prev);
+      } else {
+        alert("Oops, something went wrong! Please try again.")
+      }
     });
   }
 
   const goToPublicPage = (e) => {
     if (myProfile.hasPublished) {
       Auth.currentUserInfo().then((value) => {
-        window.open('https://76gjqug5j8.execute-api.us-east-2.amazonaws.com/prod/' 
-          + (myProfile.hasPassword ? 'getpassword' : 'get')
+        window.open('https://76gjqug5j8.execute-api.us-east-2.amazonaws.com/prod/get'
           + '?username=' 
           + value.attributes.sub, '_blank');
       });
@@ -183,50 +233,96 @@ const Editor = () => {
     Auth.currentUserInfo().then( async (value) => {
       let newpassword = window.prompt("What do you want your new password to be?");
 
-      let url = 'https://76gjqug5j8.execute-api.us-east-2.amazonaws.com/prod/createpassword?username='
-        + value.attributes.sub
-        + '&password='
-        + newpassword;
+      if (newpassword != null) {
+        let url = 'https://76gjqug5j8.execute-api.us-east-2.amazonaws.com/prod/createpassword?username='
+          + value.attributes.sub
+          + '&password=' + newpassword;
+        fetch(url, {
+          method: 'PUT'
+        });
+
+        alert('Your new password has been set!');
+
+        myProfile.hasPassword = true;
+        await myProfile.save();
+        setPlsRender(prev => !prev);
+      }
+    });
+  }
+
+  const removePublicPagePassword = (e) => {
+    Auth.currentUserInfo().then( async (value) => {
+      let url = 'https://76gjqug5j8.execute-api.us-east-2.amazonaws.com/prod/removepassword?username='
+        + value.attributes.sub;
       fetch(url, {
-        method: 'PUT'
+        method: 'DELETE'
       });
 
-      alert('Your new password has been set!');
+      alert('Your password has been removed!');
 
-      myProfile.hasPassword = true;
+      myProfile.hasPassword = false;
       await myProfile.save();
+      setPlsRender(prev => !prev);
     });
   }
 
   const addCustomURL = (e) => {
     if (myProfile.hasPublished) {
       Auth.currentUserInfo().then((value) => {
-        let customurl = window.prompt("What do you want the last part of your URL to be?");
+        let customurl = window.prompt("What do you want the last part of your new URL to be?");
 
-        let url = 'https://76gjqug5j8.execute-api.us-east-2.amazonaws.com/prod/custom/create?username='
-          + value.attributes.sub
-          + '&customurl='
-          + customurl;
-        
-        fetch(url, {
-          method: 'PUT'
-        }).then(async (value) => {
-          console.log(value.status);
-
-          if (value.status == 502) {
-            alert('Sorry, this URL is already taken. Please choose a new one.');
-          } else {
-            alert('Your custom URL has been created!');
-            alert('You can visit your page at https://public.tracedigital.tk/u/' + customurl);
-          }
-
-          myProfile.hasCustomURL = true;
-          myProfile.customURL = customurl;
-          await myProfile.save;
-        });
+        if (customurl != null) {
+          let url = 'https://76gjqug5j8.execute-api.us-east-2.amazonaws.com/prod/custom/create?username='
+            + value.attributes.sub
+            + '&customurl='
+            + customurl;
+          
+          fetch(url, {
+            method: 'PUT'
+          }).then(async (value) => {
+            if (value.status == 401) {
+              alert('Sorry, this URL is already taken. Please choose a new one.');
+            } else if (value.status < 203) {
+              alert('Your custom URL has been created!');
+              alert('You can visit your page at https://public.tracedigital.tk/u/' + customurl);
+              myProfile.hasCustomURL = true;
+              myProfile.customURL = customurl;
+              await myProfile.save;
+              setPlsRender(prev => !prev);
+            } else {
+              alert('Oops, something went wrong! Please try again.')
+            }
+          });
+        }
       });
     } else {
       alert("Please publish your page before customizing your URL.")
+    }
+  }
+
+  const goToCustomUrl = (e) => {
+    if (myProfile.hasPublished) {
+      if (myProfile.customURL != null) {
+        let url_ending = myProfile.customURL;
+        window.open('https://public.tracedigital.tk/u/' + url_ending, '_blank');
+      } else {
+        alert('Please create a custom URL before navigating to it.');
+      }
+    } else {
+      alert('Please publish your page before navigating to it.');
+    }
+  }
+
+  const deleteCustomUrl = (e) => {
+    if (myProfile.hasPublished) {
+      if (myProfile.customURL != null) {
+        let url_ending = myProfile.customURL;
+        window.open('https://public.tracedigital.tk/u/' + url_ending, '_blank');
+      } else {
+        alert('Please create a custom URL before navigating to it.');
+      }
+    } else {
+      alert('Please publish your page before navigating to it.');
     }
   }
 
@@ -316,15 +412,42 @@ const Editor = () => {
               <NavLink tag="li">
                 <DropdownItem className="nav-item" onClick={publishPublicPage} style={{color: "black"}}>Publish Page</DropdownItem>
               </NavLink>
-              <NavLink tag="li">
-                <DropdownItem className="nav-item" onClick={goToPublicPage} style={{color: "black"}}>Go To Page</DropdownItem>
-              </NavLink>
-              <NavLink tag="li">
-                <DropdownItem className="nav-item" onClick={addPublicPagePassword} style={{color: "black"}}>Add Password</DropdownItem>
-              </NavLink>
-              <NavLink tag="li">
-                <DropdownItem className="nav-item" onClick={addCustomURL} style={{color: "black"}}>Customize URL</DropdownItem>
-              </NavLink>
+              {((myProfile != null) && (myProfile.hasPublished)) && <div>
+                <NavLink tag="li">
+                  <DropdownItem className="nav-item" onClick={unpublishPublicPage} style={{color: "black"}}>Unpublish Page</DropdownItem>
+                </NavLink>
+                <DropdownItem divider tag="li" />
+                <NavLink tag="li">
+                  <DropdownItem className="nav-item" onClick={goToPublicPage} style={{color: "black"}}>Go To Page</DropdownItem>
+                </NavLink>
+                <DropdownItem divider tag="li" />
+                {((myProfile == null) || (!myProfile.hasPassword)) && 
+                  <NavLink tag="li"><DropdownItem className="nav-item" onClick={addPublicPagePassword} style={{color: "black"}}>Add Password</DropdownItem></NavLink>
+                } {((myProfile != null) && (myProfile.hasPassword)) &&
+                  <div>
+                    <NavLink tag="li"><DropdownItem className="nav-item" onClick={addPublicPagePassword} style={{color: "black"}}>Change Password</DropdownItem></NavLink>
+                    <NavLink tag="li"><DropdownItem className="nav-item" onClick={removePublicPagePassword} style={{color: "black"}}>Remove Password</DropdownItem></NavLink>
+                  </div>
+                }
+                <DropdownItem divider tag="li" />
+                { ((myProfile == null) || (myProfile.customURL == 'null')) &&
+                <NavLink tag="li">
+                  <DropdownItem className="nav-item" onClick={addCustomURL} style={{color: "black"}}>Customize URL</DropdownItem>
+                </NavLink>
+                } {((myProfile != null) && (myProfile.customURL != 'null')) && 
+                  <div>
+                    <NavLink tag="li">
+                      <DropdownItem className="nav-item" onClick={addCustomURL} style={{color: "black"}}>Edit Custom URL</DropdownItem>
+                    </NavLink>
+                    <NavLink tag="li">
+                      <DropdownItem className="nav-item" onClick={goToCustomUrl} style={{color: "black"}}>Go To Custom URL</DropdownItem>
+                    </NavLink>
+                    <NavLink tag="li">
+                      <DropdownItem className="nav-item" onClick={deleteCustomUrl} style={{color: "black"}}>Delete Custom URL</DropdownItem>
+                    </NavLink>
+                  </div>
+                }
+              </div>}
             </DropdownMenu>
           </UncontrolledDropdown>
 
