@@ -244,6 +244,7 @@ code {
   display: flex;
   align-items: center;
   text-align: center;
+  cursor: default;
   color: rgba(255, 255, 255, 0.3);
 }
 .titled-separator::before,

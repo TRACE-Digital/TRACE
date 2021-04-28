@@ -13,7 +13,7 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 import { IconButton } from "@material-ui/core";
-import { ManualAccount } from 'trace-search';
+import { AutoSearchAccountAction, ManualAccount } from 'trace-search';
 
 /**
  * Displays a Card with information about the account passed in
@@ -124,14 +124,14 @@ const AccountCard = (props) => {
               <div className="test">
                 <Button
                   onClick={(e) => { e.stopPropagation(); claimAccount(props.account); }}
-                  className="claim-button"
+                  className={props.account.actionTaken === AutoSearchAccountAction.CLAIMED ? "claim-button btn-success" : "claim-button"}
                 >
                   <i className="tim-icons icon-check-2" />
                 </Button>
                 &nbsp;
                 <Button
                   onClick={(e) => { e.stopPropagation(); rejectAccount(props.account); }}
-                  className="claim-button"
+                  className={props.account.actionTaken === AutoSearchAccountAction.REJECTED ? "claim-button btn-danger" : "claim-button"}
                 >
                   <i className="tim-icons icon-simple-remove" />
                 </Button>

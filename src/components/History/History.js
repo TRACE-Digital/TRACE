@@ -61,6 +61,7 @@ const History = (props) => {
         {sortedHistory.slice(0, maxVisible).map((execution) => {
           return (
             <HistoryEntry
+              key={execution.id}
               isCurrent={execution.id === props.currentSearchId}
               execution={execution}
               onSelect={props.onSelect}
