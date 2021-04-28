@@ -200,9 +200,8 @@ function AccountCardList(props) {
 					  onDeselected={() => setSelection(prev => prev.filter(id => id !== account.id))}
           />)}
           {typeof account === "string" &&
-            <div key={account} className='category-divider'>
+            <div key={account} className='titled-separator' style={{ marginBottom: '20px' }}>
               <h3>{account}</h3>
-              <hr/>
             </div>}
           </>
         ))}

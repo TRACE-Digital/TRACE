@@ -51,7 +51,9 @@ function Login() {
 
   useEffect(() => {
     window.addEventListener('popstate', (popState) => {
-      setIsLogin(popState.state.includes('login'));
+      if (popState.state && typeof popState.state === 'string') {
+        setIsLogin(popState.state.includes('login'));
+      }
     });
   }, []);
 
