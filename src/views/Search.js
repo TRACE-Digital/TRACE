@@ -16,6 +16,8 @@ import {
 import { Button, ButtonGroup, Row, Col } from "reactstrap";
 import AccountCardList from "components/AccountCardList/AccountCardList.js";
 
+import mainLogo from '../assets/img/trace.png';
+
 function SearchComponent() {
   const [currentSearch, setCurrentSearch] = useState(null);
   const [userNames, setUserNames] = useState([]);
@@ -238,7 +240,9 @@ function SearchComponent() {
     <div className="content">
       {currentSearch === null && (
         <>
-          <div className="search-title">TRACE</div>
+          <div className="trace-logo">
+            <img src={mainLogo} alt="trace-logo" width="700"></img>
+          </div>
           <div className="search-info">
             Find your digital footprint. Manage your online presence. Our
             service allows you to increase your social media engagement while
