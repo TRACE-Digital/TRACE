@@ -16,130 +16,26 @@
 
 */
 import React, { useEffect, useState, } from "react";
-<<<<<<< Updated upstream
-// react plugin used to create charts
-import { Line } from "react-chartjs-2";
-=======
->>>>>>> Stashed changes
 import { ProfilePage } from 'trace-search';
 import Graph from "components/Graph/Graph.js";
-import axios from "axios";
 
 // reactstrap components
 import {
-  Button,
   Card,
   CardHeader,
   CardBody,
   CardTitle,
+  Row,
+  Col,
   Dropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Row,
-  Col,
 } from "reactstrap";
 
 function Analytics(props) {
   const [page, setPage] = useState(null);
-  const [timeDropdownOpen, setTimeDropdownOpen] = useState(false);
-  const [totalGraph, setTotalGraph] = useState("1 Year");
 
-
-  const toggleTimeDropdown = () => setTimeDropdownOpen((prevState) => !prevState);
-
-  async function fetchData(id) {
-
-    try {
-      await axios.post(
-
-      );
-    } catch (error) {
-      console.log(error);
-    }
-
-    // fetch("https://api.example.com/items")
-    //   .then(res => res.json())
-    //   .then(
-    //     (result) => {
-    //       this.setState({
-    //         isLoaded: true,
-    //         items: result.items
-    //       });
-    //     },
-    //     // Note: it's important to handle errors here
-    //     // instead of a catch() block so that we don't swallow
-    //     // exceptions from actual bugs in components.
-    //     (error) => {
-    //       this.setState({
-    //         isLoaded: true,
-    //         error
-    //       });
-    //     }
-    //   )
-
-    const resp = {
-      "2021-04-04": [],
-      "2021-04-05": [],
-      "2021-04-06": [],
-      "2021-04-07": [],
-      "2021-04-08": [],
-      "2021-04-09": [
-          {
-              "label": "/username",
-              "nb_visits": 1,
-              "nb_uniq_visitors": 1,
-              "nb_hits": 5,
-              "sum_time_spent": 2132,
-              "exit_nb_uniq_visitors": "1",
-              "exit_nb_visits": "1",
-              "avg_time_on_page": 426,
-              "bounce_rate": "0%",
-              "exit_rate": "100%",
-              "url": "https://public.tracedigital.tk/username"
-          }
-      ],
-      "2021-04-10": [
-          {
-              "label": "/username",
-              "nb_visits": 1,
-              "nb_uniq_visitors": 1,
-              "nb_hits": 1,
-              "sum_time_spent": 0,
-              "entry_nb_uniq_visitors": "1",
-              "entry_nb_visits": "1",
-              "entry_nb_actions": "1",
-              "entry_sum_visit_length": "0",
-              "entry_bounce_count": "1",
-              "exit_nb_uniq_visitors": "1",
-              "exit_nb_visits": "1",
-              "avg_time_on_page": 0,
-              "bounce_rate": "100%",
-              "exit_rate": "100%",
-              "url": "https://public.tracedigital.tk/username"
-          }
-      ]
-  };
-
-  const graphData = [];
-
-  for (const key in resp) {
-    if (resp.hasOwnProperty(key)) {
-        if (resp[key].length !== 0) {
-          graphData.push(resp[key][0].nb_hits);
-        }
-        else {
-          graphData.push(0);
-        }
-
-    }
-  }
-
-    return graphData;
-  }
-
-  // Memoise (if page renders too many times)
-  // https://rossbulat.medium.com/how-to-memoize-in-react-3d20cbcd2b6e
 
   useEffect(() => {
     (async () => {
@@ -149,52 +45,29 @@ function Analytics(props) {
       } else {
         setPage(null);
       }
-      setBgChartData("data1");
     })();
   }, []);
-
-  console.log(page);
 
   return (
     <>
       <div className="content">
         <Row>
-          <Col xs="12">
+          <Col lg="12">
             <Card className="card-chart">
               <CardHeader>
                 <Row>
                   <Col className="text-left" sm="6">
-                    <h5 className="card-category">Public Profile Visitors</h5>
-                    <CardTitle tag="h2">123 Total Visitors</CardTitle>
-                  </Col>
-                  <Col sm="6">
-                    <Dropdown isOpen={timeDropdownOpen} toggle={toggleTimeDropdown} style={{display: "inline", marginRight: "10px"}}>
-                      <DropdownToggle caret>{totalGraph}
-                        <b className="caret d-none d-lg-block d-xl-block" style={{marginLeft: "-15px", marginTop: "-11px"}} />
-                      </DropdownToggle>
-                      <DropdownMenu style={{marginTop: "15px"}}>
-                        <DropdownItem onClick={() => setTotalGraph("1 Month")}>
-                          1 Month
-                        </DropdownItem>
-                        <DropdownItem divider tag="li" />
-                        <DropdownItem onClick={() => setTotalGraph("3 Months")}>
-                          3 Months
-                        </DropdownItem>
-                        <DropdownItem divider tag="li" />
-                        <DropdownItem onClick={() => setTotalGraph("6 Months")}>
-                          6 Months
-                        </DropdownItem>
-                        <DropdownItem divider tag="li" />
-                        <DropdownItem onClick={() => setTotalGraph("1 Year")}>
-                          1 Year
-                        </DropdownItem>
-                      </DropdownMenu>
-                    </Dropdown>
+                    <h5 className="card-category">Public Profile</h5>
+                    <CardTitle tag="h2">[Data] Visitors</CardTitle>
                   </Col>
                 </Row>
               </CardHeader>
               <CardBody>
-                <Graph dataLabel="Visitors" fetchData={() => fetchData("id")}/>
+                <GraphControl
+                  dataLabel="Visitors"
+                  idSite="1"
+                  pageUrl=""
+                />
               </CardBody>
             </Card>
           </Col>
@@ -202,30 +75,71 @@ function Analytics(props) {
         <Row>
           {/* Map here */}
           {page && page.accounts.map((account) => (
-             <Col lg="4">
+             <Col lg="4" key={account.id}>
               <Card className="card-chart">
                 <CardHeader>
-                  <h5 className="card-category">{account.site.name}</h5>
+                  {/* <h5 className="card-category">[Data] Interactions</h5> */}
                   <CardTitle tag="h3">
-                    <Button style={{float: "right"}}>6 Months
-                      <b className="caret d-none d-lg-block d-xl-block" style={{marginLeft: "-15px", marginTop: "-11px"}} />
-                    </Button>
-                    <i className="tim-icons icon-bell-55 text-info" /> 44 Visitors
+                    <i className="tim-icons icon-single-02" style={{paddingRight: "5px"}}/>
+                    {account.site.name}
+                    <br/>
+                    <a href={account.url}> @{account.userName}</a>
                   </CardTitle>
                 </CardHeader>
                 <CardBody>
-                  <div className="chart-area" >
-                    <Graph
-                      dataLabel="Link Clicks"
-                      fetchData={() => fetchData("id")}
-                    />
-                  </div>
+                  <GraphControl
+                    dataLabel="Clicks"
+                    idSite="1"
+                    pageUrl={`${account.site.name}/${account.userName}`}
+                  />
                 </CardBody>
               </Card>
             </Col>
           ))}
         </Row>
       </div>
+    </>
+  );
+}
+
+function GraphControl(props) {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
+  const [interval, setInterval] = useState("1 Year");
+
+  return(
+    <>
+      <div className="chart-area" >
+        <Graph
+          dataLabel={props.dataLabel}
+          idSite={props.idSite}
+          pageUrl={props.pageUrl}
+          interval={interval}
+        />
+        <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown} style={{display: "inline", marginRight: "10px", paddingTop: "10px"}}>
+          <DropdownToggle caret>{interval}
+            <b className="caret d-none d-lg-block d-xl-block" style={{marginLeft: "-15px", marginTop: "-11px"}} />
+          </DropdownToggle>
+          <DropdownMenu style={{marginTop: "15px"}}>
+            <DropdownItem onClick={() => setInterval("1 Week")}>
+              1 Week
+            </DropdownItem>
+            <DropdownItem divider tag="li" />
+            <DropdownItem onClick={() => setInterval("1 Month")}>
+              1 Month
+            </DropdownItem>
+            <DropdownItem divider tag="li" />
+            <DropdownItem onClick={() => setInterval("6 Months")}>
+              6 Months
+            </DropdownItem>
+            <DropdownItem divider tag="li" />
+            <DropdownItem onClick={() => setInterval("1 Year")}>
+              1 Year
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </div>
+
     </>
   );
 }

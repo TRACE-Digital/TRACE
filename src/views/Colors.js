@@ -247,29 +247,6 @@ function Colors(props) {
                         <Row>
                             <Col style={{"padding-right":"0px"}}>
                                 <div className="options">
-<<<<<<< HEAD
-                                    <div id="title"
-                                        className="myButton"
-                                        style={currentButton === "Title" ?
-                                            {"box-shadow": "0 0 6px #ba54fa", backgroundColor: `${titleColor}`, color: "white"} :
-                                            { backgroundColor: `${titleColor}`, color: "white"}}
-                                        onClick={handleClick}>
-                                            Title Color
-                                    </div>
-                                    <div id="background"
-                                        className="myButton"
-                                        style={currentButton === "Background" ?
-                                            {"box-shadow": "0 0 6px #ba54fa", backgroundColor: `${backColor}`, color: "white"} :
-                                            { backgroundColor: `${backColor}`, color: "white"}}
-                                        onClick={handleClick}>
-                                            Background Color
-                                    </div>
-                                    <div id="site"
-                                        className="myButton"
-                                        style={currentButton === "Site" ?
-                                            { "box-shadow": "0 0 6px #ba54fa", backgroundColor: `${siteColor}`, color: "white"} :
-                                            {backgroundColor: `${siteColor}`, color: "white"}}
-=======
                                     <div id="title"
                                         className="myButton"
                                         style={currentButton == "Title" ?
@@ -297,26 +274,10 @@ function Colors(props) {
                                             color: (`${siteColor}` == "#FFFFFF" || `${siteColor}` == "#ffffff" ?  "black" :  "white")} :
                                             {backgroundColor: `${siteColor}`,
                                             color: (`${backColor}` == "#FFFFFF" || `${backColor}` == "#ffffff" ?  "black" :  "white")}}
->>>>>>> 9574e8bf7c926a7dd1e70598ae303cd55f513fee
                                         onClick={handleClick}>
                                             Site Color
                                     </div>
                                     <div className="two-icon-buttons">
-<<<<<<< HEAD
-                                        <div id="defaultIcon"
-                                            className="company-colors"
-                                            style={currentButton === "Default Icon" ?
-                                                {"box-shadow": "0 0 6px #ba54fa", backgroundColor: `#ba54fa`, color: "white" } :
-                                                { backgroundColor: `grey`, color: "white"}}
-                                            onClick={handleDefaultIcon}>
-                                                Default Icon
-                                        </div>
-                                        <div id="customIcon"
-                                            className="custom-colors"
-                                            style={currentButton === "Custom Icon" ?
-                                                {"box-shadow": "0 0 6px #ba54fa", backgroundColor: `${iconColor}`, color: "white" } :
-                                                {backgroundColor: `grey`, color: "white"}}
-=======
                                         <div id="defaultIcon"
                                             className="company-colors"
                                             style={currentButton == "Default Icon" ?
@@ -330,7 +291,6 @@ function Colors(props) {
                                             style={currentButton == "Custom Icon"?
                                                 {"box-shadow": "0 0 6px #ba54fa", backgroundColor: `${iconColor}`, color: "white" } :
                                                 {backgroundColor: (`${colorProps[0].iconColor}` != "Default" ? `${colorProps[0].iconColor}` : "grey"), color: "white"}}
->>>>>>> 9574e8bf7c926a7dd1e70598ae303cd55f513fee
                                             onClick={handleCustomIcon}>
                                                 Custom Icon
                                         </div>

@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { Auth } from 'aws-amplify';
 import { renderToStaticMarkup } from 'react-dom/server'
 import {
+  Col,
   Collapse,
   DropdownToggle,
   DropdownMenu,
@@ -21,6 +22,7 @@ import {
   Modal,
   NavbarToggler,
   ModalHeader,
+  Row,
 } from "reactstrap";
 
 
@@ -142,7 +144,7 @@ const Editor = () => {
   /* Calls the API to publish the user's page */
   const publishPublicPage = (e) => {
     Auth.currentUserInfo().then(async (value) => {
-  
+
       let url = 'https://76gjqug5j8.execute-api.us-east-2.amazonaws.com/prod/update?username=' + value.attributes.sub;
       let csslink = 'https://tracedigital.tk/static/css/main.2e0404d2.chunk.css';
       let fetchbody = '<!DOCTYPE html><html><head><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"><link href="'
@@ -167,9 +169,9 @@ const Editor = () => {
   const goToPublicPage = (e) => {
     if (myProfile.hasPublished) {
       Auth.currentUserInfo().then((value) => {
-        window.open('https://76gjqug5j8.execute-api.us-east-2.amazonaws.com/prod/' 
+        window.open('https://76gjqug5j8.execute-api.us-east-2.amazonaws.com/prod/'
           + (myProfile.hasPassword ? 'getpassword' : 'get')
-          + '?username=' 
+          + '?username='
           + value.attributes.sub, '_blank');
       });
     } else {
@@ -205,7 +207,7 @@ const Editor = () => {
           + value.attributes.sub
           + '&customurl='
           + customurl;
-        
+
         fetch(url, {
           method: 'PUT'
         }).then(async (value) => {
@@ -229,7 +231,7 @@ const Editor = () => {
   }
 
   /**
-   * Monitors for the profile page sites 
+   * Monitors for the profile page sites
    */
   useEffect(() => {
 
