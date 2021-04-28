@@ -33,7 +33,6 @@ const testSiteNames = [
 ];
 
 function SearchComponent() {
-  const [isVisible, setVisible] = useState(false);
   const [keywordsEntered, setKeywordsEntered] = useState(false);
   const [tagsEntered, setTagsEntered] = useState(false);
   const [userNames, setUserNames] = useState([]);
@@ -43,7 +42,13 @@ function SearchComponent() {
   const [categories, setCategories] = useState(tags.slice());
   const [activeTab, setActiveTab] = useState("discovered");
   const [currentSearch, setCurrentSearch] = useState(null);
-  const [historyVisible, setHistoryVisible] = useState(false);
+  const [showRefine, setShowRefine] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [showResume, setShowResume] = useState(false);
+  const [showCancel, setShowCancel] = useState(true);
+  const [showPause, setShowPause] = useState(true);
+  const [showClear, setShowClear] = useState(false); // used to show clear button if search has been cancelled
+  const [showSearchIcon, setShowSearchIcon] = useState(true);
   const [, setPlsRender] = React.useState(false);
 
   // Register for changes to any search results
@@ -93,16 +98,40 @@ function SearchComponent() {
   }, [currentSearch]);
 
   const handleRefineClick = () => {
-    setVisible(!isVisible);
+    setShowRefine(!showRefine);
   };
 
   const handleHistoryClick = () => {
-    setHistoryVisible(!historyVisible);
+    setShowHistory(!showHistory);
   };
 
   const handleCancelClick = async () => {
+    setShowSearchIcon(true);
+    setShowResume(false);
+    setShowPause(false);
+    setShowCancel(false);
+    setShowClear(true);
     await currentSearch.cancel();
-    // TODO: await handleClearClick() ??
+  };
+
+  const handleResumeClick = async () => {
+    setShowSearchIcon(false);
+    setShowResume(false);
+    setShowPause(true);
+    setShowCancel(true);
+    setShowClear(false);
+
+    await currentSearch.resume();
+  };
+
+  const handlePauseClick = async () => {
+    setShowSearchIcon(true);
+    setShowPause(false);
+    setShowResume(true);
+    setShowCancel(true);
+    setShowClear(false);
+
+    await currentSearch.pause();
   };
 
   /**
@@ -111,6 +140,7 @@ function SearchComponent() {
    * (if a definition is present).
    */
   const handleClearClick = async () => {
+    setShowClear(false);
     // Clear old results
     setProgress(-1);
     if (currentSearch) {
@@ -210,6 +240,14 @@ function SearchComponent() {
       await searchDef.save();
 
       console.log(search);
+
+      setShowSearchIcon(false);
+      setShowResume(false);
+      setShowCancel(true);
+      setShowPause(true);
+      setShowClear(false);
+      setShowHistory(false);
+      setShowRefine(false);
       await search.start();
     }
   }
@@ -284,7 +322,40 @@ function SearchComponent() {
         </div>
 
         <div className="four">
-          <i onClick={submitSearch} className="fas fa-search"></i>
+          {/* SEARCH */}
+          {showSearchIcon && (
+            <i className="tim-icons icon-zoom-split" onClick={submitSearch} />
+          )}
+          {/* RESUME */}
+          {progress > 0 && progress < 100 && showResume && (
+            <>
+              &nbsp; &nbsp;
+              <i
+                className="tim-icons icon-triangle-right-17"
+                onClick={handleResumeClick}
+              />
+            </>
+          )}
+          {/* PAUSE */}
+          {progress > 0 && progress < 100 && showPause && (
+            <>
+              &nbsp; &nbsp;
+              <i
+                className="tim-icons icon-button-pause"
+                onClick={handlePauseClick}
+              />
+            </>
+          )}
+          {/* CANCEL */}
+          {progress > 0 && progress < 100 && showCancel && (
+            <>
+              &nbsp; &nbsp;
+              <i
+                className="tim-icons icon-simple-remove"
+                onClick={handleCancelClick}
+              />
+            </>
+          )}
         </div>
       </div>
 
@@ -301,20 +372,15 @@ function SearchComponent() {
         </span>
       </div>
       <div className="refine-search">
-        {progress > 0 && progress < 100 && (
-          <span className="the-text cancel" onClick={handleCancelClick}>
-            cancel
-          </span>
-        )}
-        {progress === 100 && (
+        {(progress === 100 || showClear) && (
           <span className="the-text cancel" onClick={handleClearClick}>
-            clear
+            clear results
           </span>
         )}
       </div>
 
       {/* REFINE SEARCH */}
-      <div className={isVisible ? "dropdownVis" : "dropdownNotVis"}>
+      <div className={showRefine ? "dropdownVis" : "dropdownNotVis"}>
         {/* Search categories section of refine dropdown goes here */}
         <h1>CATEGORIES</h1>
         <Row>
@@ -395,7 +461,12 @@ function SearchComponent() {
       </div>
 
       {/* HISTORY */}
-      {historyVisible && <History initialMax={3} onSelect={ (search) => setCurrentSearch(search) }/>}
+      {showHistory && (
+        <History
+          initialMax={3}
+          onSelect={(search) => setCurrentSearch(search)}
+        />
+      )}
 
       <div
         className={
