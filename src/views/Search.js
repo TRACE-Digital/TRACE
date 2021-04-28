@@ -41,6 +41,7 @@ function SearchComponent() {
   useEffect(() => {
     const triggerRender = () => {
       setProgress(currentSearch?.progress || -1);
+      setPlsRender(prev => !prev);
     };
 
     ThirdPartyAccount.resultCache.events.on('change', triggerRender);
@@ -494,6 +495,23 @@ function SearchComponent() {
                   <i className="tim-icons icon-tap-02" />
                 </span>
               </Button>
+              <Button
+                color="info"
+                id="2"
+                size="md"
+                tag="label"
+                className={classNames("btn-simple", {
+                  active: activeTab === "evaluated",
+                })}
+                onClick={() => setActiveTab("evaluated")}
+              >
+                <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
+                  Evaluated ({currentSearch?.evaluatedResults?.length || 0})
+                </span>
+                <span className="d-block d-sm-none">
+                  <i className="tim-icons icon-tap-02" />
+                </span>
+              </Button>
             </ButtonGroup>
             <br />
             <br />
@@ -525,6 +543,17 @@ function SearchComponent() {
             <AccountCardList
               headerText="Inconclusive Accounts"
               accounts={currentSearch?.inconclusiveResults}
+              selectable={true}
+              actionable={true}
+              flippable={true}
+              showNames={true}
+              showTripleDot={false}
+            />
+          )}
+          {activeTab === "evaluated" && (
+            <AccountCardList
+              headerText="Claimed/Rejected Accounts"
+              accounts={currentSearch?.evaluatedResults}
               selectable={true}
               actionable={true}
               flippable={true}
