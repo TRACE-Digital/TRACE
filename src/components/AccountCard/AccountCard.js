@@ -16,6 +16,7 @@ import {
 } from "reactstrap";
 import { IconButton } from "@material-ui/core";
 import { ManualAccount, tags } from 'trace-search';
+import fontAwesomeClasses from '../../assets/fonts/font-awesome.json';
 // import { faLessThanEqual } from "@fortawesome/free-solid-svg-icons";
 
 /**
@@ -33,10 +34,12 @@ const AccountCard = (props) => {
   const [userName, setUserName] = useState(props.account.userName);
   const [url, setUrl] = useState(props.account.url);
   const [accountTags, setAccountTags] = useState(props.account.site.tags);
+  const [logoClass, setLogoClass] = useState(props.account.site.logoClass);
 
   let firstNames = "";
   let lastNames = "";
   let options = [];
+  let logos = [];
 
   if (props.account.matchedFirstNames) {
     firstNames = props.account.matchedFirstNames.join(", ");
@@ -47,6 +50,11 @@ const AccountCard = (props) => {
   if (tags) {
     for (var i = 0; i < tags.length; i++) {
       options.push({ key: tags[i], id: i });
+    }
+  }
+  if (fontAwesomeClasses) {
+    for (const [key, value] of Object.entries(fontAwesomeClasses)) {
+      logos.push({"key": key, "value": value});
     }
   }
 
@@ -73,12 +81,21 @@ const AccountCard = (props) => {
     setUrl(e);
   }
 
-  const handleSelect = (selectedList) => {
+  const handleTagSelect = (selectedList) => {
     setAccountTags(selectedList);
   }
 
-  const handleRemove = (selectedList) => {
+  const handleTagRemove = (selectedList) => {
     setAccountTags(selectedList);
+  }
+
+  const handleLogoSelect = (selectedLogo) => {
+    console.log(selectedLogo[0].value);
+    setLogoClass(selectedLogo[0].value);
+  }
+
+  const handleLogoRemove = () => {
+    setLogoClass(props.account.site.logoClass);
   }
 
   async function handleSubmit(e) {
@@ -86,10 +103,11 @@ const AccountCard = (props) => {
     // console.log(userName);
     console.log(url);
     console.log(accountTags);
+    console.log(logoClass);
 
     props.account.site.url = url;
     props.account.site.tags = accountTags;
-    // TODO: logo
+    props.account.site.logoClass = logoClass;
 
     await props.account.save();
   }
@@ -131,18 +149,32 @@ const AccountCard = (props) => {
                     <Input type="text" className="input" defaultValue={props.account.url} onChange={(e) => handleUrl(`${e.target.value}`)}></Input>
                   </FormGroup>
                   <FormGroup>
-                    <Label for="tags">Tags</Label>
+                    <Label for="tags">Tags (select multiple)</Label>
                     <Multiselect
                       options={tags} // Options to display in the dropdown
                       selectedValues={accountTags} // Preselected value to persist in dropdown
-                      onSelect={handleSelect} // Function will trigger on select event
-                      onRemove={handleRemove} // Function will trigger on remove event
+                      onSelect={handleTagSelect} // Function will trigger on select event
+                      onRemove={handleTagRemove} // Function will trigger on remove event
                       displayValue="key" // Property name to display in the dropdown options
                       avoidHighlightFirstOption={true}
                       showCheckbox={true}
                       isObject={false}
-                      closeOnSelect={false}
+                      closeIcon={"close"}
                       style={{ optionContainer: { background: "#27293d" }, option: { fontSize: 12 }, inputField: { color: "white" } }}
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for="logos">Logos (select one)</Label>
+                    <Multiselect
+                      options={logos} // Options to display in the dropdown
+                      onSelect={handleLogoSelect} // Function will trigger on select event
+                      onRemove={handleLogoRemove} // Function will trigger on remove event
+                      displayValue="key" // Property name to display in the dropdown options
+                      avoidHighlightFirstOption={true}
+                      showCheckbox={true}
+                      selectionLimit={1}
+                      closeIcon={"close"}
+                      style={{ optionContainer: { background: "#27293d" }, searchBox: { color: "white" }, option: { fontSize: 12 }, inputField: { color: "white" } }}
                     />
                   </FormGroup>
                 </Form>
@@ -261,6 +293,8 @@ const AccountCard = (props) => {
                   </div>)}
               </CardBody>
             </Card>
+
+            {/* BACK OF CARD */}
             {props.flippable && (
               <Card
                 className={'card-user site-card ' + (props.selected ? 'selected-site-card' : '')}
@@ -271,7 +305,7 @@ const AccountCard = (props) => {
                   <div className="privacyBadge" >
                     <PrivacyBadge account={props.account} service={props.account.site.name} />
                   </div>
-                  <h5 className="tags">{tags}</h5>
+                  <h5 className="tags">{props.account.site.tags}</h5>
 
 
                   {/* NAMES */}
