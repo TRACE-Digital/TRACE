@@ -127,15 +127,6 @@ function Landing() {
           <img src={traceExtAdd} alt="trace-ext-add-site" width="300" height="400" className="ext-img"></img>
           <img src={traceExtPassword} alt="trace-ext-password" width="300" height="400" className="ext-img"></img>
           <br />
-          <a href="https://chrome.google.com/webstore/category/extensions" target="_blank" rel="noreferrer">
-            <Button
-              className="install-button"
-              block
-              color="secondary"
-            >
-              Chrome
-          </Button>
-          </a>
           <a href="https://addons.mozilla.org/en-US/firefox/extensions/" target="_blank" rel="noreferrer">
             <Button
               className="install-button"
@@ -145,6 +136,15 @@ function Landing() {
               Firefox
           </Button>
           </a>
+          <a href="https://chrome.google.com/webstore/detail/trace/klhmocgplcpemcdfeefpaikihedmikgk?hl=en&authuser=2" target="_blank" rel="noreferrer">
+            <Button
+              className="install-button"
+              block
+              color="secondary"
+            >
+              Chrome
+          </Button>
+          </a>
         </div>
 
         <Navbar variant="dark" className="footer">
@@ -152,7 +152,7 @@ function Landing() {
             <Col>
                 <h4>Browser extensions</h4>
                 <p><a href="https://addons.mozilla.org/en-US/firefox/extensions/" target="_blank" rel="noreferrer">Firefox</a></p>
-                <p><a href="https://chrome.google.com/webstore/category/extensions" target="_blank" rel="noreferrer">Chrome</a></p>
+                <p><a href="https://chrome.google.com/webstore/detail/trace/klhmocgplcpemcdfeefpaikihedmikgk?hl=en&authuser=2" target="_blank" rel="noreferrer">Chrome</a></p>
             </Col>
             <Col>
                 <h4>Contact Us</h4>
