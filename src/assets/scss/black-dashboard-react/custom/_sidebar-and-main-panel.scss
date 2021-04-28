@@ -315,10 +315,6 @@
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     }
 
-    a{
-      // font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    }
-
     .simple-text{
       // text-align: center;
       text-transform: uppercase;
@@ -692,6 +688,7 @@
 
     &.landing{
       padding-left:30px !important;
+      text-align: center;
       .start-button{
         width: 200px !important;
         margin: auto;
@@ -704,7 +701,7 @@
         float: right;
       }
     }
-
+    
     >.instructions {
       text-align: center;
       margin-bottom: 20px;
@@ -970,15 +967,10 @@
       }
     }
 
-    > .search-title{
-      color:$white;
+    > .trace-logo{
       text-align: center;
-      position:relative;
-      font-size: 180px;
-      font-weight: 200;
-      user-select:none;
-      margin-top:30px;
-      line-height: 1;
+      margin-top: 5%;
+      margin-bottom: 50px;
     }
 
     >.search-info{
@@ -996,6 +988,25 @@
       }
       &.heading{
         font-size: 30px !important;
+      }
+    }
+
+    .start-button {
+      display: inline !important;
+      margin-left: 5px !important;
+      margin-right: 5px !important;
+      margin-bottom: 10px !important;
+    }
+
+    >.search {
+      text-align: center;
+      width: 1100px;
+      margin: 0 auto;
+
+      .logo {
+        width: 700px;
+        margin-bottom: 30px;
+        margin-top: 5%;
       }
     }
 
@@ -1289,7 +1300,6 @@
     .main-panel{
       > .content{
         padding-left: 130px;
-
       }
     }
 

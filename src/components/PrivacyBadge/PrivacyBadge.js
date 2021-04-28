@@ -14,6 +14,14 @@ import none from './privacy_badges/false.png';
 
 export default function PrivacyBadge(props) {
 
+  // Disable this for now until we can reduce the number of requests that we send to ToSDR;
+  return (
+    <>
+      {/* <a href={`https://tosdr.org/en/service/${siteId}`} target="_blank" rel="noreferrer">{grade}</a> */}
+      {getLogo(`https://tosdr.org/en/service/${props.account.site.name}`, 'none')}
+    </>
+  );
+
   const [siteId, setSiteId] = useState(props.account.site.name);
   const [grade, setGrade] = useState('Loading...')
 
