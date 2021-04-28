@@ -687,12 +687,31 @@
     }
 
     &.landing{
-      padding-left:30px !important;
+      padding: 0px !important;
       text-align: center;
       .start-button{
         width: 200px !important;
-        margin: auto;
+        margin: 20px;
       }
+    }
+
+    >.landing-header {
+      background-color: black;
+      display: flex;
+      flex-direction: column;
+      height: 350px;
+      justify-content: center;
+      padding: 40px;
+
+      .trace-logo {
+        margin-top: 0px !important;
+        margin-bottom: 50px !important;
+        text-align: left;
+      }
+    }
+
+    >.landing-header p {
+      font-size: 25px;
     }
 
     >.header {
@@ -701,7 +720,7 @@
         float: right;
       }
     }
-    
+
     >.instructions {
       text-align: center;
       margin-bottom: 20px;
@@ -936,6 +955,7 @@
         margin: 0px !important;
       }
       &.heading{
+        margin-top: 30px !important;
         font-size: 30px !important;
       }
     }

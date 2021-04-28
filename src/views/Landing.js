@@ -1,21 +1,48 @@
   
 // reactstrap components
 
-import { Button } from 'reactstrap';
+import { Button, Card, CardBody, CardText, CardTitle, CardImg } from 'reactstrap';
 import { NavLink } from "react-router-dom";
 
 import mainLogo from '../assets/img/trace.png';
 import traceExt from '../assets/img/trace-ext.png';
+import landingImg from '../assets/img/Landing.jpg';
 
 function Landing() {
   return (
     <div className="main-panel">
       <div className="content landing">
-      <div className="trace-logo">
-        <img src={mainLogo} alt="trace-logo" width="700"></img>
+      <div className="landing-header">
+        <div className="trace-logo">
+          <img src={mainLogo} alt="trace-logo" width="150"></img>
+        </div>
+        <p>Find your digital footprint. Manage your online presence. <br/> Sync your information or work locally.</p>
+        <NavLink to="/search">
+          <Button
+            className="start-button"
+            block
+            color="primary"
+          >
+            Get Started
+          </Button>
+        </NavLink>
       </div>
-      <div className="search-info">Find your digital footprint. Manage your online presence. Our service allows you to increase your social media engagement while keeping your privacy a priority. Sync your information or work locally.</div>
-      <div className="search-info heading">What We Offer</div>
+      {/* <div className="trace-logo">
+        <img src={mainLogo} alt="trace-logo" width="200"></img>
+      </div> */}
+      <img src={landingImg} alt="landing-img" width="100%"></img>
+      Photo by <a href="https://unsplash.com/@tma?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Tianyi Ma</a> on <a href="https://unsplash.com/s/photos/computer?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
+      
+      <div className="search-info heading">WHAT WE OFFER</div>
+
+      <Card>
+        <CardBody>
+          <CardTitle tag="h5">Privacy</CardTitle>
+          <CardText>We would never tell your secrets. We promise. ;)</CardText>
+          <Button>Button</Button>
+        </CardBody>
+      </Card>
+
       <div className="search-info">TRACE offers a privacy-focused approach to manage your online presence. Use the search page to add accounts to your collection, then use the analytics page to monitor data trends on your accounts' activity.</div>
       <div className="search-info heading">Privacy</div>
       <div className="search-info">We would never tell your secrets. We promise. ;)</div>
@@ -42,16 +69,6 @@ function Landing() {
         </Button>
       </a>
       <div className="search-info">The extension allows you to add sites manually from anywhere and includes helpful privacy tools like HaveIBeenPwnd and password generators.</div>
-      <div className="search-info">Then click the button below to get started!</div>
-      <NavLink to="/search">
-        <Button
-          className="start-button"
-          block
-          color="primary"
-        >
-          Get Started
-        </Button>
-      </NavLink>
     </div>
   </div>
   );
