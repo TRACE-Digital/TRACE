@@ -414,9 +414,9 @@ const Editor = () => {
                   id="items"
                   boxesPerRow={1}
                   rowHeight={90}
-                  style={{"margin-top":"20px", "user-select":"none", height: `${(heightSize / 3) * 330}px` , "margin-left":"500px"}}>
+                  style={{"margin-top":"20px","user-select":"none", height: `${(heightSize / 3) * 330}px` , "margin-left":"500px"}}>
                   {myProfile.accounts.map(item => (
-                    <GridItem key={item.id}>
+                    <GridItem style={{"width":"auto"}}key={item.id}>
                       <div
                         className="siteTd" style={{ backgroundColor: `${colorScheme[0].siteColor}`, border:`${colorScheme[0].siteColor}` }}>
                         <Row style={{"white-space":"nowrap", "overflow-x":"auto"}}>
@@ -439,7 +439,6 @@ const Editor = () => {
                                        item.site.urlMain ||
                                        item.site.url}
                                    </a>
-
                                    </div>
                                  </Col>     
 
