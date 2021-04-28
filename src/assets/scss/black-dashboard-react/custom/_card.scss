@@ -21,7 +21,6 @@
     margin-bottom: 30px;
     box-shadow: $box-shadow;
 
-
     label{
       color: rgba($white, 0.6);
     }
@@ -32,6 +31,27 @@
 
     .card-body{
       padding: 15px;
+      display: flex;
+      flex-direction: column;
+      max-height: 314.9px;
+
+      .edit-info {
+        height: 314.9px;
+        overflow-y: scroll;
+      }
+
+      .input {
+        margin-bottom: 5px;
+      }
+
+      .form-group {
+        margin-bottom: 5px;
+      }
+
+      .save-button {
+        margin-top: auto;
+        text-align: center;
+      }
 
       .a{
         text-align: center;
