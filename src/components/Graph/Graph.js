@@ -43,7 +43,7 @@ function Graph(props) {
       return [];
     }
 
-    formdata.append("token_auth", "");
+    formdata.append("token_auth", "anonymous");
 
     var config = {
       method: 'POST',
