@@ -43,6 +43,7 @@
     "prop-types": "15.7.2",
     "react": "^17.0.2",
     "react-beautiful-dnd": "^13.1.0",
+    "react-bootstrap": "^1.5.2",
     "react-card-flip": "^1.1.0",
     "react-chartjs-2": "2.11.1",
     "react-color": "^2.19.3",
