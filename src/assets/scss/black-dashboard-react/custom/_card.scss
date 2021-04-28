@@ -48,6 +48,20 @@
         margin-bottom: 5px;
       }
 
+      .cancel {
+        float: right;
+        position: absolute;
+        transform: scale(0.6);
+        top: 4px;
+        right: 5px;
+        cursor: pointer;
+        z-index: 10;
+      }
+
+      .cancel i {
+        color: white !important;
+      }
+
       .save-button {
         margin-top: auto;
         text-align: center;

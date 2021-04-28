@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Colors from "views/Colors.js";
-import { ThirdPartyAccount, accounts, AccountType, ProfilePage, pages } from "trace-search";
+import { ProfilePage } from "trace-search";
 import SiteCard from "components/SiteCard/SiteCard";
 import { GridContextProvider, GridDropZone, GridItem, swap } from "react-grid-dnd";
 import { Link } from "react-router-dom";
@@ -8,20 +8,11 @@ import { Row, Col } from "reactstrap";
 import { Auth } from 'aws-amplify';
 import { renderToStaticMarkup } from 'react-dom/server'
 import {
-  Collapse,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
   UncontrolledDropdown,
-  Input,
-  NavbarBrand,
-  Navbar,
   NavLink,
-  Nav,
-  Container,
-  Modal,
-  NavbarToggler,
-  ModalHeader,
 } from "reactstrap";
 
 
@@ -31,13 +22,13 @@ const Editor = () => {
   /**
    * Initialize constants
    */
-  const [claimedAccounts, setClaimedAccounts] = useState({});
+  // const [claimedAccounts, setClaimedAccounts] = useState({});
   const [myProfile, setProfileData] = useState(null);
   const [title, setTitle] = useState("Enter Title");
   const [isOpen, setIsOpen] = useState(false);
   const [heightSize, setHeightSize] = useState("");
   const [, setPlsRender] = useState(false);
-  const [hasPublished, setHasPublished] = useState(false);
+  // const [hasPublished, setHasPublished] = useState(false);
   const [colorScheme, setColorScheme] = useState([{
     "titleColor": "#FFFFFF",
     "backgroundColor": "#1E1D2A",
@@ -99,7 +90,7 @@ const Editor = () => {
    * Function called when title is edited and saves
    */
   function updateTitle(e) {
-    if (e.target.value == "") {
+    if (e.target.value === "") {
       setTitle("");
       myProfile.title = "";
     }
@@ -213,7 +204,7 @@ const Editor = () => {
         }).then(async (value) => {
           console.log(value.status);
 
-          if (value.status == 502) {
+          if (value.status === 502) {
             alert('Sorry, this URL is already taken. Please choose a new one.');
           } else {
             alert('Your custom URL has been created!');
@@ -352,16 +343,16 @@ const Editor = () => {
         </div>
       </div>
         <div>
-            <a href="http://www.facebook.com" target="_blank">
+            <a href="http://www.facebook.com" target="_blank" rel="noreferrer">
                 <img src="https://facebookbrand.com/wp-content/uploads/2019/04/f_logo_RGB-Hex-Blue_512.png?w=512&h=512" alt="Facebook Logo" className="share-button" style={{width: "80px", marginLeft: "calc((110% - 440px)/2)"}}/>
             </a>
-            <a href="http://www.twitter.com" target="_blank">
+            <a href="http://www.twitter.com" target="_blank" rel="noreferrer">
                 <img src="https://cdn4.iconfinder.com/data/icons/social-media-icons-the-circle-set/48/twitter_circle-512.png" alt="Twitter Logo" className="share-button" style={{width: "80px", marginLeft: "40px"}}/>
             </a>
-            <a href="http://www.reddit.com" target="_blank">
+            <a href="http://www.reddit.com" target="_blank" rel="noreferrer">
                 <img src="https://cdn3.iconfinder.com/data/icons/2018-social-media-logotypes/1000/2018_social_media_popular_app_logo_reddit-512.png" alt="Reddit Logo" className="share-button" style={{width: "80px", marginLeft: "40px"}}/>
             </a>
-            <a href="http://www.linkedin.com" target="_blank">
+            <a href="http://www.linkedin.com" target="_blank" rel="noreferrer">
                 <img src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-512.png" alt="LinkedIn Logo" className="share-button" style={{width: "80px", marginLeft: "40px"}}/>
             </a>
         </div>

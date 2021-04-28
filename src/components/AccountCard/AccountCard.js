@@ -15,7 +15,7 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 import { IconButton } from "@material-ui/core";
-import { ManualAccount, tags } from 'trace-search';
+import { tags } from 'trace-search';
 import fontAwesomeClasses from '../../assets/fonts/font-awesome.json';
 // import { faLessThanEqual } from "@fortawesome/free-solid-svg-icons";
 
@@ -30,8 +30,8 @@ const AccountCard = (props) => {
   // const [isTagEdit, setIsTagEdit] = React.useState(false);
   const [flipped, setFlipped] = useState(false);
 
-  const [siteName, setSiteName] = useState(props.account.site.name);
-  const [userName, setUserName] = useState(props.account.userName);
+  // const [siteName, setSiteName] = useState(props.account.site.name);
+  // const [userName, setUserName] = useState(props.account.userName);
   const [url, setUrl] = useState(props.account.url);
   const [accountTags, setAccountTags] = useState(props.account.site.tags);
   const [logoClass, setLogoClass] = useState(props.account.site.logoClass);
@@ -69,13 +69,13 @@ const AccountCard = (props) => {
     }
   }
 
-  const handleSiteName = (e) => {
-    setSiteName(e);
-  }
+  // const handleSiteName = (e) => {
+  //   setSiteName(e);
+  // }
 
-  const handleUserName = (e) => {
-    setUserName(e);
-  }
+  // const handleUserName = (e) => {
+  //   setUserName(e);
+  // }
 
   const handleUrl = (e) => {
     setUrl(e);
@@ -112,6 +112,15 @@ const AccountCard = (props) => {
     await props.account.save();
   }
 
+  const handleCancel = (e) => {
+    // reset values
+    console.log("cancel");
+    setUrl(props.account.site.url);
+    setAccountTags(props.account.site.tags);
+    setLogoClass(props.account.site.logoClass);
+    setIsEdit(false);
+  } 
+
   // async function handleTagSubmit(e) {
   //   console.log(accountTags);
 
@@ -129,6 +138,10 @@ const AccountCard = (props) => {
             title={props.account.reason /* Display error for FailedAccounts */}
           >
             <CardBody className="card-body">
+
+            <IconButton onClick={handleCancel} className="cancel">
+              <i className="tim-icons icon-simple-remove"></i>
+            </IconButton>
 
               <div className="edit-info">
                 <Form>
