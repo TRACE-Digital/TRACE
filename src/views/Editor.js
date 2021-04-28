@@ -171,13 +171,111 @@ const Editor = () => {
   const publishPublicPage = (e) => {
     Auth.currentUserInfo().then(async (value) => {
 
+      const matomoPageUrl = `https://public.tracedigital.tk/a-${value.attributes.sub}`;
+      const matomoIngestUrl = new URL('https://data.tracedigital.tk');
+      matomoIngestUrl.searchParams.set('idsite', myProfile.matomoSiteId || 1);
+      matomoIngestUrl.searchParams.set('action_name', 'view');
+      matomoIngestUrl.searchParams.set('url', matomoPageUrl);
+      matomoIngestUrl.searchParams.set('apiv', '1');
+      matomoIngestUrl.searchParams.set('rec', '1');
+
+      const matomoSiteTemplate = new URL(matomoIngestUrl.toString());
+      matomoSiteTemplate.searchParams.set('action_name', 'click');
+      matomoSiteTemplate.searchParams.set('url', `${matomoSiteTemplate.searchParams.get('url', matomoPageUrl)}/SITE_NAME/USER_NAME`);
+
       let url = 'https://public.tracedigital.tk/update?username=' + value.attributes.sub;
       let csslink = 'https://tracedigital.tk/static/css/main.2e0404d2.chunk.css';
-      let fetchbody = '<!DOCTYPE html><html><head><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"><link href="'
-        + csslink
-        + '" rel="stylesheet"></head><body>'
-        + renderToStaticMarkup(baseContent)
-        + '</body></html>';
+      let fetchbody = `
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+  <link href="${csslink}" rel="stylesheet">
+</head>
+<body>
+  ${renderToStaticMarkup(baseContent)}
+  <script src="https://unpkg.com/axios@0.21.1/dist/axios.min.js" async></script>
+  <script>
+    /**
+     * Check if the DNT flag is set in the user's browser.
+     *
+     * Based on https://github.com/VarunBatraIT/is-doNotTrack/blob/918eb0a3ad295774867c4aea3d3d3672ed7e47a7/src/index.ts
+     */
+    function doNotTrackEnabled() {
+        if (
+            window.doNotTrack ||
+            navigator.doNotTrack ||
+            navigator.msDoNotTrack ||
+            'msTrackingProtectionEnabled' in window.external
+        ) {
+            if (
+                window.doNotTrack === '1' ||
+                window.navigator.doNotTrack === 'yes' ||
+                window.navigator.doNotTrack === '1' ||
+                window.navigator.msDoNotTrack === '1' ||
+                (
+                    'msTrackingProtectionEnabled' in window.external &&
+                    window.external.msTrackingProtectionEnabled()
+                )
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    const dnt = doNotTrackEnabled();
+
+    console.log('Script loaded!');
+    console.log('DNT: ' + doNotTrackEnabled());
+
+    // Ignore DNT so we have data for the demo
+    const isDemo = new Date() < new Date("2021-05-01");
+    if (dnt && isDemo) {
+      console.log('Ignoring DNT for demonstration');
+    }
+
+    if (isDemo || !dnt) {
+      setTimeout(function() {
+        axios.get('${matomoIngestUrl.toString()}&rand=' + Math.random().toString(36).substr(2))
+        .then(function(resp) {
+          console.log('Recorded page visit');
+          console.log(resp);
+        })
+        .catch(function(e) {
+          console.error(e);
+        });
+      }, 2000);
+
+      const links = document.getElementsByClassName('analytics-link');
+      for (let i = 0; i < links.length; i++) {
+        const elem = links.item(i);
+        const siteName = elem.getAttribute('data-site-name');
+        const userName = elem.getAttribute('data-username');
+
+        const apiUrl = '${matomoSiteTemplate.toString()}'.replace('SITE_NAME', siteName).replace('USER_NAME', userName);
+
+        elem.addEventListener('click', function() {
+          axios.get(apiUrl + '&rand=' + Math.random().toString(36).substr(2))
+          .then(function(resp) {
+            console.log('Recorded link click for ' + siteName + '/' + userName);
+            console.log(resp);
+          })
+          .catch(function(e) {
+            console.error(e);
+          });
+        });
+      }
+    } else {
+      console.log('Honoring DNT. No TRACE analytics data recorded');
+    }
+  </script>
+</body>
+</html>
+`;
+
+    // const preview = window.open('', `Preview - ${myProfile.title}`);
+    // preview.document.write(fetchbody);
 
       let response = await fetch(url, {
         method: 'PUT',
@@ -185,7 +283,7 @@ const Editor = () => {
       });
 
       if (response.status > 202) {
-        alert('Opps, something went wront! Please try again.')
+        alert('Oops, something went wrong! Please try again.')
       } else {
         alert("Your page has been published!");
 
@@ -287,7 +385,7 @@ const Editor = () => {
               alert('You can visit your page at https://public.tracedigital.tk/u/' + customurl);
               myProfile.hasCustomURL = true;
               myProfile.customURL = customurl;
-              await myProfile.save;
+              await myProfile.save();
               setPlsRender(prev => !prev);
             } else {
               alert('Oops, something went wrong! Please try again.')
@@ -368,16 +466,16 @@ const Editor = () => {
       </div>
       <div>
         <Row>
-      {myProfile &&
+          {myProfile &&
             myProfile.accounts.map(item => (
               <Col lg="3">
                 <SiteCard editorColor={colorScheme[0].siteColor} account={item} page="editor" />
               </Col>
             ))}
-            </Row>
-            </div>
-            </div>
-      </>
+        </Row>
+      </div>
+    </div>
+    </>
   );
 
   let editorContent = (
