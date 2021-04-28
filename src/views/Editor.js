@@ -412,16 +412,22 @@ const Editor = () => {
   }
 
   const deleteCustomUrl = (e) => {
-    if (myProfile.hasPublished) {
-      if (myProfile.customURL != null) {
-        let url_ending = myProfile.customURL;
-        window.open('https://public.tracedigital.tk/u/' + url_ending, '_blank');
+    Auth.currentUserInfo().then(async (value) => {
+      let url = 'https://76gjqug5j8.execute-api.us-east-2.amazonaws.com/prod/custom/delete?username=' + value.attributes.sub;
+
+      let response = await fetch(url, {
+        method: 'DELETE'
+      });
+
+      if (response.status == 200) {
+        alert("Your custom URL has been deleted!");
+        myProfile.customURL = 'null';
+        await myProfile.save();
+        setPlsRender(prev => !prev);
       } else {
-        alert('Please create a custom URL before navigating to it.');
+        alert("Oops, something went wrong! Please try again.")
       }
-    } else {
-      alert('Please publish your page before navigating to it.');
-    }
+    });
   }
 
   /**
