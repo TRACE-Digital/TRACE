@@ -102,7 +102,7 @@ const AccountCard = (props) => {
             <div className="editor">
               {" "}
               <i
-                className={props.account.site.logoClass}
+                className={props.account.site.logoClass || 'fas fa-question fa-sm'}
                 style={props.account.site.logoColor ? { color: props.account.site.logoColor } : null}
               ></i>
             </div>
