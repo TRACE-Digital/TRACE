@@ -27,6 +27,7 @@
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@octokit/core": "^3.3.2",
     "aws-amplify": "^3.3.21",
+    "bad-words": "^3.0.4",
     "bootstrap": "4.5.3",
     "chart.js": "2.9.4",
     "classnames": "2.2.6",
