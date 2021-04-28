@@ -100,6 +100,9 @@ const SiteCard = (props) => {
               <a
                 href={account.url}
                 target="blank"
+                className="analytics-link"
+                data-site-name={account.site.name}
+                data-username={account.userName}
               >
                 {account.site.prettyUrl ||
                   account.site.urlMain ||

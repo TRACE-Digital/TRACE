@@ -109,7 +109,15 @@ const AccountCard = (props) => {
 
             <div className="editor-handle-name" style={{ fontWeight: "bold" }}>{props.account.site.name}</div>
             <div className="editor-link">
-              <a href={props.account.url} target="blank">@{props.account.userName}</a>
+              <a
+                href={props.account.url}
+                target="blank"
+                className="analytics-link"
+                data-site-name={props.account.site.name}
+                data-username={props.account.userName}
+              >
+                @{props.account.userName}
+              </a>
             </div>
 
             {props.actionable && (
