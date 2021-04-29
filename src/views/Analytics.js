@@ -105,7 +105,7 @@ function Analytics(props) {
 function GraphControl(props) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
-  const [interval, setInterval] = useState("1 Year");
+  const [selectedInterval, setSelectedInterval] = useState("1 Year");
 
   return(
     <>
@@ -114,26 +114,26 @@ function GraphControl(props) {
           dataLabel={props.dataLabel}
           idSite={props.idSite}
           pageUrl={props.pageUrl}
-          interval={interval}
+          interval={selectedInterval}
         />
         <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown} style={{display: "inline", marginRight: "10px", paddingTop: "10px"}}>
-          <DropdownToggle caret>{interval}
+          <DropdownToggle caret>{selectedInterval}
             <b className="caret d-none d-lg-block d-xl-block" style={{marginLeft: "-15px", marginTop: "-11px"}} />
           </DropdownToggle>
           <DropdownMenu style={{marginTop: "15px"}}>
-            <DropdownItem onClick={() => setInterval("1 Week")}>
+            <DropdownItem onClick={() => setSelectedInterval("1 Week")}>
               1 Week
             </DropdownItem>
             <DropdownItem divider tag="li" />
-            <DropdownItem onClick={() => setInterval("1 Month")}>
+            <DropdownItem onClick={() => setSelectedInterval("1 Month")}>
               1 Month
             </DropdownItem>
             <DropdownItem divider tag="li" />
-            <DropdownItem onClick={() => setInterval("6 Months")}>
+            <DropdownItem onClick={() => setSelectedInterval("6 Months")}>
               6 Months
             </DropdownItem>
             <DropdownItem divider tag="li" />
-            <DropdownItem onClick={() => setInterval("1 Year")}>
+            <DropdownItem onClick={() => setSelectedInterval("1 Year")}>
               1 Year
             </DropdownItem>
           </DropdownMenu>

@@ -21,21 +21,21 @@ function Graph(props) {
     formdata.append("pageUrl", `/a-${sub}/${props.pageUrl}`); // public page url
 
     let labelFrequency = 1; // default is a label at every data point
-    if (interval == "1 Year") {
+    if (interval === "1 Year") {
       formdata.append("period", "month");
       formdata.append("date", "last12");
 
-    } else if (interval == "6 Months") {
+    } else if (interval === "6 Months") {
       formdata.append("period", "week");
       formdata.append("date", "last26");
       labelFrequency = 4;
 
-    } else if (interval == "1 Month") {
+    } else if (interval === "1 Month") {
       formdata.append("period", "day");
       formdata.append("date", "last31");
       // labelFrequency = 7;
 
-    } else if (interval == "1 Week") {
+    } else if (interval === "1 Week") {
       formdata.append("period", "day");
       formdata.append("date", "last7");
 
@@ -51,7 +51,7 @@ function Graph(props) {
       data: formdata,
     };
 
-    const analyticsData = "";
+    let analyticsData = {};
     try {
       const response = await axios(config);
       analyticsData = response.data;
@@ -69,7 +69,7 @@ function Graph(props) {
 
     if (analyticsData.hasOwnProperty(key)) {
 
-      if (count % labelFrequency == 0) {
+      if (count % labelFrequency === 0) {
         const date = new Date(key.split(',')[0]);
 
         if (interval === "1 Year" || interval === "6 Months") {
