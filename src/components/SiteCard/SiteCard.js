@@ -87,7 +87,7 @@ const SiteCard = (props) => {
             <div className="editor">
               {" "}
               <i
-                className={account.site.logoClass}
+                className={account.site.logoClass || 'fas fa-question fa-sm'}
                 style={{ color: (iconColor === "Default") ? account.site.logoColor || null : iconColor }}
               ></i>
             </div>
@@ -100,6 +100,9 @@ const SiteCard = (props) => {
               <a
                 href={account.url}
                 target="blank"
+                className="analytics-link"
+                data-site-name={account.site.name}
+                data-username={account.userName}
               >
                 {account.site.prettyUrl ||
                   account.site.urlMain ||
