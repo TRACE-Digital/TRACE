@@ -5,7 +5,6 @@ import { Button, ButtonGroup } from "reactstrap";
 import classNames from "classnames";
 
 import { ThirdPartyAccount,  ClaimedAccount, ManualAccount } from "trace-search";
-import { icon } from '@fortawesome/fontawesome-svg-core';
 import BadWordsFilter from 'bad-words';
 
 const filter = new BadWordsFilter();
@@ -214,48 +213,48 @@ function Colors(props) {
                                 <div className="options">
                                     <div id="title" 
                                         className="myButton" 
-                                        style={currentButton == "Title" ? 
+                                        style={currentButton === "Title" ? 
                                             {"box-shadow": "0 0 6px #ba54fa", backgroundColor: `${props.page.colorScheme.titleColor}`
-                                            , color: (`${props.page.colorScheme.titleColor}` == "#FFFFFF" || `${props.page.colorScheme.titleColor}` == "#ffffff" ?  "black" :  "white")} : 
+                                            , color: (`${props.page.colorScheme.titleColor}` === "#FFFFFF" || `${props.page.colorScheme.titleColor}` === "#ffffff" ?  "black" :  "white")} : 
                                             { backgroundColor: `${props.page.colorScheme.titleColor}`, 
-                                            color: (`${props.page.colorScheme.titleColor}` == "#FFFFFF" || `${props.page.colorScheme.titleColor}` == "#ffffff" ?  "black" :  "white")}} 
+                                            color: (`${props.page.colorScheme.titleColor}` === "#FFFFFF" || `${props.page.colorScheme.titleColor}` === "#ffffff" ?  "black" :  "white")}} 
                                         onClick={handleClick}>
                                             Title Color
                                     </div>
                                     <div id="background" 
                                         className="myButton" 
-                                        style={currentButton == "Background" ? 
+                                        style={currentButton === "Background" ? 
                                             {"box-shadow": "0 0 6px #ba54fa", backgroundColor: `${props.page.colorScheme.backgroundColor}`, 
-                                            color: (`${props.page.colorScheme.backgroundColor}` == "#FFFFFF" || `${props.page.colorScheme.backgroundColor}` == "#ffffff" ?  "black" :  "white")} : 
+                                            color: (`${props.page.colorScheme.backgroundColor}` === "#FFFFFF" || `${props.page.colorScheme.backgroundColor}` === "#ffffff" ?  "black" :  "white")} : 
                                             { backgroundColor: `${props.page.colorScheme.backgroundColor}`, 
-                                            color: (`${props.page.colorScheme.backgroundColor}` == "#FFFFFF" || `${props.page.colorScheme.backgroundColor}` == "#ffffff" ?  "black" :  "white")}} 
+                                            color: (`${props.page.colorScheme.backgroundColor}` === "#FFFFFF" || `${props.page.colorScheme.backgroundColor}` === "#ffffff" ?  "black" :  "white")}} 
                                         onClick={handleClick}>
                                             Background Color
                                     </div>
                                     <div id="site" 
                                         className="myButton" 
-                                        style={currentButton == "Site" ? 
+                                        style={currentButton === "Site" ? 
                                             { "box-shadow": "0 0 6px #ba54fa", backgroundColor: `${props.page.colorScheme.siteColor}`, 
-                                            color: (`${props.page.colorScheme.siteColor}` == "#FFFFFF" || `${props.page.colorScheme.siteColor}` == "#ffffff" ?  "black" :  "white")} : 
+                                            color: (`${props.page.colorScheme.siteColor}` === "#FFFFFF" || `${props.page.colorScheme.siteColor}` === "#ffffff" ?  "black" :  "white")} : 
                                             {backgroundColor: `${props.page.colorScheme.siteColor}`, 
-                                            color: (`${props.page.colorScheme.siteColor}` == "#FFFFFF" || `${props.page.colorScheme.siteColor}` == "#ffffff" ?  "black" :  "white")}} 
+                                            color: (`${props.page.colorScheme.siteColor}` === "#FFFFFF" || `${props.page.colorScheme.siteColor}` === "#ffffff" ?  "black" :  "white")}} 
                                         onClick={handleClick}>
                                             Site Color
                                     </div>
                                     <div className="two-icon-buttons">
                                         <div id="defaultIcon" 
                                             className="company-colors" 
-                                            style={currentButton == "Default Icon" ? 
+                                            style={currentButton === "Default Icon" ? 
                                                 {"box-shadow": "0 0 6px #ba54fa", backgroundColor: `#ba54fa`, color: "white" } : 
-                                                {backgroundColor: (`${props.page.colorScheme.iconColor}` == "Default"  && currentButton != "Custom Icon" ? `#ba54fa` : "grey"), color: "white"}} 
+                                                {backgroundColor: (`${props.page.colorScheme.iconColor}` === "Default"  && currentButton !== "Custom Icon" ? `#ba54fa` : "grey"), color: "white"}} 
                                             onClick={handleDefaultIcon}>
                                                 Default Icon
                                         </div>
                                         <div id="customIcon" 
                                             className="custom-colors" 
-                                            style={currentButton == "Custom Icon"? 
+                                            style={currentButton === "Custom Icon"? 
                                                 {"box-shadow": "0 0 6px #ba54fa", backgroundColor: `${props.page.colorScheme.iconColor}`, color: "white" } : 
-                                                {backgroundColor: (`${props.page.colorScheme.iconColor}` != "Default" ? `${props.page.colorScheme.iconColor}` : "grey"), color: "white"}} 
+                                                {backgroundColor: (`${props.page.colorScheme.iconColor}` !== "Default" ? `${props.page.colorScheme.iconColor}` : "grey"), color: "white"}} 
                                             onClick={handleCustomIcon}>
                                                 Custom Icon
                                         </div>

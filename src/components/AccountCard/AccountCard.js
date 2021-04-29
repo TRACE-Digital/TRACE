@@ -29,8 +29,8 @@ const AccountCard = (props) => {
   // const [isTagEdit, setIsTagEdit] = React.useState(false);
   const [flipped, setFlipped] = useState(false);
 
-  const [siteName, setSiteName] = useState(props.account.site.name);
-  const [userName, setUserName] = useState(props.account.userName);
+  // const [siteName, setSiteName] = useState(props.account.site.name);
+  // const [userName, setUserName] = useState(props.account.userName);
   const [url, setUrl] = useState(props.account.url);
   const [accountTags, setAccountTags] = useState(props.account.site.tags);
   const [logoClass, setLogoClass] = useState(props.account.site.logoClass);
@@ -70,13 +70,13 @@ const AccountCard = (props) => {
     }
   }
 
-  const handleSiteName = (e) => {
-    setSiteName(e);
-  }
+  // const handleSiteName = (e) => {
+  //   setSiteName(e);
+  // }
 
-  const handleUserName = (e) => {
-    setUserName(e);
-  }
+  // const handleUserName = (e) => {
+  //   setUserName(e);
+  // }
 
   const handleUrl = (e) => {
     setUrl(e);
@@ -106,6 +106,22 @@ const AccountCard = (props) => {
     await props.account.save();
   }
 
+  const handleCancel = (e) => {
+    // reset values
+    console.log("cancel");
+    setUrl(props.account.site.url);
+    setAccountTags(props.account.site.tags);
+    setLogoClass(props.account.site.logoClass);
+    setIsEdit(false);
+  }
+
+  // async function handleTagSubmit(e) {
+  //   console.log(accountTags);
+
+  //   props.account.site.tags = accountTags;
+  //   await props.account.save();
+  // }
+
   return (
     <>
       {/* INFO EDIT */}
@@ -116,6 +132,10 @@ const AccountCard = (props) => {
             title={props.account.reason /* Display error for FailedAccounts */}
           >
             <CardBody className="card-body">
+
+            <IconButton onClick={handleCancel} className="cancel">
+              <i className="tim-icons icon-simple-remove"></i>
+            </IconButton>
 
               <div className="edit-info">
                 <Form>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Colors from "views/Colors.js";
-import { ThirdPartyAccount, accounts, AccountType, ProfilePage, pages } from "trace-search";
+import { ProfilePage, ThirdPartyAccount } from "trace-search";
 import SiteCard from "components/SiteCard/SiteCard";
 import classNames from "classnames";
 import { GridContextProvider, GridDropZone, GridItem, swap } from "react-grid-dnd";
@@ -8,24 +8,16 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Link } from "react-router-dom";
 import { Row, Col } from "reactstrap";
 import { Button, ButtonGroup } from "reactstrap";
-
 import { Auth, nav } from 'aws-amplify';
 import { renderToStaticMarkup } from 'react-dom/server'
 import {
-  Collapse,
+  Col,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
   UncontrolledDropdown,
-  Input,
-  NavbarBrand,
-  Navbar,
   NavLink,
-  Nav,
-  Container,
-  Modal,
-  NavbarToggler,
-  ModalHeader,
+  Row,
 } from "reactstrap";
 
 
@@ -35,7 +27,6 @@ const Editor = () => {
   /**
    * Initialize constants
    */
-  const [claimedAccounts, setClaimedAccounts] = useState({});
   const [myProfile, setProfileData] = useState(null);
   const [title, setTitle] = useState("Enter Title");
   const [isOpen, setIsOpen] = useState(false);
@@ -115,7 +106,7 @@ const Editor = () => {
    * Function called when title is edited and saves
    */
   function updateTitle(e) {
-    if (e.target.value == "") {
+    if (e.target.value === "") {
       setTitle("");
       setTitleLength(2);
       myProfile.title = "";
@@ -165,8 +156,8 @@ const Editor = () => {
           .then(data => {
             console.log(`customPath before status: ${myProfile.customPath}`);
             console.log(myProfile);
-            myProfile.published = (data.page_is_published == "yes");
-            myProfile.hasPassword = (data.password_required == "yes");
+            myProfile.published = (data.page_is_published === "yes");
+            myProfile.hasPassword = (data.password_required === "yes");
             myProfile.customPath = String(data.customurl);
             console.log(`customPath from status: ${myProfile.customPath}`);
             myProfile.save();
@@ -316,7 +307,7 @@ const Editor = () => {
         method: 'GET'
       });
 
-      if (response.status == 200) {
+      if (response.status === 200) {
         alert("Your page has been unpublished!");
         myProfile.published = false;
         myProfile.hasPassword = false;
@@ -382,7 +373,7 @@ const Editor = () => {
       Auth.currentUserInfo().then((value) => {
         let customurl = window.prompt("What do you want the last part of your new URL to be?");
 
-        if (customurl != null) {
+        if (customurl !== null) {
           let url = 'https://public.tracedigital.tk/custom/create?username='
             + value.attributes.sub
             + '&customurl='
@@ -391,7 +382,7 @@ const Editor = () => {
           fetch(url, {
             method: 'PUT'
           }).then(async (value) => {
-            if (value.status == 401) {
+            if (value.status === 401) {
               alert('Sorry, this URL is already taken. Please choose a new one.');
             } else if (value.status < 203) {
               alert('Your custom URL has been created!');
@@ -431,7 +422,7 @@ const Editor = () => {
         method: 'DELETE'
       });
 
-      if (response.status == 200) {
+      if (response.status === 200) {
         alert("Your custom URL has been deleted!");
         myProfile.customPath = null;
         await myProfile.save();
