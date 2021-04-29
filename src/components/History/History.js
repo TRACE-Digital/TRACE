@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'reactstrap';
-import { Search, SearchDefinition, SearchState } from 'trace-search';
+import { Search, SearchDefinition, SearchState, ThirdPartyAccount } from 'trace-search';
 
 const History = (props) => {
   const [maxVisible, setMaxVisible] = useState(props.initialMax);
   const [sortedHistory, setSortedHistory] = useState([]);
+  const [,setPlsRender] = useState(false);
 
   const sortHistory = () => {
     const executions = Object.values(Search.cache.items);
@@ -18,6 +19,10 @@ const History = (props) => {
   }
 
   useEffect(() => {
+    const triggerRender = () => {
+      setPlsRender(prev => !prev);
+    };
+
     const loadHistory = async () => {
       try {
         // Load what we need from the database into memory
@@ -28,15 +33,20 @@ const History = (props) => {
       }
 
       sortHistory();
-      SearchDefinition.cache.events.on('change', sortHistory);
+
+      // Search changes require a resort
+      // Definition and result changes just require a re-render
       Search.cache.events.on('change', sortHistory);
+      SearchDefinition.cache.events.on('change', triggerRender);
+      ThirdPartyAccount.resultCache.events.on('change', triggerRender);
     };
 
     loadHistory();
 
     const cleanup = () => {
-      SearchDefinition.cache.events.removeListener('change', sortHistory);
       Search.cache.events.removeListener('change', sortHistory);
+      SearchDefinition.cache.events.removeListener('change', triggerRender);
+      ThirdPartyAccount.resultCache.events.removeListener('change', triggerRender);
     };
 
     return cleanup;
@@ -51,6 +61,7 @@ const History = (props) => {
         {sortedHistory.slice(0, maxVisible).map((execution) => {
           return (
             <HistoryEntry
+              key={execution.id}
               isCurrent={execution.id === props.currentSearchId}
               execution={execution}
               onSelect={props.onSelect}

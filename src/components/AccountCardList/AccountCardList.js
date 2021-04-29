@@ -72,11 +72,22 @@ function AccountCardList(props) {
 
       if (sortMethod === "new") {
         // sort by age, newest found first
-        // this happens by default
+        sorted.sort((a, b) => {
+          return a.createdAt < b.createdAt
+            ? -1
+            : a.createdAt > b.createdAt
+            ? 1
+            : 0;
+        });
       } else if (sortMethod === "old") {
         // sort by age, oldest found first
-        // since array is sorted by new by default, just reverse the array
-        sorted.reverse();
+        sorted.sort((a, b) => {
+          return a.createdAt > b.createdAt
+            ? -1
+            : a.createdAt < b.createdAt
+            ? 1
+            : 0;
+        });
       } else if (sortMethod === "az") {
         // sort alphabetically by site name, A-Z
         sorted.sort((a, b) => {
@@ -200,9 +211,8 @@ function AccountCardList(props) {
 					  onDeselected={() => setSelection(prev => prev.filter(id => id !== account.id))}
           />)}
           {typeof account === "string" &&
-            <div key={account} className='category-divider'>
+            <div key={account} className='titled-separator' style={{ marginBottom: '20px' }}>
               <h3>{account}</h3>
-              <hr/>
             </div>}
           </>
         ))}

@@ -687,12 +687,31 @@
     }
 
     &.landing{
-      padding-left:30px !important;
+      padding: 0px !important;
       text-align: center;
       .start-button{
         width: 200px !important;
-        margin: auto;
+        margin: 20px;
       }
+    }
+
+    >.landing-header {
+      background-color: black;
+      display: flex;
+      flex-direction: column;
+      height: 350px;
+      justify-content: center;
+      padding: 40px;
+
+      .trace-logo {
+        margin-top: 0px !important;
+        margin-bottom: 50px !important;
+        text-align: left;
+      }
+    }
+
+    >.landing-header p {
+      font-size: 25px;
     }
 
     >.header {
@@ -701,7 +720,7 @@
         float: right;
       }
     }
-    
+
     >.instructions {
       text-align: center;
       margin-bottom: 20px;
@@ -986,16 +1005,58 @@
       &.landing{
         margin: 0px !important;
       }
-      &.heading{
-        font-size: 30px !important;
+      &.content{
+        margin-top: 100px !important;
+        margin-bottom: 50px !important;
+        font-size: 12px !important;
+
+        .info-card {
+          padding-left: 7%;
+          padding-right: 7%;
+        }
       }
+      &.content i {
+        font-size: 100px;
+        margin-bottom: 20%;
+      }
+    }
+
+    .subtitle {
+      margin-bottom: 10px;
+    }
+
+    .site-name {
+      margin-top: -20px;
+      margin-bottom: 35px;
+    }
+
+    .ext-img {
+      margin: 10px;
+    }
+
+    .install-button {
+      width: 200px;
+      margin: 0 auto;
+      margin-bottom: 10px;
+      margin-top: 10px;
     }
 
     .start-button {
       display: inline !important;
-      margin-left: 5px !important;
-      margin-right: 5px !important;
+      margin-left: 10px !important;
+      margin-right: 10px !important;
       margin-bottom: 10px !important;
+    }
+    
+    .footer {
+      margin-top: 100px;
+      background-color: black;
+      padding-top: 30px;
+      padding-bottom: 30px;
+
+      >.footer-content {
+        width: 100%;
+      }
     }
 
     >.search {

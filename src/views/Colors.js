@@ -6,7 +6,11 @@ import classNames from "classnames";
 
 import { ThirdPartyAccount,  ClaimedAccount, ManualAccount } from "trace-search";
 import { icon } from '@fortawesome/fontawesome-svg-core';
+import BadWordsFilter from 'bad-words';
 
+const filter = new BadWordsFilter();
+filter.addWords('facebook');
+filter.addWords('thisisnotallowed');
 
 function Colors(props) {
     const [titleColor, setTitleColor] = useState(props.page.colorScheme.titleColor);
@@ -28,7 +32,7 @@ function Colors(props) {
 
 
 
-    
+
 
     // const [claimedAccounts, setClaimedAccounts] = useState({});
     // const [onProfile, setOnProfile] = useState(false);
@@ -83,6 +87,7 @@ function Colors(props) {
     ).concat(
         Object.values(ManualAccount.accounts)
     );
+    displayableAccounts.sort((a, b) => a.site.name.localeCompare(b.site.name));
 
 
 
@@ -118,6 +123,16 @@ function Colors(props) {
 
     function handleAdd(item) {
         console.log("ENTERED ADD");
+
+        const values = [item.url, item.site.name, item.userName, item.site.url];
+        for (const value of values) {
+            if (filter.isProfane(value)) {
+                const cleaned = filter.clean(value);
+                alert(`Could not add ${item.site.name} - @${item.userName}!\n\nThe following field contains content not allowed on public pages:\n    '${value}'\n    '${cleaned}'`);
+                return;
+            }
+        }
+
         props.page.accounts.push(item);
         setPlsRender(prev => !prev);
         props.onUpdatePage(null);
