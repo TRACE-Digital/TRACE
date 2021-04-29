@@ -27,7 +27,7 @@ function SearchComponent() {
   const [progress, setProgress] = useState(-1);
   const [activeTab, setActiveTab] = useState("discovered");
   const [showRefine, setShowRefine] = useState(false);
-  const [showHistory, setShowHistory] = useState(false);
+  const [showHistory, setShowHistory] = useState(true);
   const [, setPlsRender] = useState(false);
   const [error, setError] = useState('');
 
