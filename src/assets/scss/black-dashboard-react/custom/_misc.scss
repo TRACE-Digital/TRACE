@@ -242,9 +242,15 @@ code {
 
 .titled-separator {
   display: flex;
+  width: 100%;
   align-items: center;
   text-align: center;
+  line-height: 2em;
+  cursor: default;
   color: rgba(255, 255, 255, 0.3);
+}
+.titled-separator > * {
+  margin: 0;
 }
 .titled-separator::before,
 .titled-separator::after {

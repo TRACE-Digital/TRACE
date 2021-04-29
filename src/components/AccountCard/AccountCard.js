@@ -15,9 +15,8 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 import { IconButton } from "@material-ui/core";
-import { tags } from 'trace-search';
+import { AutoSearchAccountAction, tags } from 'trace-search';
 import fontAwesomeClasses from '../../assets/fonts/font-awesome.json';
-// import { faLessThanEqual } from "@fortawesome/free-solid-svg-icons";
 
 /**
  * Displays a Card with information about the account passed in
@@ -119,7 +118,7 @@ const AccountCard = (props) => {
     setAccountTags(props.account.site.tags);
     setLogoClass(props.account.site.logoClass);
     setIsEdit(false);
-  } 
+  }
 
   // async function handleTagSubmit(e) {
   //   console.log(accountTags);
@@ -263,36 +262,40 @@ const AccountCard = (props) => {
                   </div>
                 )}
 
-
                 {/* ICON */}
                 <div className="editor">
                   {" "}
                   <i
-                    className={
-                      props.account.site.logoClass !== "fa-question-circle"
-                        ? "fab " + props.account.site.logoClass
-                        : "fas " + props.account.site.logoClass
-                    }
+                    className={props.account.site.logoClass || 'fas fa-question fa-sm'}
+                    style={props.account.site.logoColor ? { color: props.account.site.logoColor } : null}
                   ></i>
                 </div>
 
                 <div className="editor-handle-name" style={{ fontWeight: "bold" }}>{props.account.site.name}</div>
                 <div className="editor-link">
-                  <a href={props.account.url} target="blank">@{props.account.userName}</a>
+                  <a
+                    href={props.account.url}
+                    className="analytics-link"
+                    data-site-name={props.account.site.name}
+                    data-username={props.account.userName}
+                    target="blank"
+                  >
+                      @{props.account.userName}
+                  </a>
                 </div>
 
                 {props.actionable && (
                   <div className="test">
                     <Button
                       onClick={(e) => { e.stopPropagation(); claimAccount(props.account); }}
-                      className="claim-button"
+                      className={props.account.actionTaken === AutoSearchAccountAction.CLAIMED ? "claim-button btn-success" : "claim-button"}
                     >
                       <i className="tim-icons icon-check-2" />
                     </Button>
                   &nbsp;
                     <Button
                       onClick={(e) => { e.stopPropagation(); rejectAccount(props.account); }}
-                      className="claim-button"
+                      className={props.account.actionTaken === AutoSearchAccountAction.REJECTED ? "claim-button btn-danger" : "claim-button"}
                     >
                       <i className="tim-icons icon-simple-remove" />
                     </Button>
