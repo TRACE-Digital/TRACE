@@ -24,7 +24,7 @@ const SiteCard = (props) => {
   const editorColor = props.editorColor;
   const iconColor = props.iconColor;
 
-
+  
   if (!search && !dashboard && !editor) {
     console.warn(
       'WARNING - invalid type passed to SiteCard component. Needs to be "search", "dashboard", or "editor"'
@@ -86,8 +86,9 @@ const SiteCard = (props) => {
             {/* ICON */}
             <div className="editor">
               {" "}
+              
               <i
-                className={account.site.logoClass}
+                className={account.site.logoClass || 'fas fa-question fa-sm'}
                 style={{ color: (iconColor === "Default") ? account.site.logoColor || null : iconColor }}
               ></i>
             </div>
@@ -100,6 +101,9 @@ const SiteCard = (props) => {
               <a
                 href={account.url}
                 target="blank"
+                className="analytics-link"
+                data-site-name={account.site.name}
+                data-username={account.userName}
               >
                 {account.site.prettyUrl ||
                   account.site.urlMain ||

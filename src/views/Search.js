@@ -5,6 +5,7 @@ import History from "components/History/History";
 import classNames from "classnames";
 
 import {
+  Search,
   SearchDefinition,
   SearchState,
   ThirdPartyAccount,
@@ -26,13 +27,15 @@ function SearchComponent() {
   const [progress, setProgress] = useState(-1);
   const [activeTab, setActiveTab] = useState("discovered");
   const [showRefine, setShowRefine] = useState(false);
-  const [showHistory, setShowHistory] = useState(false);
-  const [showResume, setShowResume] = useState(false);
-  const [showCancel, setShowCancel] = useState(true);
-  const [showPause, setShowPause] = useState(true);
-  const [showClear, setShowClear] = useState(false); // used to show clear button if search has been cancelled
-  const [showSearchIcon, setShowSearchIcon] = useState(true);
+  const [showHistory, setShowHistory] = useState(true);
+  const [, setPlsRender] = useState(false);
   const [error, setError] = useState('');
+
+  const showResume = [SearchState.PAUSED].includes(currentSearch?.state);
+  const showCancel = [SearchState.IN_PROGRESS, SearchState.PAUSED].includes(currentSearch?.state);
+  const showPause = [SearchState.IN_PROGRESS].includes(currentSearch?.state);
+  const showClear = [SearchState.PAUSED, SearchState.COMPLETED, SearchState.FAILED].includes(currentSearch?.state);
+  const showSearchIcon = currentSearch === null || [SearchState.CREATED, SearchState.COMPLETED, SearchState.FAILED].includes(currentSearch?.state);
 
   // Register for changes to any search results
   // Results get updated as they are claimed/rejected
@@ -40,17 +43,17 @@ function SearchComponent() {
   useEffect(() => {
     const triggerRender = () => {
       setProgress(currentSearch?.progress || -1);
+      setPlsRender(prev => !prev);
     };
 
-    // This may cause a few extra re-renders since it's results for all searches,
-    // but the user is not likely to have many searches running at once
-    ThirdPartyAccount.resultCache.events.on("change", triggerRender);
+    ThirdPartyAccount.resultCache.events.on('change', triggerRender);
+    SearchDefinition.cache.events.on('change', triggerRender);
+    Search.cache.events.on('change', triggerRender);
 
     const cleanup = () => {
-      ThirdPartyAccount.resultCache.events.removeListener(
-        "change",
-        triggerRender
-      );
+      ThirdPartyAccount.resultCache.events.removeListener('change', triggerRender);
+      SearchDefinition.cache.events.removeListener('change', triggerRender);
+      Search.cache.events.removeListener('change', triggerRender);
     };
 
     return cleanup;
@@ -65,32 +68,18 @@ function SearchComponent() {
   };
 
   const handleCancelClick = async () => {
-    setShowSearchIcon(true);
-    setShowResume(false);
-    setShowPause(false);
-    setShowCancel(false);
-    setShowClear(true);
     await currentSearch.cancel();
+    setPlsRender(prev => !prev);
   };
 
   const handleResumeClick = async () => {
-    setShowSearchIcon(false);
-    setShowResume(false);
-    setShowPause(true);
-    setShowCancel(true);
-    setShowClear(false);
-
     await currentSearch.resume();
+    setPlsRender(prev => !prev);
   };
 
   const handlePauseClick = async () => {
-    setShowSearchIcon(true);
-    setShowPause(false);
-    setShowResume(true);
-    setShowCancel(true);
-    setShowClear(false);
-
     await currentSearch.pause();
+    setPlsRender(prev => !prev);
   };
 
   /**
@@ -99,7 +88,6 @@ function SearchComponent() {
    * (if a definition is present).
    */
   const handleClearClick = async () => {
-    setShowClear(false);
     setProgress(-1);
     if (currentSearch) {
       const search = await currentSearch.definition.new();
@@ -209,13 +197,6 @@ function SearchComponent() {
       handleNewSearch(search);
       console.log(search);
 
-      setShowSearchIcon(false);
-      setShowResume(false);
-      setShowCancel(true);
-      setShowPause(true);
-      setShowClear(false);
-      setShowHistory(false);
-      setShowRefine(false);
       await search.start();
 
       setProgress(search.progress);
@@ -299,7 +280,7 @@ function SearchComponent() {
             <i className="tim-icons icon-zoom-split" onClick={submitSearch} />
           )}
           {/* RESUME */}
-          {progress > 0 && progress < 100 && showResume && (
+          {showResume && (
             <>
               &nbsp; &nbsp;
               <i
@@ -309,7 +290,7 @@ function SearchComponent() {
             </>
           )}
           {/* PAUSE */}
-          {progress > 0 && progress < 100 && showPause && (
+          {showPause && (
             <>
               &nbsp; &nbsp;
               <i
@@ -319,7 +300,7 @@ function SearchComponent() {
             </>
           )}
           {/* CANCEL */}
-          {progress > 0 && progress < 100 && showCancel && (
+          {showCancel && (
             <>
               &nbsp; &nbsp;
               <i
@@ -344,7 +325,7 @@ function SearchComponent() {
         </span>
       </div>
       <div className="refine-search">
-        {(progress === 100 || showClear) && (
+        {showClear && (
           <span className="the-text cancel" onClick={handleClearClick}>
             clear results
           </span>
@@ -518,6 +499,23 @@ function SearchComponent() {
                   <i className="tim-icons icon-tap-02" />
                 </span>
               </Button>
+              <Button
+                color="info"
+                id="2"
+                size="md"
+                tag="label"
+                className={classNames("btn-simple", {
+                  active: activeTab === "evaluated",
+                })}
+                onClick={() => setActiveTab("evaluated")}
+              >
+                <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
+                  Evaluated ({currentSearch?.evaluatedResults?.length || 0})
+                </span>
+                <span className="d-block d-sm-none">
+                  <i className="tim-icons icon-tap-02" />
+                </span>
+              </Button>
             </ButtonGroup>
             <br />
             <br />
@@ -549,6 +547,17 @@ function SearchComponent() {
             <AccountCardList
               headerText="Inconclusive Accounts"
               accounts={currentSearch?.inconclusiveResults}
+              selectable={true}
+              actionable={true}
+              flippable={true}
+              showNames={true}
+              showTripleDot={false}
+            />
+          )}
+          {activeTab === "evaluated" && (
+            <AccountCardList
+              headerText="Claimed/Rejected Accounts"
+              accounts={currentSearch?.evaluatedResults}
               selectable={true}
               actionable={true}
               flippable={true}

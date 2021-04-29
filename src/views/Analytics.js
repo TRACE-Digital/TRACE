@@ -16,52 +16,26 @@
 
 */
 import React, { useEffect, useState, } from "react";
-// react plugin used to create charts
-import { Line } from "react-chartjs-2";
 import { ProfilePage } from 'trace-search';
+import Graph from "components/Graph/Graph.js";
 
 // reactstrap components
 import {
-  Button,
   Card,
   CardHeader,
   CardBody,
   CardTitle,
+  Row,
+  Col,
   Dropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Row,
-  Col,
 } from "reactstrap";
 
-// core components
-import {
-  chartExample1,
-  chartExample2,
-  chartExample3,
-  chartExample4,
-  chartExample5,
-  chartExample6,
-  chartExample7,
-} from "variables/charts.js";
+function Analytics(props) {
+  const [page, setPage] = useState(null);
 
-
-
-function Dashboard(props) {
-  const [bigChartData, setbigChartData] = React.useState("data1");
-  const [, setPage] = useState(null);
-  const [timeDropdownOpen, setTimeDropdownOpen] = useState(false);
-  const [totalGraph, setTotalGraph] = useState("1 Year");
-  // const [oneGraph, setOneGraph] = useState("6 Months");
-  // const [secondGraph, setSecondGraph] = useState("6 Months");
-  // const [thirdGraph, setThirdGraph] = useState("6 Months");
-
-  const toggleTimeDropdown = () => setTimeDropdownOpen((prevState) => !prevState);
-
-  const setBgChartData = (name) => {
-    setbigChartData(name);
-  };
 
   useEffect(() => {
     (async () => {
@@ -71,7 +45,6 @@ function Dashboard(props) {
       } else {
         setPage(null);
       }
-      setBgChartData("data1");
     })();
   }, []);
 
@@ -79,148 +52,96 @@ function Dashboard(props) {
     <>
       <div className="content">
         <Row>
-          <Col xs="12">
+          <Col lg="12">
             <Card className="card-chart">
               <CardHeader>
                 <Row>
                   <Col className="text-left" sm="6">
-                    <h5 className="card-category">Public Profile Visitors</h5>
-                    <CardTitle tag="h2">123 Total Visitors</CardTitle>
-                  </Col>
-                  <Col sm="6">
-                    <Dropdown isOpen={timeDropdownOpen} toggle={toggleTimeDropdown} style={{display: "inline", marginRight: "10px"}}>
-                      <DropdownToggle caret>{totalGraph}
-                        <b className="caret d-none d-lg-block d-xl-block" style={{marginLeft: "-15px", marginTop: "-11px"}} />
-                      </DropdownToggle>
-                      <DropdownMenu style={{marginTop: "15px"}}>
-                        <DropdownItem onClick={() => setTotalGraph("1 Month")}>
-                          1 Month
-                        </DropdownItem>
-                        <DropdownItem divider tag="li" />
-                        <DropdownItem onClick={() => setTotalGraph("3 Months")}>
-                          3 Months
-                        </DropdownItem>
-                        <DropdownItem divider tag="li" />
-                        <DropdownItem onClick={() => setTotalGraph("6 Months")}>
-                          6 Months
-                        </DropdownItem>
-                        <DropdownItem divider tag="li" />
-                        <DropdownItem onClick={() => setTotalGraph("1 Year")}>
-                          1 Year
-                        </DropdownItem>
-                      </DropdownMenu>
-                    </Dropdown>
+                    <h5 className="card-category">Public Profile</h5>
+                    <CardTitle tag="h2">[Data] Visitors</CardTitle>
                   </Col>
                 </Row>
               </CardHeader>
               <CardBody>
-                {/* 1 Year */}
-                {totalGraph === "1 Year" && (
-                <div className="chart-area">
-                  <Line
-                    data={chartExample1[bigChartData]}
-                    options={chartExample1.options}
-                  />
-                </div>
-                )}
-                {/* 6 Months */}
-                {totalGraph === "6 Months" && (
-                <div className="chart-area">
-                  <Line
-                    data={chartExample5[bigChartData]}
-                    options={chartExample5.options}
-                  />
-                </div>
-                )}
-                {totalGraph === "3 Months" && (
-                <div className="chart-area">
-                  <Line
-                    data={chartExample6[bigChartData]}
-                    options={chartExample6.options}
-                  />
-                </div>
-                )}
-                {totalGraph === "1 Month" && (
-                <div className="chart-area">
-                  <Line
-                    data={chartExample7[bigChartData]}
-                    options={chartExample7.options}
-                  />
-                </div>
-                )}
+                <GraphControl
+                  dataLabel="Visitors"
+                  idSite="1"
+                  pageUrl=""
+                />
               </CardBody>
             </Card>
           </Col>
         </Row>
         <Row>
-          <Col lg="4">
-            <Card className="card-chart">
-              <CardHeader>
-                <h5 className="card-category">Instagram</h5>
-                <CardTitle tag="h3">
-                  <Button style={{float: "right"}}>6 Months
-                    <b className="caret d-none d-lg-block d-xl-block" style={{marginLeft: "-15px", marginTop: "-11px"}} />
-                  </Button>
-                  <i className="tim-icons icon-bell-55 text-info" /> 44 Visitors
-                </CardTitle>
-              </CardHeader>
-              <CardBody>
-                <div className="chart-area">
-                  <Line
-                    data={chartExample2.data}
-                    options={chartExample2.options}
+          {/* Map here */}
+          {page && page.accounts.map((account) => (
+             <Col lg="4" key={account.id}>
+              <Card className="card-chart">
+                <CardHeader>
+                  {/* <h5 className="card-category">[Data] Interactions</h5> */}
+                  <CardTitle tag="h3">
+                    <i className="tim-icons icon-single-02" style={{paddingRight: "5px"}}/>
+                    {account.site.name}
+                    <br/>
+                    <a href={account.url}> @{account.userName}</a>
+                  </CardTitle>
+                </CardHeader>
+                <CardBody>
+                  <GraphControl
+                    dataLabel="Clicks"
+                    idSite="1"
+                    pageUrl={`${account.site.name}/${account.userName}`}
                   />
-                </div>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col lg="4">
-            <Card className="card-chart">
-              <CardHeader>
-                <h5 className="card-category">Twitter</h5>
-                <CardTitle tag="h3">
-                  <Button style={{float: "right"}}>6 Months
-                    <b className="caret d-none d-lg-block d-xl-block" style={{marginLeft: "-15px", marginTop: "-11px"}} />
-                  </Button>
-                  <i className="tim-icons icon-delivery-fast text-primary" />{" "}
-                  27 Visitors
-                </CardTitle>
-              </CardHeader>
-              <CardBody>
-                <div className="chart-area">
-                  <Line
-                    data={chartExample3.data}
-                    options={chartExample3.options}
-                  />
-                </div>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col lg="4">
-            <Card className="card-chart">
-              <CardHeader>
-                <h5 className="card-category">Facebook</h5>
-                <CardTitle tag="h3">
-                  <Button style={{float: "right"}}>6 Months
-                    <b className="caret d-none d-lg-block d-xl-block" style={{marginLeft: "-15px", marginTop: "-11px"}} />
-                  </Button>
-                  <i className="tim-icons icon-send text-success" /> 18 Visitors
-                </CardTitle>
-              </CardHeader>
-              <CardBody>
-                <div className="chart-area">
-                  <Line
-                    data={chartExample4.data}
-                    options={chartExample4.options}
-                  />
-                </div>
-              </CardBody>
-            </Card>
-          </Col>
+                </CardBody>
+              </Card>
+            </Col>
+          ))}
         </Row>
       </div>
     </>
   );
 }
 
-export default Dashboard;
+function GraphControl(props) {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
+  const [selectedInterval, setSelectedInterval] = useState("1 Year");
+
+  return(
+    <>
+      <div className="chart-area" >
+        <Graph
+          dataLabel={props.dataLabel}
+          idSite={props.idSite}
+          pageUrl={props.pageUrl}
+          interval={selectedInterval}
+        />
+        <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown} style={{display: "inline", marginRight: "10px", paddingTop: "10px"}}>
+          <DropdownToggle caret>{selectedInterval}
+            <b className="caret d-none d-lg-block d-xl-block" style={{marginLeft: "-15px", marginTop: "-11px"}} />
+          </DropdownToggle>
+          <DropdownMenu style={{marginTop: "15px"}}>
+            <DropdownItem onClick={() => setSelectedInterval("1 Week")}>
+              1 Week
+            </DropdownItem>
+            <DropdownItem divider tag="li" />
+            <DropdownItem onClick={() => setSelectedInterval("1 Month")}>
+              1 Month
+            </DropdownItem>
+            <DropdownItem divider tag="li" />
+            <DropdownItem onClick={() => setSelectedInterval("6 Months")}>
+              6 Months
+            </DropdownItem>
+            <DropdownItem divider tag="li" />
+            <DropdownItem onClick={() => setSelectedInterval("1 Year")}>
+              1 Year
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </div>
+
+    </>
+  );
+}
+
+export default Analytics;

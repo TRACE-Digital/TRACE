@@ -5,13 +5,14 @@ import { Button, ButtonGroup } from "reactstrap";
 import classNames from "classnames";
 
 import { ThirdPartyAccount,  ClaimedAccount, ManualAccount } from "trace-search";
-// import { icon } from '@fortawesome/fontawesome-svg-core';
+import BadWordsFilter from 'bad-words';
 
+const filter = new BadWordsFilter();
+filter.addWords('facebook');
+filter.addWords('thisisnotallowed');
 
 function Colors(props) {
-    const [titleColor, setTitleColor] = useState(props.page.colorScheme.titleColor);
-    const [backColor, setBackgroundColor] = useState(props.page.colorScheme.backgroundColor);
-    const [siteColor, setSiteColor] = useState(props.page.colorScheme.siteColor);
+   
     const [iconColor, setIconColor] = useState(props.page.colorScheme.iconColor);
     const [disabled, setDisabled] = useState(false);
     const [chromeColor, setChromeColor] = useState();
@@ -19,21 +20,6 @@ function Colors(props) {
     const [currentButton, setCurrentButton] = useState("Title");
     const [showThemeFeature, setThemeFeature] = useState(false);
     const [showSiteFeature, setSiteFeature] = useState(true);
-    const [colorProps, ] = useState([{
-        "titleColor": "#FFFFFF",
-        "backgroundColor": "#1E1D2A",
-        "siteColor": "#26283A",
-        "iconColor": "Default"
-    }])
-
-
-
-    
-
-    // const [claimedAccounts, setClaimedAccounts] = useState({});
-    // const [onProfile, setOnProfile] = useState(false);
-
-
 
     // Load the initial accounts that we need and
     // register for any future changes
@@ -54,14 +40,6 @@ function Colors(props) {
                 console.error(e);
             }
             console.log(ThirdPartyAccount.accountCache.items);
-            setTitleColor(props.page.colorScheme.titleColor);
-            colorProps[0].titleColor = props.page.colorScheme.titleColor;
-            setBackgroundColor(props.page.colorScheme.backgroundColor);
-            colorProps[0].backgroundColor = props.page.colorScheme.backgroundColor;
-            setSiteColor(props.page.colorScheme.siteColor);
-            colorProps[0].siteColor = props.page.colorScheme.siteColor;
-            setIconColor(props.page.colorScheme.iconColor);
-            colorProps[0].iconColor = props.page.colorScheme.iconColor;
         }
 
         ClaimedAccount.accountCache.events.on('change', triggerRender);
@@ -82,41 +60,24 @@ function Colors(props) {
     ).concat(
         Object.values(ManualAccount.accounts)
     );
+    displayableAccounts.sort((a, b) => a.site.name.localeCompare(b.site.name));
 
 
 
-
-
-    // /**
-    //  * Monitor for new claimed accounts. Every time the accounts array is updated, re-render to show the proper tiles.
-    //  */
-    // useEffect(() => {
-    //     const loadAccounts = async () => {
-    //     try {
-    //         // Load all accounts from the database into memory
-    //         await ThirdPartyAccount.loadAll();
-    //         // setPlsRender((current) => !current);
-    //     } catch (e) {
-    //         console.error("Failed to load accounts from the database!");
-    //         console.error(e);
-    //         return {};
-    //     }
-    //     return accounts;
-    //     };
-
-    //     loadAccounts().then(() => {
-    //     setClaimedAccounts(accounts);
-    //     setTitleColor(props.page.colorScheme.titleColor);
-    //     setBackgroundColor(props.page.colorScheme.backgroundColor);
-    //     setSiteColor(props.page.colorScheme.siteColor);
-    //     setIconColor(props.page.colorScheme.iconColor);
-    //     });
-
-    // }, [accounts]);
 
 
     function handleAdd(item) {
         console.log("ENTERED ADD");
+
+        const values = [item.url, item.site.name, item.userName, item.site.url];
+        for (const value of values) {
+            if (filter.isProfane(value)) {
+                const cleaned = filter.clean(value);
+                alert(`Could not add ${item.site.name} - @${item.userName}!\n\nThe following field contains content not allowed on public pages:\n    '${value}'\n    '${cleaned}'`);
+                return;
+            }
+        }
+
         props.page.accounts.push(item);
         setPlsRender(prev => !prev);
         props.onUpdatePage(null);
@@ -133,44 +94,50 @@ function Colors(props) {
     function handleDefaultIcon(e){
         setDisabled(true);
         setCurrentButton("Default Icon");
-        colorProps[0].iconColor = "Default";
-        props.onSelectLanguage(colorProps);
+        props.page.colorScheme.iconColor = "Default";
+        setPlsRender(prev => !prev);
+        props.onSelectLanguage(null);
     }
 
     function handleCustomIcon(e){
         setDisabled(false);
         setCurrentButton("Custom Icon");
-        setChromeColor(e.target.style.backgroundColor);
+        setChromeColor(props.page.colorScheme.iconColor);
     }
 
     function handleColorPicker(e) {
         setChromeColor(e);
-        console.log(currentButton);
+
         if (currentButton === "Title") {
-            setTitleColor(e.hex);
-            colorProps[0].titleColor = e.hex;
-            props.onSelectLanguage(colorProps);
+            props.page.colorScheme.titleColor = e.hex;
+            setPlsRender(prev => !prev);
+            props.onSelectLanguage(null);
         }
         else if (currentButton === "Site") {
-            setSiteColor(e.hex);
-            colorProps[0].siteColor = e.hex;
-            props.onSelectLanguage(colorProps);
+            props.page.colorScheme.siteColor = e.hex;
+            setPlsRender(prev => !prev);
+            props.onSelectLanguage(null);
+           
         }
         else if (currentButton === "Custom Icon") {
-            setIconColor(e.hex);
-            colorProps[0].iconColor = e.hex;
-            props.onSelectLanguage(colorProps);
+            // props.page.colorScheme.iconColor = e.hex;
+            props.page.colorScheme.iconColor = e.hex;
+            setPlsRender(prev => !prev);
+            props.onSelectLanguage(null);  
+   
         }
         else if (currentButton === "Background") {
-            setBackgroundColor(e.hex);
-            colorProps[0].backgroundColor = e.hex;
-            props.onSelectLanguage(colorProps);
+            props.page.colorScheme.backgroundColor = e.hex;
+            setPlsRender(prev => !prev);
+            props.onSelectLanguage(null);
         }
+  
+        
     }
 
     function handleClick(e) {
         setDisabled(false);
-        console.log(e.target.id);
+  
         if (e.target.id === "title") {
             setCurrentButton("Title");
             setChromeColor(e.target.style.backgroundColor);
@@ -247,30 +214,30 @@ function Colors(props) {
                                     <div id="title" 
                                         className="myButton" 
                                         style={currentButton === "Title" ? 
-                                            {"box-shadow": "0 0 6px #ba54fa", backgroundColor: `${titleColor}`
-                                            , color: (`${titleColor}` === "#FFFFFF" || `${titleColor}` === "#ffffff" ?  "black" :  "white")} : 
-                                            { backgroundColor: `${titleColor}`, 
-                                            color: (`${titleColor}` === "#FFFFFF" || `${titleColor}` === "#ffffff" ?  "black" :  "white")}} 
+                                            {"box-shadow": "0 0 6px #ba54fa", backgroundColor: `${props.page.colorScheme.titleColor}`
+                                            , color: (`${props.page.colorScheme.titleColor}` === "#FFFFFF" || `${props.page.colorScheme.titleColor}` === "#ffffff" ?  "black" :  "white")} : 
+                                            { backgroundColor: `${props.page.colorScheme.titleColor}`, 
+                                            color: (`${props.page.colorScheme.titleColor}` === "#FFFFFF" || `${props.page.colorScheme.titleColor}` === "#ffffff" ?  "black" :  "white")}} 
                                         onClick={handleClick}>
                                             Title Color
                                     </div>
                                     <div id="background" 
                                         className="myButton" 
                                         style={currentButton === "Background" ? 
-                                            {"box-shadow": "0 0 6px #ba54fa", backgroundColor: `${backColor}`, 
-                                            color: (`${backColor}` === "#FFFFFF" || `${backColor}` === "#ffffff" ?  "black" :  "white")} : 
-                                            { backgroundColor: `${backColor}`, 
-                                            color: (`${backColor}` === "#FFFFFF" || `${backColor}` === "#ffffff" ?  "black" :  "white")}} 
+                                            {"box-shadow": "0 0 6px #ba54fa", backgroundColor: `${props.page.colorScheme.backgroundColor}`, 
+                                            color: (`${props.page.colorScheme.backgroundColor}` === "#FFFFFF" || `${props.page.colorScheme.backgroundColor}` === "#ffffff" ?  "black" :  "white")} : 
+                                            { backgroundColor: `${props.page.colorScheme.backgroundColor}`, 
+                                            color: (`${props.page.colorScheme.backgroundColor}` === "#FFFFFF" || `${props.page.colorScheme.backgroundColor}` === "#ffffff" ?  "black" :  "white")}} 
                                         onClick={handleClick}>
                                             Background Color
                                     </div>
                                     <div id="site" 
                                         className="myButton" 
                                         style={currentButton === "Site" ? 
-                                            { "box-shadow": "0 0 6px #ba54fa", backgroundColor: `${siteColor}`, 
-                                            color: (`${siteColor}` === "#FFFFFF" || `${siteColor}` === "#ffffff" ?  "black" :  "white")} : 
-                                            {backgroundColor: `${siteColor}`, 
-                                            color: (`${backColor}` === "#FFFFFF" || `${backColor}` === "#ffffff" ?  "black" :  "white")}} 
+                                            { "box-shadow": "0 0 6px #ba54fa", backgroundColor: `${props.page.colorScheme.siteColor}`, 
+                                            color: (`${props.page.colorScheme.siteColor}` === "#FFFFFF" || `${props.page.colorScheme.siteColor}` === "#ffffff" ?  "black" :  "white")} : 
+                                            {backgroundColor: `${props.page.colorScheme.siteColor}`, 
+                                            color: (`${props.page.colorScheme.siteColor}` === "#FFFFFF" || `${props.page.colorScheme.siteColor}` === "#ffffff" ?  "black" :  "white")}} 
                                         onClick={handleClick}>
                                             Site Color
                                     </div>
@@ -279,15 +246,15 @@ function Colors(props) {
                                             className="company-colors" 
                                             style={currentButton === "Default Icon" ? 
                                                 {"box-shadow": "0 0 6px #ba54fa", backgroundColor: `#ba54fa`, color: "white" } : 
-                                                {backgroundColor: (`${colorProps[0].iconColor}` === "Default"  && currentButton !== "Custom Icon" ? `#ba54fa` : "grey"), color: "white"}} 
+                                                {backgroundColor: (`${props.page.colorScheme.iconColor}` === "Default"  && currentButton !== "Custom Icon" ? `#ba54fa` : "grey"), color: "white"}} 
                                             onClick={handleDefaultIcon}>
                                                 Default Icon
                                         </div>
                                         <div id="customIcon" 
                                             className="custom-colors" 
                                             style={currentButton === "Custom Icon"? 
-                                                {"box-shadow": "0 0 6px #ba54fa", backgroundColor: `${iconColor}`, color: "white" } : 
-                                                {backgroundColor: (`${colorProps[0].iconColor}` !== "Default" ? `${colorProps[0].iconColor}` : "grey"), color: "white"}} 
+                                                {"box-shadow": "0 0 6px #ba54fa", backgroundColor: `${props.page.colorScheme.iconColor}`, color: "white" } : 
+                                                {backgroundColor: (`${props.page.colorScheme.iconColor}` !== "Default" ? `${props.page.colorScheme.iconColor}` : "grey"), color: "white"}} 
                                             onClick={handleCustomIcon}>
                                                 Custom Icon
                                         </div>

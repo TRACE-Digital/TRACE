@@ -15,9 +15,8 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 import { IconButton } from "@material-ui/core";
-import { tags } from 'trace-search';
+import { AutoSearchAccountAction, tags, supportedSites} from 'trace-search';
 import fontAwesomeClasses from '../../assets/fonts/font-awesome.json';
-// import { faLessThanEqual } from "@fortawesome/free-solid-svg-icons";
 
 /**
  * Displays a Card with information about the account passed in
@@ -36,6 +35,8 @@ const AccountCard = (props) => {
   const [accountTags, setAccountTags] = useState(props.account.site.tags);
   const [logoClass, setLogoClass] = useState(props.account.site.logoClass);
 
+  let logoKeyValue = Object.entries(fontAwesomeClasses).filter(([, value]) => value == props.account.site.logoClass)[0];
+  let logoObj = logoKeyValue ? [{key: logoKeyValue[0], value: logoKeyValue[1]}] : [{key: "question", value: "fas fa-question fa-sm"}];
   let firstNames = "";
   let lastNames = "";
   let options = [];
@@ -90,7 +91,6 @@ const AccountCard = (props) => {
   }
 
   const handleLogoSelect = (selectedLogo) => {
-    console.log(selectedLogo[0].value);
     setLogoClass(selectedLogo[0].value);
   }
 
@@ -99,16 +99,10 @@ const AccountCard = (props) => {
   }
 
   async function handleSubmit(e) {
-    // console.log(siteName);
-    // console.log(userName);
-    console.log(url);
-    console.log(accountTags);
-    console.log(logoClass);
-
     props.account.site.url = url;
     props.account.site.tags = accountTags;
     props.account.site.logoClass = logoClass;
-
+    props.account.site.logoColor = "white";
     await props.account.save();
   }
 
@@ -119,7 +113,7 @@ const AccountCard = (props) => {
     setAccountTags(props.account.site.tags);
     setLogoClass(props.account.site.logoClass);
     setIsEdit(false);
-  } 
+  }
 
   // async function handleTagSubmit(e) {
   //   console.log(accountTags);
@@ -178,8 +172,10 @@ const AccountCard = (props) => {
                   </FormGroup>
                   <FormGroup>
                     <Label for="logos">Logos (select one)</Label>
+                    {console.log(logos[0])}
                     <Multiselect
                       options={logos} // Options to display in the dropdown
+                      selectedValues={logoObj}
                       onSelect={handleLogoSelect} // Function will trigger on select event
                       onRemove={handleLogoRemove} // Function will trigger on remove event
                       displayValue="key" // Property name to display in the dropdown options
@@ -263,36 +259,40 @@ const AccountCard = (props) => {
                   </div>
                 )}
 
-
                 {/* ICON */}
                 <div className="editor">
                   {" "}
                   <i
-                    className={
-                      props.account.site.logoClass !== "fa-question-circle"
-                        ? "fab " + props.account.site.logoClass
-                        : "fas " + props.account.site.logoClass
-                    }
+                    className={props.account.site.logoClass || 'fas fa-question fa-sm'}
+                    style={props.account.site.logoColor ? { color: props.account.site.logoColor } : null}
                   ></i>
                 </div>
 
                 <div className="editor-handle-name" style={{ fontWeight: "bold" }}>{props.account.site.name}</div>
                 <div className="editor-link">
-                  <a href={props.account.url} target="blank">@{props.account.userName}</a>
+                  <a
+                    href={props.account.url}
+                    className="analytics-link"
+                    data-site-name={props.account.site.name}
+                    data-username={props.account.userName}
+                    target="blank"
+                  >
+                      @{props.account.userName}
+                  </a>
                 </div>
 
                 {props.actionable && (
                   <div className="test">
                     <Button
                       onClick={(e) => { e.stopPropagation(); claimAccount(props.account); }}
-                      className="claim-button"
+                      className={props.account.actionTaken === AutoSearchAccountAction.CLAIMED ? "claim-button btn-success" : "claim-button"}
                     >
                       <i className="tim-icons icon-check-2" />
                     </Button>
                   &nbsp;
                     <Button
                       onClick={(e) => { e.stopPropagation(); rejectAccount(props.account); }}
-                      className="claim-button"
+                      className={props.account.actionTaken === AutoSearchAccountAction.REJECTED ? "claim-button btn-danger" : "claim-button"}
                     >
                       <i className="tim-icons icon-simple-remove" />
                     </Button>

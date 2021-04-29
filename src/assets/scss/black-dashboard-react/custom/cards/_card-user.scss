@@ -512,8 +512,11 @@
 
     .editor-link {
       font-size: 1rem;
-      color:#ffffff;
+      color: $primary-states;
       text-align: center;
+      :hover {
+        color: $primary;
+      }
     }
 
     .test{
@@ -581,7 +584,7 @@
         >.card-details {
           margin: auto;
         }
-        
+
     }
 
     hr {
