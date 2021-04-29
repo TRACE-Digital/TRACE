@@ -97,11 +97,7 @@ function Landing() {
             return (
             <Col sm="4" md="3">
               <i
-              className={
-                site.logoClass !== "fa-question-circle"
-                  ? "fab " + site.logoClass
-                  : "fas " + site.logoClass
-              }
+              className={site.logoClass}
               ></i>
               <h4 className="site-name">{site.name}</h4>
             </Col>

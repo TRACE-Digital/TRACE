@@ -1,27 +1,18 @@
 import React, { useState, useEffect } from "react";
 import Colors from "views/Colors.js";
-import { ThirdPartyAccount, accounts, AccountType, ProfilePage, pages } from "trace-search";
+import { ProfilePage, ThirdPartyAccount } from "trace-search";
 import SiteCard from "components/SiteCard/SiteCard";
 import { GridContextProvider, GridDropZone, GridItem, swap } from "react-grid-dnd";
 import { Link } from "react-router-dom";
 import { Row, Col } from "reactstrap";
-import { Auth, nav } from 'aws-amplify';
+import { Auth } from 'aws-amplify';
 import { renderToStaticMarkup } from 'react-dom/server'
 import {
-  Collapse,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
   UncontrolledDropdown,
-  Input,
-  NavbarBrand,
-  Navbar,
   NavLink,
-  Nav,
-  Container,
-  Modal,
-  NavbarToggler,
-  ModalHeader,
 } from "reactstrap";
 
 
@@ -31,15 +22,12 @@ const Editor = () => {
   /**
    * Initialize constants
    */
-  const [claimedAccounts, setClaimedAccounts] = useState({});
+  // const [claimedAccounts, setClaimedAccounts] = useState({});
   const [myProfile, setProfileData] = useState(null);
   const [title, setTitle] = useState("Enter Title");
   const [isOpen, setIsOpen] = useState(false);
   const [heightSize, setHeightSize] = useState("");
   const [, setPlsRender] = useState(false);
-  const [hasPublished, setHasPublished] = useState(false);
-  const [hasPassword, setHasPassword] = useState(false);
-  const [customUrl, setCustomUrl] = useState(null);
   const [colorScheme, setColorScheme] = useState([{
     "titleColor": "#FFFFFF",
     "backgroundColor": "#1E1D2A",
@@ -80,7 +68,6 @@ const Editor = () => {
     console.log(myProfile.colorScheme.iconColor);
     saveData();
     setPlsRender(prev => !prev);
-
   }
 
   const updatePage = () => {
@@ -100,7 +87,7 @@ const Editor = () => {
    * Function called when title is edited and saves
    */
   function updateTitle(e) {
-    if (e.target.value == "") {
+    if (e.target.value === "") {
       setTitle("");
       myProfile.title = "";
     }
@@ -128,23 +115,10 @@ const Editor = () => {
   }, []);
 
   /**
-   * Monitors for user login before accessing profile page
-   */
-  useEffect(() => {
-    async function isLoggedIn() {
-      try {
-        await Auth.currentUserPoolUser();
-      }
-      catch {
-        window.location.href = '/login';
-      }
-    }
-    isLoggedIn();
-  }, []);
-
-  /**
+   * TODO: This should be removed once sync is reliable
+   *
    * Queries CouchDB to see if the current user has a published page and
-   * updates the value of hasPublished accordingly. If they do have a
+   * updates the value of published accordingly. If they do have a
    * public page, it also queries whether they have a password.
    */
    useEffect(() => {
@@ -156,9 +130,12 @@ const Editor = () => {
         fetch(url, { method: 'GET' })
           .then(response => response.json())
           .then(data => {
-            myProfile.hasPublished = (data.page_is_published == "yes");
-            myProfile.hasPassword = (data.password_required == "yes");
-            myProfile.customURL = String(data.customurl);
+            console.log(`customPath before status: ${myProfile.customPath}`);
+            console.log(myProfile);
+            myProfile.published = (data.page_is_published === "yes");
+            myProfile.hasPassword = (data.password_required === "yes");
+            myProfile.customPath = String(data.customurl);
+            console.log(`customPath from status: ${myProfile.customPath}`);
             myProfile.save();
           }).then(() => {
             setPlsRender(prev => !prev);
@@ -168,7 +145,7 @@ const Editor = () => {
   }, [myProfile]);
 
   /* Calls the API to publish the user's page */
-  const publishPublicPage = (e) => {
+  const publishPublicPage = (e, quiet = false) => {
     Auth.currentUserInfo().then(async (value) => {
 
       const matomoPageUrl = `https://public.tracedigital.tk/a-${value.attributes.sub}`;
@@ -191,9 +168,11 @@ const Editor = () => {
 <head>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
   <link href="${csslink}" rel="stylesheet">
+  <link rel="icon" type="image/png" href="https://tracedigital.tk/favicon.png">
+  <title>${myProfile.title.replace('</title>', '')}</title>
 </head>
 <body>
-  ${renderToStaticMarkup(baseContent)}
+  ${renderBaseContent()}
   <script src="https://unpkg.com/axios@0.21.1/dist/axios.min.js" async></script>
   <script>
     /**
@@ -282,14 +261,15 @@ const Editor = () => {
         body: fetchbody
       });
 
+      const tellEm = quiet ? console.warn : alert;
       if (response.status > 202) {
-        alert('Oops, something went wrong! Please try again.')
+        tellEm('Oops, something went wrong! Please try again.')
       } else {
-        alert("Your page has been published!");
-
-        myProfile.hasPublished = true;
+        myProfile.published = true;
         await myProfile.save();
         setPlsRender(prev => !prev);
+
+        tellEm("Your page has been published!");
       }
     });
   }
@@ -303,9 +283,9 @@ const Editor = () => {
         method: 'GET'
       });
 
-      if (response.status == 200) {
+      if (response.status === 200) {
         alert("Your page has been unpublished!");
-        myProfile.hasPublished = false;
+        myProfile.published = false;
         myProfile.hasPassword = false;
         await myProfile.save();
         setPlsRender(prev => !prev);
@@ -316,7 +296,7 @@ const Editor = () => {
   }
 
   const goToPublicPage = (e) => {
-    if (myProfile.hasPublished) {
+    if (myProfile.published) {
       Auth.currentUserInfo().then((value) => {
         window.open('https://public.tracedigital.tk/get'
           + '?username='
@@ -365,11 +345,11 @@ const Editor = () => {
   }
 
   const addCustomURL = (e) => {
-    if (myProfile.hasPublished) {
+    if (myProfile.published) {
       Auth.currentUserInfo().then((value) => {
         let customurl = window.prompt("What do you want the last part of your new URL to be?");
 
-        if (customurl != null) {
+        if (customurl !== null) {
           let url = 'https://public.tracedigital.tk/custom/create?username='
             + value.attributes.sub
             + '&customurl='
@@ -378,13 +358,12 @@ const Editor = () => {
           fetch(url, {
             method: 'PUT'
           }).then(async (value) => {
-            if (value.status == 401) {
+            if (value.status === 401) {
               alert('Sorry, this URL is already taken. Please choose a new one.');
             } else if (value.status < 203) {
               alert('Your custom URL has been created!');
               alert('You can visit your page at https://public.tracedigital.tk/u/' + customurl);
-              myProfile.hasCustomURL = true;
-              myProfile.customURL = customurl;
+              myProfile.customPath = customurl;
               await myProfile.save();
               setPlsRender(prev => !prev);
             } else {
@@ -399,9 +378,9 @@ const Editor = () => {
   }
 
   const goToCustomUrl = (e) => {
-    if (myProfile.hasPublished) {
-      if (myProfile.customURL != null) {
-        let url_ending = myProfile.customURL;
+    if (myProfile.published) {
+      if (myProfile.hasCustomPath) {
+        let url_ending = myProfile.customPath;
         window.open('https://public.tracedigital.tk/u/' + url_ending, '_blank');
       } else {
         alert('Please create a custom URL before navigating to it.');
@@ -419,9 +398,9 @@ const Editor = () => {
         method: 'DELETE'
       });
 
-      if (response.status == 200) {
+      if (response.status === 200) {
         alert("Your custom URL has been deleted!");
-        myProfile.customURL = 'null';
+        myProfile.customPath = null;
         await myProfile.save();
         setPlsRender(prev => !prev);
       } else {
@@ -434,6 +413,9 @@ const Editor = () => {
    * Monitors for the profile page sites
    */
   useEffect(() => {
+    const triggerRender = () => {
+      setPlsRender(prev => !prev);
+    }
 
     const loadProfile = async () => {
       const results = await ProfilePage.loadAll();
@@ -451,38 +433,60 @@ const Editor = () => {
       setProfileData(results[0]);
       setHeightSize(8); // temp for now
       // saveData();
-
     };
+
     loadProfile();
 
+    ThirdPartyAccount.accountCache.events.on('change', triggerRender)
+    return () => { ThirdPartyAccount.accountCache.events.removeListener('change', triggerRender) }
   }, [colorScheme]);
 
-  let baseContent = (
-    <>
-    <div className={`editor-background`} style={{ backgroundColor: `${colorScheme[0].backgroundColor}` }}>
-      <div className={"editor-title"} style={{ color: `${colorScheme[0].titleColor}` }}>
-        <input
-          className="editor-input"
-          type="text"
-          value={title}
-          maxLength={30}
-          onChange={updateTitle}
-          style={{ color: `${colorScheme[0].titleColor}`, backgroundColor: `${colorScheme[0].backgroundColor}`, border: "none", outline: "none" }}
-        />
+  /** Monitor for removed accounts. TODO: This is not ideal since we're doing it every render. */
+  useEffect(() => {
+    if (!myProfile) {
+      return;
+    }
+
+    console.debug(`Checking profile page for deleted accounts`);
+
+    let accountRemoved = false;
+    for (const account of myProfile.accounts) {
+      if (!ThirdPartyAccount.accountCache.has(account.id)) {
+        myProfile.removeAccount(account.id);
+        accountRemoved = true;
+      }
+    }
+
+    if (accountRemoved) {
+      if (myProfile.published) {
+        console.log(`Republishing ${myProfile.title}`)
+        publishPublicPage(null, true);
+      }
+    }
+  });
+
+  /** Make this a function so that publish always sees the latest changes without needing a re-render. */
+  const renderBaseContent = () => {
+    return renderToStaticMarkup(
+      <>
+      <div className={`editor-background`} style={{ backgroundColor: `${colorScheme[0].backgroundColor}` }}>
+        <div className={"editor-title"} style={{ color: `${colorScheme[0].titleColor}` }}>
+          <h1 style={{ paddingTop: '20px' }}>{title}</h1>
+        </div>
+        <div>
+          <Row>
+            {myProfile &&
+              myProfile.accounts.map(item => (
+                <Col lg="3">
+                  <SiteCard editorColor={colorScheme[0].siteColor} iconColor={colorScheme[0].iconColor} account={item} page="editor" />
+                </Col>
+              ))}
+          </Row>
+        </div>
       </div>
-      <div>
-        <Row>
-          {myProfile &&
-            myProfile.accounts.map(item => (
-              <Col lg="3">
-                <SiteCard editorColor={colorScheme[0].siteColor} account={item} page="editor" />
-              </Col>
-            ))}
-        </Row>
-      </div>
-    </div>
-    </>
-  );
+      </>
+    );
+  }
 
   let editorContent = (
     <>
@@ -516,7 +520,7 @@ const Editor = () => {
               <NavLink tag="li">
                 <DropdownItem className="nav-item" onClick={publishPublicPage} style={{color: "black"}}>Publish Page</DropdownItem>
               </NavLink>
-              {((myProfile != null) && (myProfile.hasPublished)) && <div>
+              {myProfile && myProfile.published && <div>
                 <NavLink tag="li">
                   <DropdownItem className="nav-item" onClick={unpublishPublicPage} style={{color: "black"}}>Unpublish Page</DropdownItem>
                 </NavLink>
@@ -525,20 +529,20 @@ const Editor = () => {
                   <DropdownItem className="nav-item" onClick={goToPublicPage} style={{color: "black"}}>Go To Page</DropdownItem>
                 </NavLink>
                 <DropdownItem divider tag="li" />
-                {((myProfile == null) || (!myProfile.hasPassword)) &&
+                {myProfile && !myProfile.hasPassword &&
                   <NavLink tag="li"><DropdownItem className="nav-item" onClick={addPublicPagePassword} style={{color: "black"}}>Add Password</DropdownItem></NavLink>
-                } {((myProfile != null) && (myProfile.hasPassword)) &&
+                } {myProfile && myProfile.hasPassword &&
                   <div>
                     <NavLink tag="li"><DropdownItem className="nav-item" onClick={addPublicPagePassword} style={{color: "black"}}>Change Password</DropdownItem></NavLink>
                     <NavLink tag="li"><DropdownItem className="nav-item" onClick={removePublicPagePassword} style={{color: "black"}}>Remove Password</DropdownItem></NavLink>
                   </div>
                 }
                 <DropdownItem divider tag="li" />
-                { ((myProfile == null) || (myProfile.customURL == 'null')) &&
+                {myProfile && !myProfile.hasCustomPath &&
                 <NavLink tag="li">
                   <DropdownItem className="nav-item" onClick={addCustomURL} style={{color: "black"}}>Customize URL</DropdownItem>
                 </NavLink>
-                } {((myProfile != null) && (myProfile.customURL != 'null')) &&
+                } {myProfile && myProfile.hasCustomPath &&
                   <div>
                     <NavLink tag="li">
                       <DropdownItem className="nav-item" onClick={addCustomURL} style={{color: "black"}}>Edit Custom URL</DropdownItem>
@@ -578,20 +582,6 @@ const Editor = () => {
             </GridContextProvider>}
         </div>
       </div>
-        <div>
-            <a href="http://www.facebook.com" target="_blank">
-                <img src="https://facebookbrand.com/wp-content/uploads/2019/04/f_logo_RGB-Hex-Blue_512.png?w=512&h=512" alt="Facebook Logo" className="share-button" style={{width: "80px", marginLeft: "calc((110% - 440px)/2)"}}/>
-            </a>
-            <a href="http://www.twitter.com" target="_blank">
-                <img src="https://cdn4.iconfinder.com/data/icons/social-media-icons-the-circle-set/48/twitter_circle-512.png" alt="Twitter Logo" className="share-button" style={{width: "80px", marginLeft: "40px"}}/>
-            </a>
-            <a href="http://www.reddit.com" target="_blank">
-                <img src="https://cdn3.iconfinder.com/data/icons/2018-social-media-logotypes/1000/2018_social_media_popular_app_logo_reddit-512.png" alt="Reddit Logo" className="share-button" style={{width: "80px", marginLeft: "40px"}}/>
-            </a>
-            <a href="http://www.linkedin.com" target="_blank">
-                <img src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-512.png" alt="LinkedIn Logo" className="share-button" style={{width: "80px", marginLeft: "40px"}}/>
-            </a>
-        </div>
     </>
   );
 
