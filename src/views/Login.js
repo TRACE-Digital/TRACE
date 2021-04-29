@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Auth } from 'aws-amplify';
+import { destroyLocalDb, generateEncryptionKey } from 'trace-search'
 
 // reactstrap components
 import { Alert, Card, CardImg, CardBody, CardTitle, Button, Form, FormGroup, Input } from 'reactstrap';
@@ -15,6 +16,11 @@ async function signUp(username, email, password) {
               email,
           }
       });
+      // Before a user signs up, we must clear the current local database
+      // We also must generate a new encryption key based off of their password
+      await destroyLocalDb();
+      const user = await Auth.currentUserPoolUser();
+      await generateEncryptionKey(password, user.attributes.sub);
       return null;
   } catch (error) {
       console.log('error signing up:', error);
@@ -34,10 +40,15 @@ async function signUp(username, email, password) {
 async function signIn(username, password) {
     try {
         await Auth.signIn(username, password);
+        // Before a user signs in, we must clear the current local database
+        // We also must generate a new encryption key based off of their password
+        await destroyLocalDb();
+        const user = await Auth.currentUserPoolUser();
+        await generateEncryptionKey(password, user.attributes.sub);
         return null;
     } catch (error) {
       Auth.error = error;
-      console.log('error signing in', error.message);
+      console.error('error signing in', error.message);
       return error.message;
     }
 }
