@@ -305,7 +305,7 @@ function Colors(props) {
                         <div className="sContainer">
                             <table className="siteTable">
                                 {displayableAccounts.map(item => (
-                                    <tr className="siteTr">
+                                    <tr key={item.id} className="siteTr">
                                         <td className="siteTd">
                                             {props.page.accounts.includes(item) ?
                                                 <div className="remove-button" onClick={() => { handleRemove(item) }}>Remove</div> :
