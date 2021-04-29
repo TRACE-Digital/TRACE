@@ -30,7 +30,6 @@ const exampleSites = [
 
 function Landing() {
   const sites = exampleSites.map((name) => supportedSites[name]);
-  console.log(sites);
 
   return (
     <div className="main-panel">
@@ -160,10 +159,9 @@ function Landing() {
                 <p><a href="mailto:demo.trace.digital@gmail.com">Email</a></p>
             </Col>
             <Col>
-                <h4>Resources</h4>
-                <p><a href="https://www.google.com" target="_blank" rel="noreferrer">Documentation</a></p>
-                <p><a href="https://www.google.com" target="_blank" rel="noreferrer">Documentation</a></p>
-                <p><a href="https://www.google.com" target="_blank" rel="noreferrer">Documentation</a></p>
+                <h4>Documentation</h4>
+                <p><a href="https://trace-digital.github.io/TRACE-search-docs/" target="_blank" rel="noreferrer">Search</a></p>
+                <p><a href="https://github.com/TRACE-Digital/TRACE-ext" target="_blank" rel="noreferrer">Extension</a></p>
             </Col>
           </Row>
         </Navbar>
