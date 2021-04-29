@@ -5,7 +5,7 @@ import SiteCard from "components/SiteCard/SiteCard";
 import { GridContextProvider, GridDropZone, GridItem, swap } from "react-grid-dnd";
 import { Link } from "react-router-dom";
 import { Row, Col } from "reactstrap";
-import { Auth, nav } from 'aws-amplify';
+import { Auth } from 'aws-amplify';
 import { renderToStaticMarkup } from 'react-dom/server'
 import {
   DropdownToggle,
@@ -132,8 +132,8 @@ const Editor = () => {
           .then(data => {
             console.log(`customPath before status: ${myProfile.customPath}`);
             console.log(myProfile);
-            myProfile.published = (data.page_is_published == "yes");
-            myProfile.hasPassword = (data.password_required == "yes");
+            myProfile.published = (data.page_is_published === "yes");
+            myProfile.hasPassword = (data.password_required === "yes");
             myProfile.customPath = String(data.customurl);
             console.log(`customPath from status: ${myProfile.customPath}`);
             myProfile.save();
@@ -283,7 +283,7 @@ const Editor = () => {
         method: 'GET'
       });
 
-      if (response.status == 200) {
+      if (response.status === 200) {
         alert("Your page has been unpublished!");
         myProfile.published = false;
         myProfile.hasPassword = false;
@@ -398,7 +398,7 @@ const Editor = () => {
         method: 'DELETE'
       });
 
-      if (response.status == 200) {
+      if (response.status === 200) {
         alert("Your custom URL has been deleted!");
         myProfile.customPath = null;
         await myProfile.save();
