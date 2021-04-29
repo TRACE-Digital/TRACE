@@ -36,6 +36,9 @@ function Colors(props) {
     // const [claimedAccounts, setClaimedAccounts] = useState({});
     // const [onProfile, setOnProfile] = useState(false);
 
+    // if (false) {
+    //     setColorProps(false);
+    // }
 
 
     // Load the initial accounts that we need and

@@ -4,15 +4,16 @@ import { ProfilePage, ThirdPartyAccount } from "trace-search";
 import SiteCard from "components/SiteCard/SiteCard";
 import { GridContextProvider, GridDropZone, GridItem, swap } from "react-grid-dnd";
 import { Link } from "react-router-dom";
-import { Row, Col } from "reactstrap";
 import { Auth } from 'aws-amplify';
 import { renderToStaticMarkup } from 'react-dom/server'
 import {
+  Col,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
   UncontrolledDropdown,
   NavLink,
+  Row,
 } from "reactstrap";
 
 
@@ -22,7 +23,6 @@ const Editor = () => {
   /**
    * Initialize constants
    */
-  // const [claimedAccounts, setClaimedAccounts] = useState({});
   const [myProfile, setProfileData] = useState(null);
   const [title, setTitle] = useState("Enter Title");
   const [isOpen, setIsOpen] = useState(false);

@@ -5,7 +5,7 @@ const ConfidenceMeter = (props) => {
 
     const getColor = (strength) => {
       strength = parseFloat(strength)
-  
+
       if (strength <= 3) {
         return "danger"
       }
@@ -19,11 +19,11 @@ const ConfidenceMeter = (props) => {
         return "success"
       }
     }
-  
+
     const confidence = props.confidence;
-  
+
     let color = getColor(confidence)
-    
+
     return <Progress value={confidence} max={10} className="progressBar" color={color}>{`${confidence * 10}%`}</Progress>
   };
 
