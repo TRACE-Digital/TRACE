@@ -86,6 +86,7 @@ function Colors(props) {
     ).concat(
         Object.values(ManualAccount.accounts)
     );
+    displayableAccounts.sort((a, b) => a.site.name.localeCompare(b.site.name));
 
 
 
