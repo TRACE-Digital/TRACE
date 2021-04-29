@@ -3,7 +3,7 @@ import { Button, Row, Col, Form, FormGroup, Label, Input } from 'reactstrap';
 
 import { ManualAccount, tags } from 'trace-search';
 
-const Popup = (props) => {
+const AddPopup = (props) => {
     const [categories, setCategories] = useState([]);
     const [username, setUsername] = useState('');
     const [siteName, setSiteName] = useState('');
@@ -126,4 +126,4 @@ const Popup = (props) => {
     );
 }
 
-export default Popup;
+export default AddPopup;
