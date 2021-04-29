@@ -13,9 +13,7 @@ filter.addWords('facebook');
 filter.addWords('thisisnotallowed');
 
 function Colors(props) {
-    const [titleColor, setTitleColor] = useState(props.page.colorScheme.titleColor);
-    const [backColor, setBackgroundColor] = useState(props.page.colorScheme.backgroundColor);
-    const [siteColor, setSiteColor] = useState(props.page.colorScheme.siteColor);
+   
     const [iconColor, setIconColor] = useState(props.page.colorScheme.iconColor);
     const [disabled, setDisabled] = useState(false);
     const [chromeColor, setChromeColor] = useState();
@@ -23,21 +21,6 @@ function Colors(props) {
     const [currentButton, setCurrentButton] = useState("Title");
     const [showThemeFeature, setThemeFeature] = useState(false);
     const [showSiteFeature, setSiteFeature] = useState(true);
-    const [colorProps, setColorProps] = useState([{
-        "titleColor": "#FFFFFF",
-        "backgroundColor": "#1E1D2A",
-        "siteColor": "#26283A",
-        "iconColor": "Default"
-    }])
-
-
-
-
-
-    // const [claimedAccounts, setClaimedAccounts] = useState({});
-    // const [onProfile, setOnProfile] = useState(false);
-
-
 
     // Load the initial accounts that we need and
     // register for any future changes
@@ -58,15 +41,6 @@ function Colors(props) {
                 console.error(e);
             }
             console.log(ThirdPartyAccount.accountCache.items);
-
-            // setTitleColor(props.page.colorScheme.titleColor);
-            // colorProps[0].titleColor = props.page.colorScheme.titleColor;
-            // setBackgroundColor(props.page.colorScheme.backgroundColor);
-            // colorProps[0].backgroundColor = props.page.colorScheme.backgroundColor;
-            // setSiteColor(props.page.colorScheme.siteColor);
-            // colorProps[0].siteColor = props.page.colorScheme.siteColor;
-            // setIconColor(props.page.colorScheme.iconColor);
-            // colorProps[0].iconColor = props.page.colorScheme.iconColor;
         }
 
         ClaimedAccount.accountCache.events.on('change', triggerRender);
@@ -91,34 +65,6 @@ function Colors(props) {
 
 
 
-
-
-    // /**
-    //  * Monitor for new claimed accounts. Every time the accounts array is updated, re-render to show the proper tiles.
-    //  */
-    // useEffect(() => {
-    //     const loadAccounts = async () => {
-    //     try {
-    //         // Load all accounts from the database into memory
-    //         await ThirdPartyAccount.loadAll();
-    //         // setPlsRender((current) => !current);
-    //     } catch (e) {
-    //         console.error("Failed to load accounts from the database!");
-    //         console.error(e);
-    //         return {};
-    //     }
-    //     return accounts;
-    //     };
-
-    //     loadAccounts().then(() => {
-    //     setClaimedAccounts(accounts);
-    //     setTitleColor(props.page.colorScheme.titleColor);
-    //     setBackgroundColor(props.page.colorScheme.backgroundColor);
-    //     setSiteColor(props.page.colorScheme.siteColor);
-    //     setIconColor(props.page.colorScheme.iconColor);
-    //     });
-
-    // }, [accounts]);
 
 
     function handleAdd(item) {
@@ -149,71 +95,42 @@ function Colors(props) {
     function handleDefaultIcon(e){
         setDisabled(true);
         setCurrentButton("Default Icon");
-        // colorProps[0].iconColor = "Default";
         props.page.colorScheme.iconColor = "Default";
         setPlsRender(prev => !prev);
         props.onSelectLanguage(null);
-        // props.onSelectLanguage(colorProps);
     }
 
     function handleCustomIcon(e){
         setDisabled(false);
         setCurrentButton("Custom Icon");
-        setChromeColor(e.target.style.backgroundColor);
+        setChromeColor(props.page.colorScheme.iconColor);
     }
 
     function handleColorPicker(e) {
         setChromeColor(e);
-        console.log(currentButton);
-        console.log("COLOR");
-        console.log(e.hex);
 
         if (currentButton === "Title") {
             props.page.colorScheme.titleColor = e.hex;
             setPlsRender(prev => !prev);
             props.onSelectLanguage(null);
-         
-
-
-
-
-            // setTitleColor(e.hex);
-            // colorProps[0].titleColor = e.hex;
-            // console.log("EWWRERERER");
-            // console.log(colorProps[0]);
-            // console.log(colorProps);
         }
         else if (currentButton === "Site") {
-            // setSiteColor(e.hex);
-            // colorProps[0].siteColor = e.hex;
             props.page.colorScheme.siteColor = e.hex;
             setPlsRender(prev => !prev);
             props.onSelectLanguage(null);
            
         }
         else if (currentButton === "Custom Icon") {
-            // setIconColor(e.hex);
-
             // props.page.colorScheme.iconColor = e.hex;
-            // setPlsRender(prev => !prev);
-            // props.onUpdatePage(null);
-
-            // console.log(colorProps[0]);
-            // console.log(colorProps);
-            // props.onSelectLanguage(colorProps);
             props.page.colorScheme.iconColor = e.hex;
             setPlsRender(prev => !prev);
-            props.onSelectLanguage(null);
-            
+            props.onSelectLanguage(null);  
    
         }
         else if (currentButton === "Background") {
-            // setBackgroundColor(e.hex);
-            // colorProps[0].backgroundColor = e.hex;
             props.page.colorScheme.backgroundColor = e.hex;
             setPlsRender(prev => !prev);
             props.onSelectLanguage(null);
-            
         }
   
         

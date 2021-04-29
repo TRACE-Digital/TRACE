@@ -15,7 +15,7 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 import { IconButton } from "@material-ui/core";
-import { AutoSearchAccountAction, tags } from 'trace-search';
+import { AutoSearchAccountAction, tags, supportedSites} from 'trace-search';
 import fontAwesomeClasses from '../../assets/fonts/font-awesome.json';
 
 /**
@@ -91,8 +91,6 @@ const AccountCard = (props) => {
   }
 
   const handleLogoSelect = (selectedLogo) => {
-    console.log(selectedLogo[0].value);
-    console.log(selectedLogo[0].key);
     setLogoClass(selectedLogo[0].value);
   }
 
@@ -101,25 +99,12 @@ const AccountCard = (props) => {
   }
 
   async function handleSubmit(e) {
-    // console.log(siteName);
-    // console.log(userName);
-    console.log(url);
-    console.log(accountTags);
-    console.log(logoClass);
-
     props.account.site.url = url;
     props.account.site.tags = accountTags;
     props.account.site.logoClass = logoClass;
-
+    props.account.site.logoColor = "white";
     await props.account.save();
   }
-
-  // async function handleTagSubmit(e) {
-  //   console.log(accountTags);
-
-  //   props.account.site.tags = accountTags;
-  //   await props.account.save();
-  // }
 
   return (
     <>

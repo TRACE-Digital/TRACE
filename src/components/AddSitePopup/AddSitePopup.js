@@ -52,16 +52,18 @@ const AddPopup = (props) => {
         if (siteName && username && url.includes("http")) {
             // Add to database
             let foundLogo;
+            let foundColor;
             const domain = new URL(url).hostname;
             
             for (const site of Object.values(supportedSites)) {
                 if (site.url.includes(domain) || site.urlMain.includes(domain)) {
                     foundLogo = site.logoClass;
+                    foundColor = site.logoColor;
                 }
             }
 
             foundLogo = foundLogo || 'fas fa-question fa-sm';
-            const manualSite = { url: url, name: siteName, tags: categories, logoClass: foundLogo};
+            const manualSite = { url: url, name: siteName, tags: categories, logoClass: foundLogo, logoColor: foundColor};
             const manualAccount = new ManualAccount(manualSite, username);
             setShowError(false);
 

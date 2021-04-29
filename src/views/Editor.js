@@ -51,14 +51,6 @@ const Editor = () => {
   const [titleColor, setTitleColor] = useState("#FFFFFF");
 
 
-
-  // const [colorScheme, setColorScheme] = useState([{
-  //   "titleColor": "#FFFFFF",
-  //   "backgroundColor": "#1E1D2A",
-  //   "siteColor": "#26283A",
-  //   "iconColor": "Default"
-  // }])
-
   /**
    * Function is called when there is a change on the site grid and updates the order
    */
@@ -97,19 +89,6 @@ const Editor = () => {
    * Function handles any updating of the color choices from the popup and saves data
    */
   function handleLanguage(colorChoice) {
-    // console.log("WTF");
-    // console.log(colorChoice);
-    // const updated = [...colorChoice];
-    // setColorScheme([...updated]);
-    // myProfile.colorScheme.titleColor = colorScheme[0].titleColor;
-    // myProfile.colorScheme.backgroundColor = colorScheme[0].backgroundColor;
-    // myProfile.colorScheme.siteColor = colorScheme[0].siteColor;
-    // myProfile.colorScheme.iconColor = colorScheme[0].iconColor;
-    // console.log("OKKKK");
-    // console.log(myProfile.colorScheme.titleColor);
-    // console.log(myProfile.colorScheme.backgroundColor);
-    // console.log(myProfile.colorScheme.siteColor);
-    // console.log(myProfile.colorScheme.iconColor);
     saveData();
     setBackGroundColor(myProfile.colorScheme.backgroundColor);
     setIconColor(myProfile.colorScheme.iconColor);
@@ -478,10 +457,6 @@ const Editor = () => {
         results.push(page);
       }
       else {
-        // colorScheme[0].backgroundColor = results[0].colorScheme.backgroundColor;
-        // colorScheme[0].titleColor = results[0].colorScheme.titleColor;
-        // colorScheme[0].siteColor = results[0].colorScheme.siteColor;
-        // colorScheme[0].iconColor = results[0].colorScheme.iconColor;
         setBackGroundColor(results[0].colorScheme.backgroundColor);
         setIconColor(results[0].colorScheme.iconColor);
         setSiteColor(results[0].colorScheme.siteColor);
@@ -539,8 +514,8 @@ const Editor = () => {
   const renderBaseContent = () => {
     return renderToStaticMarkup(
       <>
-      <div className={`editor-background`} style={{ backgroundColor: `${colorScheme[0].backgroundColor}` }}>
-        <div className={"editor-title"} style={{ color: `${colorScheme[0].titleColor}` }}>
+      <div className={`editor-background`} style={{ backgroundColor: `${backgroundColor}` }}>
+        <div className={"editor-title"} style={{ color: `${titleColor}` }}>
           <h1 style={{ paddingTop: '20px' }}>{title}</h1>
         </div>
         <div>
@@ -548,7 +523,7 @@ const Editor = () => {
             {myProfile &&
               myProfile.accounts.map(item => (
                 <Col lg="3">
-                  <SiteCard editorColor={colorScheme[0].siteColor} iconColor={colorScheme[0].iconColor} account={item} page="editor" />
+                  <SiteCard editorColor={siteColor} iconColor={iconColor} account={item} page="editor" />
                 </Col>
               ))}
           </Row>
@@ -675,75 +650,6 @@ const Editor = () => {
                     </td>
             </tr>
           </table>
-
-
-        {/* <div className={`editor-background`} style={{ backgroundColor: `${colorScheme[0].backgroundColor}` }}>
-          <div className={"editor-title"} style={{ color: `${colorScheme[0].titleColor}` }}>
-
-            <input
-              className="editor-input"
-              type="text"
-              value={title}
-              maxLength={30}
-              onChange={updateTitle}
-              style={{width:"600px", color: `${colorScheme[0].titleColor}`, backgroundColor: `${colorScheme[0].backgroundColor}`, border: "none", outline: "none" }}
-            />
-
-          <Link style={{display: "inline-block", float: "right"}}
-              className="btn btn-primary editor-button"
-              color="primary"
-              onClick={handleAddClick}
-            >
-              Edit Page
-          </Link>
-
-          <UncontrolledDropdown style={{display: "inline-block", float: "right"}}>
-            <DropdownToggle className="btn btn-primary public-options-button">
-              Page Options
-            </DropdownToggle>
-            <DropdownMenu className="dropdown-navbar" right tag="ul" style={{marginRight: "10px"}}>
-              <NavLink tag="li">
-                <DropdownItem className="nav-item" onClick={publishPublicPage} style={{color: "black"}}>Publish Page</DropdownItem>
-              </NavLink>
-              {myProfile && myProfile.published && <div>
-                <NavLink tag="li">
-                  <DropdownItem className="nav-item" onClick={unpublishPublicPage} style={{color: "black"}}>Unpublish Page</DropdownItem>
-                </NavLink>
-                <DropdownItem divider tag="li" />
-                <NavLink tag="li">
-                  <DropdownItem className="nav-item" onClick={goToPublicPage} style={{color: "black"}}>Go To Page</DropdownItem>
-                </NavLink>
-                <DropdownItem divider tag="li" />
-                {myProfile && !myProfile.hasPassword &&
-                  <NavLink tag="li"><DropdownItem className="nav-item" onClick={addPublicPagePassword} style={{color: "black"}}>Add Password</DropdownItem></NavLink>
-                } {myProfile && myProfile.hasPassword &&
-                  <div>
-                    <NavLink tag="li"><DropdownItem className="nav-item" onClick={addPublicPagePassword} style={{color: "black"}}>Change Password</DropdownItem></NavLink>
-                    <NavLink tag="li"><DropdownItem className="nav-item" onClick={removePublicPagePassword} style={{color: "black"}}>Remove Password</DropdownItem></NavLink>
-                  </div>
-                }
-                <DropdownItem divider tag="li" />
-                {myProfile && !myProfile.hasCustomPath &&
-                <NavLink tag="li">
-                  <DropdownItem className="nav-item" onClick={addCustomURL} style={{color: "black"}}>Customize URL</DropdownItem>
-                </NavLink>
-                } {myProfile && myProfile.hasCustomPath &&
-                  <div>
-                    <NavLink tag="li">
-                      <DropdownItem className="nav-item" onClick={addCustomURL} style={{color: "black"}}>Edit Custom URL</DropdownItem>
-                    </NavLink>
-                    <NavLink tag="li">
-                      <DropdownItem className="nav-item" onClick={goToCustomUrl} style={{color: "black"}}>Go To Custom URL</DropdownItem>
-                    </NavLink>
-                    <NavLink tag="li">
-                      <DropdownItem className="nav-item" onClick={deleteCustomUrl} style={{color: "black"}}>Delete Custom URL</DropdownItem>
-                    </NavLink>
-                  </div>
-                }
-              </div>}
-            </DropdownMenu>
-          </UncontrolledDropdown> */}
-
           </div>
           {myProfile &&
             (showBlockTheme ? 
@@ -783,12 +689,12 @@ const Editor = () => {
                          
                           <Row style={{ "white-space":"nowrap","margin-right":"10px"}}>
                             
-                            <Col lg="8" style={{display:"inline-block","text-align": "right", "max-width":"120px"}}>
-                              
-                              <i className={ item.site.logoClass !== "fa-question-circle" ? "fab " + item.site.logoClass : "fas " + item.site.logoClass}
-                                 style={{"font-size":"50px", "margin-left":"40px", color: `${iconColor}` }}
-                              > </i>
-                                 
+                            <Col className="colors" lg="8" style={{display:"inline-block","text-align": "right", "max-width":"120px"}}>
+                              <div className="colorsListView">
+                              <i className={item.site.logoClass}
+                                 style={{"font-size":"50px", "margin-left":"40px", color: (iconColor === "Default") ? item.site.logoColor || null : iconColor}}
+                              ></i>
+                              </div>
                             </Col>
                             <Col lg="8" style={{display:"inline-block","margin-top":"10px", "font-weight":"600", "text-align": "left", "margin-right":"40px"}}>
                             
