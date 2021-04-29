@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Row, Col, Form, FormGroup, Label, Input } from 'reactstrap';
 
-import { ManualAccount, tags } from 'trace-search';
+import { ManualAccount, tags, supportedSites } from 'trace-search';
 
 const AddPopup = (props) => {
     const [categories, setCategories] = useState([]);
@@ -49,11 +49,20 @@ const AddPopup = (props) => {
         console.log(username);
         console.log(url);
 
-        if (siteName && username && url) {
+        if (siteName && username && url.includes("http")) {
             // Add to database
-            const manualSite = { url: url, name: siteName, tags: categories };
-            const manualAccount = new ManualAccount(manualSite, username);
+            let foundLogo;
+            const domain = new URL(url).hostname;
+            
+            for (const site of Object.values(supportedSites)) {
+                if (site.url.includes(domain) || site.urlMain.includes(domain)) {
+                    foundLogo = site.logoClass;
+                }
+            }
 
+            foundLogo = foundLogo || 'fas fa-question fa-sm';
+            const manualSite = { url: url, name: siteName, tags: categories, logoClass: foundLogo};
+            const manualAccount = new ManualAccount(manualSite, username);
             setShowError(false);
 
             try {
@@ -116,7 +125,7 @@ const AddPopup = (props) => {
                     Add to Dashboard
                 </Button>
                 <div className={showError ? "error-message-visible" : "error-not-visible"}>
-                    Warning: required fields are empty
+                    Warning: required fields are empty or invalid
                 </div>
                 <div className={dbError ? "error-message-visible" : "error-not-visible"}>
                     { dbError ? "Error: " + dbError : ""}
