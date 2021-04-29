@@ -6,7 +6,7 @@ import classNames from "classnames";
 import { GridContextProvider, GridDropZone, GridItem, swap } from "react-grid-dnd";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Link } from "react-router-dom";
-import { Row, Col } from "reactstrap";
+
 import { Button, ButtonGroup } from "reactstrap";
 import { Auth, nav } from 'aws-amplify';
 import { renderToStaticMarkup } from 'react-dom/server'

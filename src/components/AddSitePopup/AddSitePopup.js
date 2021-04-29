@@ -10,6 +10,7 @@ const AddPopup = (props) => {
     const [url, setUrl] = useState('');
     const [showError, setShowError] = useState(false);
     const [dbError, setDbError] = useState(null);
+    const [urlError, setUrlError] = useState(false);
 
     function handleClickCheckbox(e) {
         console.log(e.target.value);
@@ -49,33 +50,40 @@ const AddPopup = (props) => {
         console.log(username);
         console.log(url);
 
-        if (siteName && username && url.includes("http")) {
-            // Add to database
-            let foundLogo;
-            let foundColor;
-            const domain = new URL(url).hostname;
-            
-            for (const site of Object.values(supportedSites)) {
-                if (site.url.includes(domain) || site.urlMain.includes(domain)) {
-                    foundLogo = site.logoClass;
-                    foundColor = site.logoColor;
+        if (siteName && username && url) {
+            if (url.includes("http")){
+                    // Add to database
+                let foundLogo;
+                let foundColor;
+                const domain = new URL(url).hostname;
+                
+                for (const site of Object.values(supportedSites)) {
+                    if (site.url.includes(domain) || site.urlMain.includes(domain)) {
+                        foundLogo = site.logoClass;
+                        foundColor = site.logoColor;
+                    }
+                }
+
+                foundLogo = foundLogo || 'fas fa-question fa-sm';
+                const manualSite = { url: url, name: siteName, tags: categories, logoClass: foundLogo, logoColor: foundColor};
+                const manualAccount = new ManualAccount(manualSite, username);
+                setShowError(false);
+                setUrlError(false);
+
+                try {
+                    await manualAccount.save();
+                    props.closePopup();
+                } catch (e) {
+                    if (e.message === "Document update conflict") {
+                        setDbError("Account already exists");
+                    } else {
+                    setDbError(e.message);
+                    }
                 }
             }
-
-            foundLogo = foundLogo || 'fas fa-question fa-sm';
-            const manualSite = { url: url, name: siteName, tags: categories, logoClass: foundLogo, logoColor: foundColor};
-            const manualAccount = new ManualAccount(manualSite, username);
-            setShowError(false);
-
-            try {
-                await manualAccount.save();
-                props.closePopup();
-            } catch (e) {
-                if (e.message === "Document update conflict") {
-                    setDbError("Account already exists");
-                } else {
-                setDbError(e.message);
-                }
+            else{
+                setShowError(true);
+                setUrlError(true);
             }
         }
         else {
@@ -127,7 +135,7 @@ const AddPopup = (props) => {
                     Add to Dashboard
                 </Button>
                 <div className={showError ? "error-message-visible" : "error-not-visible"}>
-                    Warning: required fields are empty or invalid
+                    {urlError ? "Warning: url not valid" : "Warning: required fields are empty"}
                 </div>
                 <div className={dbError ? "error-message-visible" : "error-not-visible"}>
                     { dbError ? "Error: " + dbError : ""}
