@@ -48,6 +48,28 @@
         margin-bottom: 5px;
       }
 
+      .tag-container {
+        display: flex;
+        flex-flow: row wrap;
+        height: 100vh;
+        max-height: inherit;
+        overflow-y: scroll;
+        margin-top: -30px;
+        align-content: flex-start;
+
+        >.tags {
+          border-color:#d3d3d3;
+          background-color:#d3d3d3;
+          color:#373737;
+          border-style: solid;
+          padding: 5px;
+          margin-right: 5px;
+          margin-top: 5px;
+          border-radius: 25px;
+          text-align: center;
+        }
+      }
+
       .cancel {
         float: right;
         position: absolute;

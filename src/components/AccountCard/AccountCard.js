@@ -318,7 +318,16 @@ const AccountCard = (props) => {
                   <div className="privacyBadge" >
                     <PrivacyBadge account={props.account} service={props.account.site.name} />
                   </div>
-                  <h5 className="tags">{props.account.site.tags.join(', ')}</h5>
+                  <div className="tag-container">
+                    {props.account.site.tags.map((tag) => {
+                      return (
+                        <div className="tags">
+                          {tag}
+                        </div>
+                      );
+                    })}
+                  </div>
+                  {/* <h5 className="tags">{props.account.site.tags}</h5> */}
 
 
                   {/* NAMES */}
