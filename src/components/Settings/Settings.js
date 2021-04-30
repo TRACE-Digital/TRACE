@@ -105,9 +105,8 @@ function Settings() {
       alert(`Could not close account!\n${e}`);
     }
 
-    setRefreshData(prev => !prev);
-
     await Auth.signOut();
+    await setRemoteUser(null);
     window.location.href = '/login';
   };
 

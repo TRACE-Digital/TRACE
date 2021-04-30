@@ -34,8 +34,23 @@ function SearchComponent() {
   const showResume = [SearchState.PAUSED].includes(currentSearch?.state);
   const showCancel = [SearchState.IN_PROGRESS, SearchState.PAUSED].includes(currentSearch?.state);
   const showPause = [SearchState.IN_PROGRESS].includes(currentSearch?.state);
-  const showClear = [SearchState.PAUSED, SearchState.COMPLETED, SearchState.FAILED].includes(currentSearch?.state);
+  const showClear = [SearchState.PAUSED, SearchState.COMPLETED, SearchState.CANCELLED, SearchState.FAILED].includes(currentSearch?.state);
   const showSearchIcon = currentSearch === null || [SearchState.CREATED, SearchState.COMPLETED, SearchState.FAILED].includes(currentSearch?.state);
+
+  // Load the search from the ID in the URL
+  useEffect(() => {
+    let idToRestore;
+    if (window.location.hash && window.location.hash.startsWith('#search')) {
+      idToRestore= window.location.hash.substr(1);
+    } else {
+      idToRestore = localStorage.getItem('traceLastSelectedSearchId');
+    }
+
+    const search = Search.cache.get(idToRestore);
+    if (idToRestore && search) {
+      setCurrentSearch(search);
+    }
+  }, []);
 
   // Register for changes to any search results
   // Results get updated as they are claimed/rejected
@@ -55,6 +70,8 @@ function SearchComponent() {
       SearchDefinition.cache.events.removeListener('change', triggerRender);
       Search.cache.events.removeListener('change', triggerRender);
     };
+
+    localStorage.setItem('traceLastSelectedSearchId', currentSearch?.id);
 
     return cleanup;
   }, [currentSearch]);
@@ -90,8 +107,10 @@ function SearchComponent() {
   const handleClearClick = async () => {
     setProgress(-1);
     if (currentSearch) {
-      const search = await currentSearch.definition.new();
+      const searchDef = new SearchDefinition();
+      const search = await searchDef.new();
       handleNewSearch(search);
+      setSelectedTags(tags.slice());
       return search;
     }
   };
@@ -170,19 +189,14 @@ function SearchComponent() {
       setError('please select at least one tag');
     } else {
 
-      let searchDef;
-      let search;
       if (currentSearch) {
         if (currentSearch.state === SearchState.IN_PROGRESS) {
           await currentSearch.cancel();
         }
-
-        searchDef = currentSearch.definition;
-        search = await currentSearch.definition.new();
-      } else {
-        searchDef = new SearchDefinition(undefined, []);
-        search = await searchDef.new();
       }
+
+      const searchDef = new SearchDefinition();
+      const search = await searchDef.new();
 
       const taggedSites = filterSitesByTags(supportedSites, selectedTags);
 
@@ -226,7 +240,7 @@ function SearchComponent() {
 
   function handleClickCheckbox(e) {
     if (selectedTags.includes(e.target.value)) {
-      selectedTags.splice(tags.indexOf(e.target.value), 1);
+      selectedTags.splice(selectedTags.indexOf(e.target.value), 1);
       setSelectedTags([...selectedTags]);
     } else {
       setError('');
@@ -277,7 +291,11 @@ function SearchComponent() {
         <div className="four">
           {/* SEARCH */}
           {showSearchIcon && (
-            <i className="tim-icons icon-zoom-split" onClick={submitSearch} />
+            <i
+              className="tim-icons icon-zoom-split"
+              onClick={submitSearch}
+              title="Search"
+            />
           )}
           {/* RESUME */}
           {showResume && (
@@ -286,6 +304,7 @@ function SearchComponent() {
               <i
                 className="tim-icons icon-triangle-right-17"
                 onClick={handleResumeClick}
+                title="Resume"
               />
             </>
           )}
@@ -296,6 +315,7 @@ function SearchComponent() {
               <i
                 className="tim-icons icon-button-pause"
                 onClick={handlePauseClick}
+                title="Pause"
               />
             </>
           )}
@@ -306,6 +326,18 @@ function SearchComponent() {
               <i
                 className="tim-icons icon-simple-remove"
                 onClick={handleCancelClick}
+                title="Cancel"
+              />
+            </>
+          )}
+          {/* CLEAR */}
+          {showClear && (
+            <>
+              &nbsp; &nbsp;
+              <i
+                className="tim-icons icon-simple-add"
+                onClick={handleClearClick}
+                title="New Search"
               />
             </>
           )}
@@ -323,13 +355,6 @@ function SearchComponent() {
         <span className="the-text refine" onClick={handleHistoryClick}>
           history
         </span>
-      </div>
-      <div className="refine-search">
-        {showClear && (
-          <span className="the-text cancel" onClick={handleClearClick}>
-            clear results
-          </span>
-        )}
       </div>
 
       {/* REFINE SEARCH */}
@@ -426,7 +451,7 @@ function SearchComponent() {
         {error}
       </div>
 
-      {progress >= 0 && (
+      {currentSearch && currentSearch.state !== SearchState.CREATED && (
         <div style={{ width: "100%", textAlign: "center" }}>
           <div>{progress}%</div>
           <div

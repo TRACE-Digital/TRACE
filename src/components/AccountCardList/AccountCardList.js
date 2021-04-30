@@ -123,9 +123,9 @@ function AccountCardList(props) {
         // sort by confidence level, highest first
         sorted.sort((a, b) => {
           return a.confidence < b.confidence
-            ? -1
-            : a.confidence > b.confidence
             ? 1
+            : a.confidence > b.confidence
+            ? -1
             : 0;
         });
       } else if (sortMethod === "category") {
@@ -213,7 +213,8 @@ function AccountCardList(props) {
       </div>
       <Row>
         {sortedAccounts.map((account) => (
-          <Fragment key={account.id || account}>
+          // <Fragment key={account.id || account}> // This has duplicate IDs right now and causes some real weird stuff
+          <Fragment>
           {typeof account !== "string" && (<AccountCard
             key={account.id}
             account={account}

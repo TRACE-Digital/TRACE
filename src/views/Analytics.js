@@ -32,10 +32,11 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "reactstrap";
+import Auth from "@aws-amplify/auth";
+import { Link } from "react-router-dom";
 
 function Analytics(props) {
   const [page, setPage] = useState(null);
-
 
   useEffect(() => {
     (async () => {
@@ -48,9 +49,31 @@ function Analytics(props) {
     })();
   }, []);
 
+  useEffect(() => {
+    async function isLoggedIn() {
+      try {
+        await Auth.currentUserPoolUser();
+      }
+      catch {
+        window.location.href = '/login';
+      }
+    }
+    isLoggedIn();
+  }, []);
+
   return (
     <>
       <div className="content">
+        {!page &&
+        <h3>You haven't created a profile page yet! Check out the <Link to="/profile-editor">editor</Link> first.</h3>
+        }
+        {page && !page.published &&
+        <>
+          <h3>Great! You've created a profile page.</h3>
+          <h3>It's not yet published though. Head back over to the <Link to="/profile-editor">editor</Link> to publish it.</h3>
+        </>
+        }
+        {page && page.published &&
         <Row>
           <Col lg="12">
             <Card className="card-chart">
@@ -72,9 +95,10 @@ function Analytics(props) {
             </Card>
           </Col>
         </Row>
+        }
         <Row>
           {/* Map here */}
-          {page && page.accounts.map((account) => (
+          {page && page.published && page.accounts.map((account) => (
              <Col lg="4" key={account.id}>
               <Card className="card-chart">
                 <CardHeader>

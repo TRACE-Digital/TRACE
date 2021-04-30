@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Auth } from 'aws-amplify';
-import { destroyLocalDb, generateEncryptionKey } from 'trace-search'
+import { destroyDb, generateEncryptionKey } from 'trace-search'
 
 // reactstrap components
 import { Alert, Card, CardImg, CardBody, CardTitle, Button, Form, FormGroup, Input } from 'reactstrap';
@@ -18,8 +18,10 @@ async function signUp(username, email, password) {
           }
       });
       // Before a user signs up, we must clear the current local database
+      await setRemoteUser(null);
+      await destroyDb();
+
       // We also must generate a new encryption key based off of their password
-      await destroyLocalDb();
       const user = await Auth.currentUserPoolUser();
       await generateEncryptionKey(password, user.attributes.sub);
       return null;
@@ -43,7 +45,13 @@ async function signIn(username, password) {
         await Auth.signIn(username, password);
         const user = await Auth.currentUserPoolUser();
 
+        // Before a user signs in, we must clear the current local database
+        await setRemoteUser(null);
+        await destroyDb();
+
+        // We also must generate a new encryption key based off of their password
         await setRemoteUser(user);
+        await generateEncryptionKey(password, user.attributes.sub);
         const db = await getRemoteDb();
 
         let settings = {};
@@ -53,16 +61,12 @@ async function signIn(username, password) {
           console.error(e);
         }
 
-        // Before a user signs in, we must clear the current local database
-        await destroyLocalDb();
-
         if (settings.accountClosed) {
           await Auth.signOut();
+          await setRemoteUser(null);
           return 'Your account has been closed! Contract TRACE administrators if you would like to reopen it.';
         }
 
-        // We also must generate a new encryption key based off of their password
-        await generateEncryptionKey(password, user.attributes.sub);
         return null;
     } catch (error) {
       Auth.error = error;

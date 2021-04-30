@@ -321,7 +321,7 @@ const AccountCard = (props) => {
                   <div className="tag-container">
                     {props.account.site.tags.map((tag) => {
                       return (
-                        <div className="tags">
+                        <div key={tag} className="tags">
                           {tag}
                         </div>
                       );
@@ -351,7 +351,7 @@ const AccountCard = (props) => {
                   <div className="card-back-bottom">
                   {props.account.confidence > 0 && (
                     <div className="confidence">
-                      CONFIDENCE
+                      Confidence
                       <ConfidenceMeter confidence={props.account.confidence} />
                     </div>
                   )}
