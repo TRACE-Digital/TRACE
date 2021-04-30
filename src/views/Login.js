@@ -196,8 +196,13 @@ function Login() {
                     />
                   </FormGroup>
                 </Form>
-                <Button color="primary" block type="submit" form='sign-up-form' >
-                  Sign Up
+                <Button color="primary" block size="lg" type="submit" form='sign-up-form' >
+                  {error && (
+                    <span style={{transform: "translateY(-10px)"}}>Sign Up</span>
+                  )}
+                  {!error && (
+                    <span>Sign Up</span>
+                  )}
                 </Button>
                 <br/>
                 <Link
