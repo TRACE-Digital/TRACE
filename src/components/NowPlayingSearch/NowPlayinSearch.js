@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { Search, SearchState, ThirdPartyAccount } from "trace-search";
 
 function NowPlayingSearch() {
-  const [currentSearch, setCurrentSearch] = useState(null);
   const [, setPlsRender] = useState(false);
 
   const getInProgressSearches = () => {
@@ -15,20 +14,12 @@ function NowPlayingSearch() {
 
   useEffect(() => {
     const triggerRender = () => setPlsRender(prev => !prev);
-    const pickSearch = () => {
-      const searches = getInProgressSearches();
-      console.log(searches);
-      if (searches.length > 0) {
-        setCurrentSearch(searches[0]);
-      }
-      triggerRender();
-    }
 
-    Search.cache.events.on('change', pickSearch);
+    Search.cache.events.on('change', triggerRender);
     ThirdPartyAccount.resultCache.events.on('change', triggerRender);
     const interval = setInterval(triggerRender, 60 * 1000);
     return () => {
-      Search.cache.events.removeListener('change', pickSearch);
+      Search.cache.events.removeListener('change', triggerRender);
       ThirdPartyAccount.resultCache.events.removeListener('change', triggerRender);
       clearInterval(interval);
     }
