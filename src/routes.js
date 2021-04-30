@@ -21,6 +21,7 @@ import Analytics from "views/Analytics.js";
 import UserProfile from "views/UserProfile.js";
 import Editor from "views/Editor.js";
 import Contact from "views/Contact.js";
+import Settings from "components/Settings/Settings";
 
 var routes = [
   {
@@ -53,6 +54,14 @@ var routes = [
     rtlName: "ملف تعريفي للمستخدم",
     icon: "tim-icons icon-pencil",
     component: Editor,
+    layout: "",
+  },
+  {
+    path: "/settings",
+    name: "Settings",
+    rtlName: "",
+    icon: "tim-icons icon-settings",
+    component: Settings,
     layout: "",
   },
   {
