@@ -191,7 +191,7 @@ const Editor = () => {
       matomoSiteTemplate.searchParams.set('url', `${matomoSiteTemplate.searchParams.get('url', matomoPageUrl)}/SITE_NAME/USER_NAME`);
 
       let url = 'https://public.tracedigital.tk/update?username=' + value.attributes.sub;
-      let csslink = 'https://tracedigital.tk/static/css/main.2e0404d2.chunk.css';
+      let csslink = 'https://tracedigital.tk/static/css/main.e3ab3859.chunk.css';
       let fetchbody = `
 <!DOCTYPE html>
 <html>

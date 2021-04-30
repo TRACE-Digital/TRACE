@@ -451,7 +451,7 @@ function SearchComponent() {
         {error}
       </div>
 
-      {currentSearch && currentSearch.state !== SearchState.CREATED && (
+      {currentSearch && currentSearch.state !== SearchState.CREATED && progress >= 0 && (
         <div style={{ width: "100%", textAlign: "center" }}>
           <div>{progress}%</div>
           <div
