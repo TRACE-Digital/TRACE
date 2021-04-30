@@ -3,112 +3,113 @@ import { Line } from "react-chartjs-2";
 import axios from "axios";
 import { Auth } from 'aws-amplify';
 
+async function fetchData(props, setLabels, setTotalData) {
+
+  var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  var days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
+
+  const currentUser = await Auth.currentUserPoolUser();
+  const sub = currentUser.attributes.sub;
+  const interval = props.interval;
+
+  var formdata = new FormData();
+  formdata.append("idSite", props.idSite); // from profile page
+  formdata.append("pageUrl", `/a-${sub}/${props.pageUrl}`); // public page url
+
+  let labelFrequency = 1; // default is a label at every data point
+  if (interval === "1 Year") {
+    formdata.append("period", "month");
+    formdata.append("date", "last12");
+
+  } else if (interval === "6 Months") {
+    formdata.append("period", "week");
+    formdata.append("date", "last26");
+    labelFrequency = 4;
+
+  } else if (interval === "1 Month") {
+    formdata.append("period", "day");
+    formdata.append("date", "last31");
+    // labelFrequency = 7;
+
+  } else if (interval === "1 Week") {
+    formdata.append("period", "day");
+    formdata.append("date", "last7");
+
+  } else {
+    return [];
+  }
+
+  formdata.append("token_auth", "anonymous");
+
+  var config = {
+    method: 'POST',
+    url: 'https://analytics.tracedigital.tk/?module=API&method=Actions.getPageUrl&format=JSON',
+    data: formdata,
+  };
+
+  let analyticsData = {};
+  try {
+    const response = await axios(config);
+    analyticsData = response.data;
+  }
+  catch(error) {
+    console.error(error);
+  }
+
+const data = [];
+
+// Add label logic in here
+const tempLabels = [];
+let count = 0;
+let total = 0;
+for (const key in analyticsData) {
+
+  if (analyticsData.hasOwnProperty(key)) {
+
+    if (count % labelFrequency === 0) {
+      const date = new Date(key.split(',')[0]);
+
+      if (interval === "1 Year" || interval === "6 Months") {
+        tempLabels.push(`${months[date.getMonth()]} ${date.getFullYear()}`);
+
+      } else if (interval === "1 Month") {
+        tempLabels.push(`${months[date.getMonth()]} ${date.getDate()}`);
+      } else if (interval === "1 Week") {
+        tempLabels.push(`${days[date.getDay()]} ${months[date.getMonth()]} ${date.getDate()}`);
+      }
+
+    } else {
+      tempLabels.push('');
+    }
+
+
+    if (analyticsData[key].length !== 0) {
+      let hits = analyticsData[key][0].nb_hits;
+      data.push(hits);
+      total += hits;
+    }
+    else {
+      data.push(0);
+    }
+  }
+  count++;
+}
+
+  setLabels(tempLabels);
+  setTotalData(total);
+  return data;
+}
+
 function Graph(props) {
 
   const [data, setData] = useState([]);
   const [labels, setLabels] = useState([]);
   const [totalData, setTotalData] = useState(0);
 
-  var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  var days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
-
-  async function fetchData(interval) {
-
-    const currentUser = await Auth.currentUserPoolUser();
-    const sub = currentUser.attributes.sub;
-
-    var formdata = new FormData();
-    formdata.append("idSite", props.idSite); // from profile page
-    formdata.append("pageUrl", `/a-${sub}/${props.pageUrl}`); // public page url
-
-    let labelFrequency = 1; // default is a label at every data point
-    if (interval === "1 Year") {
-      formdata.append("period", "month");
-      formdata.append("date", "last12");
-
-    } else if (interval === "6 Months") {
-      formdata.append("period", "week");
-      formdata.append("date", "last26");
-      labelFrequency = 4;
-
-    } else if (interval === "1 Month") {
-      formdata.append("period", "day");
-      formdata.append("date", "last31");
-      // labelFrequency = 7;
-
-    } else if (interval === "1 Week") {
-      formdata.append("period", "day");
-      formdata.append("date", "last7");
-
-    } else {
-      return [];
-    }
-
-    formdata.append("token_auth", "anonymous");
-
-    var config = {
-      method: 'POST',
-      url: 'https://analytics.tracedigital.tk/?module=API&method=Actions.getPageUrl&format=JSON',
-      data: formdata,
-    };
-
-    let analyticsData = {};
-    try {
-      const response = await axios(config);
-      analyticsData = response.data;
-    }
-    catch(error) {
-      console.error(error);
-    }
-
-  const data = [];
-
-  // Add label logic in here
-  const tempLabels = [];
-  let count = 0;
-  let total = 0;
-  for (const key in analyticsData) {
-
-    if (analyticsData.hasOwnProperty(key)) {
-
-      if (count % labelFrequency === 0) {
-        const date = new Date(key.split(',')[0]);
-
-        if (interval === "1 Year" || interval === "6 Months") {
-          tempLabels.push(`${months[date.getMonth()]} ${date.getFullYear()}`);
-
-        } else if (interval === "1 Month") {
-          tempLabels.push(`${months[date.getMonth()]} ${date.getDate()}`);
-        } else if (interval === "1 Week") {
-          tempLabels.push(`${days[date.getDay()]} ${months[date.getMonth()]} ${date.getDate()}`);
-        }
-
-      } else {
-        tempLabels.push('');
-      }
-
-
-      if (analyticsData[key].length !== 0) {
-        let hits = analyticsData[key][0].nb_hits;
-        data.push(hits);
-        total += hits;
-      }
-      else {
-        data.push(0);
-      }
-    }
-    count++;
-  }
-
-    setLabels(tempLabels);
-    setTotalData(total);
-    return data;
-  }
-
   useEffect(() => {
     (async () => {
       try {
-        const data = await fetchData(props.interval);
+        const data = await fetchData(props, setLabels, setTotalData);
         setData(data);
       }
       catch {
@@ -116,7 +117,7 @@ function Graph(props) {
         setData([]);
       }
     })();
-  }, [props.interval]);
+  }, [props]);
 
 
   let chart = {

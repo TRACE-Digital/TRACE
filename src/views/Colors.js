@@ -14,19 +14,12 @@ filter.addWords('thisisnotallowed');
 
 function Colors(props) {
 
-    const [iconColor, setIconColor] = useState(props.page.colorScheme.iconColor);
     const [disabled, setDisabled] = useState(false);
     const [chromeColor, setChromeColor] = useState();
     const [, setPlsRender] = useState(false);
     const [currentButton, setCurrentButton] = useState("Title");
     const [showThemeFeature, setThemeFeature] = useState(false);
     const [showSiteFeature, setSiteFeature] = useState(true);
-    const [colorProps, ] = useState([{
-        "titleColor": "#FFFFFF",
-        "backgroundColor": "#1E1D2A",
-        "siteColor": "#26283A",
-        "iconColor": "Default"
-    }])
 
     const notificationAlertRef = useRef(null);
     const toast = (message, type) => {

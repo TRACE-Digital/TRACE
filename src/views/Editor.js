@@ -4,11 +4,10 @@ import { ProfilePage, ThirdPartyAccount } from "trace-search";
 import SiteCard from "components/SiteCard/SiteCard";
 import classNames from "classnames";
 import { GridContextProvider, GridDropZone, GridItem, swap } from "react-grid-dnd";
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Link } from "react-router-dom";
 
 import { Button, ButtonGroup } from "reactstrap";
-import { Auth, nav } from 'aws-amplify';
+import { Auth } from 'aws-amplify';
 import { renderToStaticMarkup } from 'react-dom/server'
 import {
   Col,
@@ -45,9 +44,7 @@ const Editor = () => {
   const [heightSize, setHeightSize] = useState("");
   const [, setPlsRender] = useState(false);
   const [showBlockTheme, setBlockFeature] = useState(true); // SET TO WHATEVER THEY SET IT AS PREVIOUSLY
-  const [showListTheme, setListFeature] = useState(false);
   const [titleLength, setTitleLength] = useState(title.length+1);
-  const [hasPublished, setHasPublished] = useState(false);
   const [backgroundColor, setBackGroundColor] = useState("#1E1D2A");
   const [iconColor, setIconColor] = useState("Default");
   const [siteColor, setSiteColor] = useState("#26283A");
@@ -400,7 +397,7 @@ const Editor = () => {
             method: 'PUT'
           }).then(async (value) => {
             if (value.status === 401) {
-              toast('Sorry, this URL is already taken. Please choose a new one.', "warning");
+              toast('Sorry, this URL is already taken. Please choose a new one.', "danger");
             } else if (value.status < 203) {
               toast('Your custom URL has been created!', "success");
               toast('You can visit your page at https://public.tracedigital.tk/u/' + customurl, "info");
@@ -414,7 +411,7 @@ const Editor = () => {
         }
       });
     } else {
-      toast("Please publish your page before customizing your URL.", "warning")
+      toast("Please publish your page before customizing your URL.", "danger")
     }
   }
 
@@ -424,7 +421,7 @@ const Editor = () => {
         let url_ending = myProfile.customPath;
         window.open('https://public.tracedigital.tk/u/' + url_ending, '_blank');
       } else {
-        toast('Please create a custom URL before navigating to it.', "warning");
+        toast('Please create a custom URL before navigating to it.', "danger");
       }
     } else {
       toast('Please publish your page before navigating to it.', "warning");
@@ -475,11 +472,11 @@ const Editor = () => {
       setProfileData(results[0]);
       setHeightSize(results[0].accounts.length);
 
-      if (results[0].layoutType == undefined){
+      if (results[0].layoutType === undefined){
         results[0].layoutType = "block";
         setBlockFeature(true);
       }
-      else if (results[0].layoutType == "block"){
+      else if (results[0].layoutType === "block"){
         setBlockFeature(true);
       }
       else{
@@ -631,11 +628,11 @@ const Editor = () => {
                               </div>
                             }
                             <DropdownItem divider tag="li" />
-                            {myProfile && (myProfile.customPath == 'null') &&
+                            {myProfile && (myProfile.customPath === 'null') &&
                             <NavLink tag="li">
                               <DropdownItem className="nav-item" onClick={addCustomURL} style={{color: "black"}}>Customize URL</DropdownItem>
                             </NavLink>
-                            } {myProfile && (myProfile.customPath != 'null') &&
+                            } {myProfile && (myProfile.customPath !== 'null') &&
                               <div>
                                 <NavLink tag="li">
                                   <DropdownItem className="nav-item" onClick={addCustomURL} style={{color: "black"}}>Edit Custom URL</DropdownItem>
