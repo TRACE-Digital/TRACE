@@ -81,7 +81,7 @@ function Login() {
           Continue locally without an account
         </Link>
 
-        <div className="titled-separator" style={{ padding: '30px' }}>or</div>
+        <div className="titled-separator" style={{ padding: '15px' }}>or</div>
 
       </div>
       {error && <Alert color="danger">{error}</Alert>}
@@ -113,7 +113,7 @@ function Login() {
       <div className="login">
         {/* Log In */}
         <Card style={{width: '30rem'}}>
-            <CardImg top src={require("assets/img/header.jpg").default} alt="trace logo"/>
+            <CardImg top src={require("assets/img/header.jpg").default} alt="trace logo" className="top-img"/>
             <CardBody>
                 {welcomeElement}
                 <Form id='sign-in-form'  onSubmit={async (e) => {
@@ -127,7 +127,7 @@ function Login() {
                 }}>
                   {loginFields}
                 </Form>
-                <Button color="primary" block type="submit" form='sign-in-form' >
+                <Button color="primary" block type="submit" form='sign-in-form' style={{overflow: "unset"}}>
                   Log In
                 </Button>
                 <br/>
