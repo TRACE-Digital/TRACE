@@ -6,7 +6,7 @@ import { destroyDb, generateEncryptionKey } from 'trace-search'
 import { Alert, Card, CardImg, CardBody, CardTitle, Button, Form, FormGroup, Input } from 'reactstrap';
 import { Link } from "react-router-dom";
 import ReactCardFlip from "react-card-flip";
-import { getRemoteDb, setRemoteUser, removeEncryptionKey } from 'trace-search';
+import { getRemoteDb, setRemoteUser } from 'trace-search';
 
 async function signUp(username, email, password) {
   try {
@@ -45,7 +45,13 @@ async function signIn(username, password) {
         await Auth.signIn(username, password);
         const user = await Auth.currentUserPoolUser();
 
+        // Before a user signs in, we must clear the current local database
+        await setRemoteUser(null);
+        await destroyDb();
+
+        // We also must generate a new encryption key based off of their password
         await setRemoteUser(user);
+        await generateEncryptionKey(password, user.attributes.sub);
         const db = await getRemoteDb();
 
         let settings = {};
@@ -55,17 +61,12 @@ async function signIn(username, password) {
           console.error(e);
         }
 
-        // Before a user signs in, we must clear the current local database
-        await setRemoteUser(null);
-        await destroyDb();
-
         if (settings.accountClosed) {
           await Auth.signOut();
+          await setRemoteUser(null);
           return 'Your account has been closed! Contract TRACE administrators if you would like to reopen it.';
         }
 
-        // We also must generate a new encryption key based off of their password
-        await generateEncryptionKey(password, user.attributes.sub);
         return null;
     } catch (error) {
       Auth.error = error;
