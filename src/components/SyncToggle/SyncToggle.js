@@ -20,6 +20,17 @@ function SyncToggle() {
     notificationAlertRef.current.notificationAlert(options);
   }
 
+  const permaToast = (message, type) => {
+    var options = {};
+    options = {
+      place: "tc",
+      message: (<span>{message}</span>),
+      type: type,
+      autoDismiss: -1,
+    };
+    notificationAlertRef.current.notificationAlert(options);
+  }
+
   const getSyncEnabled = async () => {
     const db = await getDb();
     const settings = await db.get('settings');
@@ -61,6 +72,7 @@ function SyncToggle() {
       try {
         console.log('Disabling sync');
         await disableSync();
+        permaToast(`CAUTION: You are now editing locally. You're change will not be synced!`, 'danger')
       } catch (e) {
         console.error(e);
         return;
