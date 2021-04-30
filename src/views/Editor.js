@@ -2,9 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import Colors from "views/Colors.js";
 import { ProfilePage, ThirdPartyAccount } from "trace-search";
 import SiteCard from "components/SiteCard/SiteCard";
+import classNames from "classnames";
 import { GridContextProvider, GridDropZone, GridItem, swap } from "react-grid-dnd";
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Link } from "react-router-dom";
-import { Auth } from 'aws-amplify';
+
+import { Button, ButtonGroup } from "reactstrap";
+import { Auth, nav } from 'aws-amplify';
 import { renderToStaticMarkup } from 'react-dom/server'
 import {
   Col,
@@ -40,12 +44,15 @@ const Editor = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [heightSize, setHeightSize] = useState("");
   const [, setPlsRender] = useState(false);
-  const [colorScheme, setColorScheme] = useState([{
-    "titleColor": "#FFFFFF",
-    "backgroundColor": "#1E1D2A",
-    "siteColor": "#26283A",
-    "iconColor": "Default"
-  }])
+  const [showBlockTheme, setBlockFeature] = useState(true); // SET TO WHATEVER THEY SET IT AS PREVIOUSLY
+  const [showListTheme, setListFeature] = useState(false);
+  const [titleLength, setTitleLength] = useState(title.length+1);
+  const [hasPublished, setHasPublished] = useState(false);
+  const [backgroundColor, setBackGroundColor] = useState("#1E1D2A");
+  const [iconColor, setIconColor] = useState("Default");
+  const [siteColor, setSiteColor] = useState("#26283A");
+  const [titleColor, setTitleColor] = useState("#FFFFFF");
+
 
   /**
    * Function is called when there is a change on the site grid and updates the order
@@ -54,6 +61,20 @@ const Editor = () => {
     const items = myProfile.accounts;
     const nextState = swap(items, sourceIndex, targetIndex);
     myProfile.accounts = nextState;
+    saveData();
+    setPlsRender(prev => !prev);
+  }
+
+  function handleBlock(){
+    setBlockFeature(true);
+    myProfile.layoutType = "block";
+    saveData();
+    setPlsRender(prev => !prev);
+  }
+
+  function handleList(){
+    setBlockFeature(false);
+    myProfile.layoutType = "list";
     saveData();
     setPlsRender(prev => !prev);
   }
@@ -71,14 +92,11 @@ const Editor = () => {
    * Function handles any updating of the color choices from the popup and saves data
    */
   function handleLanguage(colorChoice) {
-    const updated = [...colorChoice];
-    setColorScheme([...updated]);
-    myProfile.colorScheme.titleColor = colorScheme[0].titleColor;
-    myProfile.colorScheme.backgroundColor = colorScheme[0].backgroundColor;
-    myProfile.colorScheme.siteColor = colorScheme[0].siteColor;
-    myProfile.colorScheme.iconColor = colorScheme[0].iconColor;
-    console.log(myProfile.colorScheme.iconColor);
     saveData();
+    setBackGroundColor(myProfile.colorScheme.backgroundColor);
+    setIconColor(myProfile.colorScheme.iconColor);
+    setSiteColor(myProfile.colorScheme.siteColor);
+    setTitleColor(myProfile.colorScheme.titleColor);
     setPlsRender(prev => !prev);
   }
 
@@ -93,6 +111,7 @@ const Editor = () => {
   const handleAddClick = () => {
     setIsOpen(!isOpen);
     saveData();
+    setPlsRender(prev => !prev);
   }
 
   /**
@@ -101,11 +120,16 @@ const Editor = () => {
   function updateTitle(e) {
     if (e.target.value === "") {
       setTitle("");
+      setTitleLength(2);
       myProfile.title = "";
     }
     else {
+      if ((e.target.value.length+1) < 24){
+        setTitleLength(e.target.value.length+1);
+      }
       setTitle(e.target.value);
       myProfile.title = e.target.value;
+      
     }
     saveData();
     setPlsRender(prev => !prev);
@@ -446,22 +470,34 @@ const Editor = () => {
         results.push(page);
       }
       else {
-        colorScheme[0].backgroundColor = results[0].colorScheme.backgroundColor;
-        colorScheme[0].titleColor = results[0].colorScheme.titleColor;
-        colorScheme[0].siteColor = results[0].colorScheme.siteColor;
-        colorScheme[0].iconColor = results[0].colorScheme.iconColor;
+        setBackGroundColor(results[0].colorScheme.backgroundColor);
+        setIconColor(results[0].colorScheme.iconColor);
+        setSiteColor(results[0].colorScheme.siteColor);
+        setTitleColor(results[0].colorScheme.titleColor);
         setTitle(results[0].title);
       }
       setProfileData(results[0]);
+      setHeightSize(results[0].accounts.length); 
+      
+      if (results[0].layoutType == undefined){
+        results[0].layoutType = "block";
+        setBlockFeature(true);
+      }
+      else if (results[0].layoutType == "block"){
+        setBlockFeature(true);
+      }
+      else{
+        setBlockFeature(false);
+      }
+
       setHeightSize(8); // temp for now
       // saveData();
     };
 
     loadProfile();
-
     ThirdPartyAccount.accountCache.events.on('change', triggerRender)
     return () => { ThirdPartyAccount.accountCache.events.removeListener('change', triggerRender) }
-  }, [colorScheme]);
+  }, []);
 
   /** Monitor for removed accounts. TODO: This is not ideal since we're doing it every render. */
   useEffect(() => {
@@ -491,8 +527,8 @@ const Editor = () => {
   const renderBaseContent = () => {
     return renderToStaticMarkup(
       <>
-      <div className={`editor-background`} style={{ backgroundColor: `${colorScheme[0].backgroundColor}` }}>
-        <div className={"editor-title"} style={{ color: `${colorScheme[0].titleColor}` }}>
+      <div className={`editor-background`} style={{ backgroundColor: `${backgroundColor}` }}>
+        <div className={"editor-title"} style={{ color: `${titleColor}` }}>
           <h1 style={{ paddingTop: '20px' }}>{title}</h1>
         </div>
         <div>
@@ -500,12 +536,12 @@ const Editor = () => {
             {myProfile &&
               myProfile.accounts.map(item => (
                 <Col lg="3">
-                  <SiteCard editorColor={colorScheme[0].siteColor} iconColor={colorScheme[0].iconColor} account={item} page="editor" />
+                  <SiteCard editorColor={siteColor} iconColor={iconColor} account={item} page="editor" />
                 </Col>
               ))}
           </Row>
         </div>
-      </div>
+        </div>
       </>
     );
   }
@@ -517,76 +553,123 @@ const Editor = () => {
       </div>
       {isOpen ? <Colors onSelectLanguage={handleLanguage} closePopup={handleAddClick} onUpdatePage={updatePage} page={myProfile} /> : null}
       <div className={isOpen ? `content blur` : `content`}>
-        <div className={`editor-background`} style={{ backgroundColor: `${colorScheme[0].backgroundColor}` }}>
-          <div className={"editor-title"} style={{ color: `${colorScheme[0].titleColor}` }}>
-
-            <input
-              className="editor-input"
-              type="text"
-              value={title}
-              maxLength={30}
-              onChange={updateTitle}
-              style={{width:"600px", color: `${colorScheme[0].titleColor}`, backgroundColor: `${colorScheme[0].backgroundColor}`, border: "none", outline: "none" }}
-            />
-
-          <Link style={{display: "inline-block", float: "right"}}
-              className="btn btn-primary editor-button"
-              color="primary"
-              onClick={handleAddClick}
-            >
-              Edit Page
-          </Link>
-
-          <UncontrolledDropdown style={{display: "inline-block", float: "right"}}>
-            <DropdownToggle className="btn btn-primary public-options-button">
-              Page Options
-            </DropdownToggle>
-            <DropdownMenu className="dropdown-navbar" right tag="ul" style={{marginRight: "10px"}}>
-              <NavLink tag="li">
-                <DropdownItem className="nav-item" onClick={publishPublicPage} style={{color: "black"}}>Publish Page</DropdownItem>
-              </NavLink>
-              {myProfile && myProfile.published && <div>
-                <NavLink tag="li">
-                  <DropdownItem className="nav-item" onClick={unpublishPublicPage} style={{color: "black"}}>Unpublish Page</DropdownItem>
-                </NavLink>
-                <DropdownItem divider tag="li" />
-                <NavLink tag="li">
-                  <DropdownItem className="nav-item" onClick={goToPublicPage} style={{color: "black"}}>Go To Page</DropdownItem>
-                </NavLink>
-                <DropdownItem divider tag="li" />
-                {myProfile && !myProfile.hasPassword &&
-                  <NavLink tag="li"><DropdownItem className="nav-item" onClick={addPublicPagePassword} style={{color: "black"}}>Add Password</DropdownItem></NavLink>
-                } {myProfile && myProfile.hasPassword &&
-                  <div>
-                    <NavLink tag="li"><DropdownItem className="nav-item" onClick={addPublicPagePassword} style={{color: "black"}}>Change Password</DropdownItem></NavLink>
-                    <NavLink tag="li"><DropdownItem className="nav-item" onClick={removePublicPagePassword} style={{color: "black"}}>Remove Password</DropdownItem></NavLink>
-                  </div>
-                }
-                <DropdownItem divider tag="li" />
-                {myProfile && !myProfile.hasCustomPath &&
-                <NavLink tag="li">
-                  <DropdownItem className="nav-item" onClick={addCustomURL} style={{color: "black"}}>Customize URL</DropdownItem>
-                </NavLink>
-                } {myProfile && myProfile.hasCustomPath &&
-                  <div>
-                    <NavLink tag="li">
-                      <DropdownItem className="nav-item" onClick={addCustomURL} style={{color: "black"}}>Edit Custom URL</DropdownItem>
-                    </NavLink>
-                    <NavLink tag="li">
-                      <DropdownItem className="nav-item" onClick={goToCustomUrl} style={{color: "black"}}>Go To Custom URL</DropdownItem>
-                    </NavLink>
-                    <NavLink tag="li">
-                      <DropdownItem className="nav-item" onClick={deleteCustomUrl} style={{color: "black"}}>Delete Custom URL</DropdownItem>
-                    </NavLink>
-                  </div>
-                }
-              </div>}
-            </DropdownMenu>
-          </UncontrolledDropdown>
-
+        <div className={`editor-background`} style={{ backgroundColor: `${backgroundColor}` }}>
+          <div className={"editor-title"} style={{ color: `${titleColor}` }}>
+          <table style={{width: "100%"}}>
+            <tr>
+                <td>
+                  <input
+                    className="editor-input"
+                    type="text"
+                    value={title}
+                    maxLength={titleLength}
+                    onChange={updateTitle}
+                    style={{width:"100%", color: `${titleColor}`, backgroundColor: `${backgroundColor}`, border: "none", outline: "none" }}
+                  />
+                  </td>
+                  <td>
+                      <Link style={{display: "inline-block", float: "right"}}
+                          className="btn btn-primary editor-button"
+                          color="primary"
+                          onClick={handleAddClick}
+                        >
+                          Edit Page
+                      </Link>
+                      <UncontrolledDropdown style={{display: "inline-block", float: "right"}}>
+                        <DropdownToggle className="btn btn-primary public-options-button">
+                          Page Options
+                        </DropdownToggle>
+                        <DropdownMenu className="dropdown-navbar" right tag="ul" style={{marginRight: "10px"}}>
+                          <NavLink tag="li">
+                            <DropdownItem className="nav-item" onClick={publishPublicPage} style={{color: "black"}}>Publish Page</DropdownItem>
+                          </NavLink>
+                          {myProfile && myProfile.published && <div>
+                            <NavLink tag="li">
+                              <DropdownItem className="nav-item" onClick={unpublishPublicPage} style={{color: "black"}}>Unpublish Page</DropdownItem>
+                            </NavLink>
+                            <DropdownItem divider tag="li" />
+                            <NavLink tag="li">
+                              <DropdownItem className="nav-item" onClick={goToPublicPage} style={{color: "black"}}>Go To Page</DropdownItem>
+                            </NavLink>
+                            <DropdownItem divider tag="li" />
+                            {myProfile && !myProfile.hasPassword &&
+                              <NavLink tag="li"><DropdownItem className="nav-item" onClick={addPublicPagePassword} style={{color: "black"}}>Add Password</DropdownItem></NavLink>
+                            } {myProfile && myProfile.hasPassword &&
+                              <div>
+                                <NavLink tag="li"><DropdownItem className="nav-item" onClick={addPublicPagePassword} style={{color: "black"}}>Change Password</DropdownItem></NavLink>
+                                <NavLink tag="li"><DropdownItem className="nav-item" onClick={removePublicPagePassword} style={{color: "black"}}>Remove Password</DropdownItem></NavLink>
+                              </div>
+                            }
+                            <DropdownItem divider tag="li" />
+                            {myProfile && !myProfile.hasCustomPath &&
+                            <NavLink tag="li">
+                              <DropdownItem className="nav-item" onClick={addCustomURL} style={{color: "black"}}>Customize URL</DropdownItem>
+                            </NavLink>
+                            } {myProfile && myProfile.hasCustomPath &&
+                              <div>
+                                <NavLink tag="li">
+                                  <DropdownItem className="nav-item" onClick={addCustomURL} style={{color: "black"}}>Edit Custom URL</DropdownItem>
+                                </NavLink>
+                                <NavLink tag="li">
+                                  <DropdownItem className="nav-item" onClick={goToCustomUrl} style={{color: "black"}}>Go To Custom URL</DropdownItem>
+                                </NavLink>
+                                <NavLink tag="li">
+                                  <DropdownItem className="nav-item" onClick={deleteCustomUrl} style={{color: "black"}}>Delete Custom URL</DropdownItem>
+                                </NavLink>
+                              </div>
+                            }
+                          </div>}
+                        </DropdownMenu>
+                      </UncontrolledDropdown>
+                </td>
+                <td>
+                          <ButtonGroup
+                          
+                              className="btn-group-toggle"
+                              data-toggle="buttons"
+                          >
+                              <Button
+                                  tag="label"
+                                  className={classNames("btn btn-primary")}
+                                  color="info"
+                                  id="0"
+                                  onClick={handleList}
+                                  style={{height:"auto", "padding-top": "10px", "padding-bottom": "10px"}}
+                                  size="sm"
+                                  
+                              >
+                                  <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
+                                      List View
+                                  </span>
+                                  <span className="d-block d-sm-none">
+                                      <i className="tim-icons icon-single-02" />
+                                  </span>
+                              </Button>
+                              <Button
+                                  color="info"
+                                  id="1"
+                                  style={{height:"auto", "padding-top": "10px", "padding-bottom": "10px"}}
+                                  size="sm"
+                                  tag="label"
+                                  onClick={handleBlock}
+                                  className={classNames("btn btn-primary")}
+                              >
+                                  <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
+                                      Block View
+                                  </span>
+                                  <span className="d-block d-sm-none">
+                                      <i className="tim-icons icon-gift-2" />
+                                  </span>
+                              </Button>
+                          </ButtonGroup>
+       
+                    </td>
+            </tr>
+          </table>
           </div>
           {myProfile &&
-            <GridContextProvider onChange={onChange}>
+            (showBlockTheme ? 
+              <GridContextProvider onChange={onChange}>
               <GridDropZone
                 id="items"
                 boxesPerRow={4}
@@ -599,12 +682,61 @@ const Editor = () => {
                         width: "100%",
                         height: "100%",
                       }}>
-                      {<SiteCard editorColor={colorScheme[0].siteColor} iconColor={colorScheme[0].iconColor} account={item} page="editor" />}
+                      {<SiteCard editorColor={siteColor} iconColor={iconColor} account={item} page="editor" />}
                     </div>
                   </GridItem>
                 ))}
               </GridDropZone>
-            </GridContextProvider>}
+            </GridContextProvider>
+            : 
+
+            <GridContextProvider onChange={onChange}>
+             
+                <GridDropZone
+                  id="items"
+                  boxesPerRow={1}
+                  rowHeight={90}
+                  style={{"margin-top":"20px","user-select":"none", height: `${(heightSize / 3) * 270}px`, display:"flex", "justify-content":"center"}}>
+                    
+                    {myProfile.accounts.map(item => (
+                      <GridItem style={{"width":"auto"}} key={item.id}>
+                   
+                          <div className="siteTd" style={{ backgroundColor: `${siteColor}`, border:`${siteColor}` }}>
+                         
+                          <Row style={{ "white-space":"nowrap","margin-right":"10px"}}>
+                            
+                            <Col className="colors" lg="8" style={{display:"inline-block","text-align": "right", "max-width":"120px"}}>
+                              <div className="colorsListView">
+                              <i className={item.site.logoClass}
+                                 style={{"font-size":"50px", "margin-left":"40px", color: (iconColor === "Default") ? item.site.logoColor || null : iconColor}}
+                              ></i>
+                              </div>
+                            </Col>
+                            <Col lg="8" style={{display:"inline-block","margin-top":"10px", "font-weight":"600", "text-align": "left", "margin-right":"40px"}}>
+                            
+                              <div style={{display:"inline-block","font-size":"20px"}}>{item.site.name}:</div>
+                              <div style={{display:"inline-block","margin-left":"5px","font-size":"20px", "font-weight":"400"}}>
+
+                                <a href={item.site.url.replace("{}", item.userName)} target="blank" >
+                                  {item.site.prettyUrl ||
+                                  item.site.urlMain ||
+                                  item.site.url}
+                                </a>
+
+                              </div>
+                            </Col>     
+
+                         </Row>
+                        </div>
+
+                 
+                    </GridItem>
+                  ))}
+                </GridDropZone>
+             
+              </GridContextProvider>
+   
+            )}
         </div>
       </div>
     </>

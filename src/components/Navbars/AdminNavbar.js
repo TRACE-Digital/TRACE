@@ -19,7 +19,7 @@ import { useEffect, useState } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 
-import { resetDb, resetRemoteDb, setRemoteUser } from 'trace-search';
+import { resetDb, resetRemoteDb, setRemoteUser, destroyLocalDb } from 'trace-search';
 
 import SyncToggle from 'components/SyncToggle/SyncToggle';
 
@@ -68,7 +68,6 @@ function AdminNavbar(props) {
     (async () => {
       try {
         const user = await Auth.currentUserPoolUser();
-        console.log(user);
         setCurrentUsername(user.username);
       }
       catch {
@@ -80,6 +79,8 @@ function AdminNavbar(props) {
   const signOut = async () => {
     try {
       await Auth.signOut();
+      // When a user signs out, we must clear the current local database
+      await destroyLocalDb();
     } catch (error) {
       console.log('error signing out: ', error);
     }

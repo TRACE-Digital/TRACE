@@ -15,7 +15,7 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 import { IconButton } from "@material-ui/core";
-import { AutoSearchAccountAction, tags } from 'trace-search';
+import { AutoSearchAccountAction, tags, supportedSites} from 'trace-search';
 import fontAwesomeClasses from '../../assets/fonts/font-awesome.json';
 
 /**
@@ -35,6 +35,8 @@ const AccountCard = (props) => {
   const [accountTags, setAccountTags] = useState(props.account.site.tags);
   const [logoClass, setLogoClass] = useState(props.account.site.logoClass);
 
+  let logoKeyValue = Object.entries(fontAwesomeClasses).filter(([, value]) => value == props.account.site.logoClass)[0];
+  let logoObj = logoKeyValue ? [{key: logoKeyValue[0], value: logoKeyValue[1]}] : [{key: "question", value: "fas fa-question fa-sm"}];
   let firstNames = "";
   let lastNames = "";
   let options = [];
@@ -89,7 +91,6 @@ const AccountCard = (props) => {
   }
 
   const handleLogoSelect = (selectedLogo) => {
-    console.log(selectedLogo[0].value);
     setLogoClass(selectedLogo[0].value);
   }
 
@@ -98,16 +99,10 @@ const AccountCard = (props) => {
   }
 
   async function handleSubmit(e) {
-    // console.log(siteName);
-    // console.log(userName);
-    console.log(url);
-    console.log(accountTags);
-    console.log(logoClass);
-
     props.account.site.url = url;
     props.account.site.tags = accountTags;
     props.account.site.logoClass = logoClass;
-
+    props.account.site.logoColor = "white";
     await props.account.save();
   }
 
@@ -177,8 +172,10 @@ const AccountCard = (props) => {
                   </FormGroup>
                   <FormGroup>
                     <Label for="logos">Logos (select one)</Label>
+                    {console.log(logos[0])}
                     <Multiselect
                       options={logos} // Options to display in the dropdown
+                      selectedValues={logoObj}
                       onSelect={handleLogoSelect} // Function will trigger on select event
                       onRemove={handleLogoRemove} // Function will trigger on remove event
                       displayValue="key" // Property name to display in the dropdown options
@@ -304,7 +301,7 @@ const AccountCard = (props) => {
                 {props.flippable && (
                   <div className="flip-button">
                     <IconButton onClick={(e) => { e.stopPropagation(); setFlipped(true) }}>
-                      <i className="tim-icons icon-refresh-01" style={{ color: "#DDDDDD", transform: "scaleX(-1)" }}></i>
+                      <i className="tim-icons icon-refresh-01" style={{ color: "#DDDDDD", transform: "scale(0.75) scaleX(-1)" }}></i>
                     </IconButton>
                   </div>)}
               </CardBody>
@@ -321,7 +318,16 @@ const AccountCard = (props) => {
                   <div className="privacyBadge" >
                     <PrivacyBadge account={props.account} service={props.account.site.name} />
                   </div>
-                  <h5 className="tags">{props.account.site.tags.join(', ')}</h5>
+                  <div className="tag-container">
+                    {props.account.site.tags.map((tag) => {
+                      return (
+                        <div className="tags">
+                          {tag}
+                        </div>
+                      );
+                    })}
+                  </div>
+                  {/* <h5 className="tags">{props.account.site.tags}</h5> */}
 
 
                   {/* NAMES */}
@@ -341,6 +347,8 @@ const AccountCard = (props) => {
 
                   {/* CONFIDENCE LEVEL */}
                   <br />
+
+                  <div className="card-back-bottom">
                   {props.account.confidence > 0 && (
                     <div className="confidence">
                       CONFIDENCE
@@ -352,6 +360,7 @@ const AccountCard = (props) => {
                     <IconButton onClick={(e) => { e.stopPropagation(); setFlipped(false) }}>
                       <i className="tim-icons icon-refresh-01" style={{ color: "#DDDDDD", transform: "scale(0.75) scaleX(-1)" }}></i>
                     </IconButton>
+                  </div>
                   </div>
 
                 </CardBody>

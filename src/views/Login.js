@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Auth } from 'aws-amplify';
+import { destroyLocalDb, generateEncryptionKey } from 'trace-search'
 
 // reactstrap components
 import { Alert, Card, CardImg, CardBody, CardTitle, Button, Form, FormGroup, Input } from 'reactstrap';
@@ -15,6 +16,11 @@ async function signUp(username, email, password) {
               email,
           }
       });
+      // Before a user signs up, we must clear the current local database
+      // We also must generate a new encryption key based off of their password
+      await destroyLocalDb();
+      const user = await Auth.currentUserPoolUser();
+      await generateEncryptionKey(password, user.attributes.sub);
       return null;
   } catch (error) {
       console.log('error signing up:', error);
@@ -34,10 +40,15 @@ async function signUp(username, email, password) {
 async function signIn(username, password) {
     try {
         await Auth.signIn(username, password);
+        // Before a user signs in, we must clear the current local database
+        // We also must generate a new encryption key based off of their password
+        await destroyLocalDb();
+        const user = await Auth.currentUserPoolUser();
+        await generateEncryptionKey(password, user.attributes.sub);
         return null;
     } catch (error) {
       Auth.error = error;
-      console.log('error signing in', error.message);
+      console.error('error signing in', error.message);
       return error.message;
     }
 }
@@ -70,7 +81,7 @@ function Login() {
           Continue locally without an account
         </Link>
 
-        <div className="titled-separator" style={{ padding: '30px' }}>or</div>
+        <div className="titled-separator" style={{ padding: '15px' }}>or</div>
 
       </div>
       {error && <Alert color="danger">{error}</Alert>}
@@ -102,7 +113,7 @@ function Login() {
       <div className="login">
         {/* Log In */}
         <Card style={{width: '30rem'}}>
-            <CardImg top src={require("assets/img/header.jpg").default} alt="trace logo"/>
+            <CardImg top src={require("assets/img/header.jpg").default} alt="trace logo" className="top-img"/>
             <CardBody>
                 {welcomeElement}
                 <Form id='sign-in-form'  onSubmit={async (e) => {
@@ -116,7 +127,7 @@ function Login() {
                 }}>
                   {loginFields}
                 </Form>
-                <Button color="primary" block type="submit" form='sign-in-form' >
+                <Button color="primary" block type="submit" form='sign-in-form' style={{overflow: "unset"}}>
                   Log In
                 </Button>
                 <br/>
