@@ -58,7 +58,7 @@ function Analytics(props) {
                 <Row>
                   <Col className="text-left" sm="6">
                     <h5 className="card-category">Public Profile</h5>
-                    <CardTitle tag="h2">[Data] Visitors</CardTitle>
+                    <CardTitle tag="h2" style={{opacity: "0"}}>placeholder</CardTitle>
                   </Col>
                 </Row>
               </CardHeader>
@@ -78,12 +78,12 @@ function Analytics(props) {
              <Col lg="4" key={account.id}>
               <Card className="card-chart">
                 <CardHeader>
-                  {/* <h5 className="card-category">[Data] Interactions</h5> */}
                   <CardTitle tag="h3">
                     <i className="tim-icons icon-single-02" style={{paddingRight: "5px"}}/>
-                    {account.site.name}
-                    <br/>
+                    {account.site.name} -
                     <a href={account.url}> @{account.userName}</a>
+                    <br/>
+                    <h4 style={{opacity: "0"}}>placeholder</h4>
                   </CardTitle>
                 </CardHeader>
                 <CardBody>
