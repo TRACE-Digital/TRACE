@@ -80,6 +80,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
+  const [info, setInfo] = useState(null);
   const [isLogin, setIsLogin] = useState(window.location.href.includes('login'));
 
   useEffect(() => {
@@ -106,6 +107,7 @@ function Login() {
         <div className="titled-separator" style={{ padding: '15px' }}>or</div>
 
       </div>
+      {info && <Alert color="success">{info}</Alert>}
       {error && <Alert color="danger">{error}</Alert>}
     </>
   )
@@ -183,7 +185,9 @@ function Login() {
                     }
                   setError(localError);
                   if (!localError) {
-                    window.location.href = '/dashboard';
+                    setIsLogin(true);
+                    window.history.pushState('/login', 'Log In', '/login');
+                    setInfo('Account created! Log in to get started');
                   }
                 }}>
                   {loginFields}
