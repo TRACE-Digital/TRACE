@@ -15,7 +15,7 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 import { IconButton } from "@material-ui/core";
-import { AutoSearchAccountAction, tags, supportedSites} from 'trace-search';
+import { AutoSearchAccountAction, tags } from 'trace-search';
 import fontAwesomeClasses from '../../assets/fonts/font-awesome.json';
 
 /**
@@ -35,7 +35,7 @@ const AccountCard = (props) => {
   const [accountTags, setAccountTags] = useState(props.account.site.tags);
   const [logoClass, setLogoClass] = useState(props.account.site.logoClass);
 
-  let logoKeyValue = Object.entries(fontAwesomeClasses).filter(([, value]) => value == props.account.site.logoClass)[0];
+  let logoKeyValue = Object.entries(fontAwesomeClasses).filter(([, value]) => value === props.account.site.logoClass)[0];
   let logoObj = logoKeyValue ? [{key: logoKeyValue[0], value: logoKeyValue[1]}] : [{key: "question", value: "fas fa-question fa-sm"}];
   let firstNames = "";
   let lastNames = "";

@@ -4,11 +4,10 @@ import { ProfilePage, ThirdPartyAccount } from "trace-search";
 import SiteCard from "components/SiteCard/SiteCard";
 import classNames from "classnames";
 import { GridContextProvider, GridDropZone, GridItem, swap } from "react-grid-dnd";
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Link } from "react-router-dom";
 
 import { Button, ButtonGroup } from "reactstrap";
-import { Auth, nav } from 'aws-amplify';
+import { Auth } from 'aws-amplify';
 import { renderToStaticMarkup } from 'react-dom/server'
 import {
   Col,
@@ -45,9 +44,7 @@ const Editor = () => {
   const [heightSize, setHeightSize] = useState("");
   const [, setPlsRender] = useState(false);
   const [showBlockTheme, setBlockFeature] = useState(true); // SET TO WHATEVER THEY SET IT AS PREVIOUSLY
-  const [showListTheme, setListFeature] = useState(false);
   const [titleLength, setTitleLength] = useState(title.length+1);
-  const [hasPublished, setHasPublished] = useState(false);
   const [backgroundColor, setBackGroundColor] = useState("#1E1D2A");
   const [iconColor, setIconColor] = useState("Default");
   const [siteColor, setSiteColor] = useState("#26283A");
@@ -129,7 +126,7 @@ const Editor = () => {
       }
       setTitle(e.target.value);
       myProfile.title = e.target.value;
-      
+
     }
     saveData();
     setPlsRender(prev => !prev);
@@ -477,13 +474,13 @@ const Editor = () => {
         setTitle(results[0].title);
       }
       setProfileData(results[0]);
-      setHeightSize(results[0].accounts.length); 
-      
-      if (results[0].layoutType == undefined){
+      setHeightSize(results[0].accounts.length);
+
+      if (results[0].layoutType === undefined){
         results[0].layoutType = "block";
         setBlockFeature(true);
       }
-      else if (results[0].layoutType == "block"){
+      else if (results[0].layoutType === "block"){
         setBlockFeature(true);
       }
       else{
@@ -533,7 +530,7 @@ const Editor = () => {
               <h1 style={{ paddingTop: '20px' }}>{title}</h1>
             </div>
             {myProfile.accounts.map(item => (
-              <div className="siteTd" style={{ backgroundColor: `${siteColor}`, border:`${siteColor}`, "justify-content":"center", "max-width": "550px", "border-radius": "15px", "margin-left": "calc(50% - 250px)" }}>    
+              <div className="siteTd" style={{ backgroundColor: `${siteColor}`, border:`${siteColor}`, "justify-content":"center", "max-width": "550px", "border-radius": "15px", "margin-left": "calc(50% - 250px)" }}>
                 <Row style={{ "white-space":"nowrap","margin-right":"10px", "margin-top":"20px" }}>
                   <Col className="colors" lg="8" style={{display:"inline-block","text-align": "right", "max-width":"120px"}}>
                     <div className="colorsListView">
@@ -551,7 +548,7 @@ const Editor = () => {
                         item.site.url}
                       </a>
                     </div>
-                  </Col>     
+                  </Col>
                 </Row>
               </div>
             ))}
@@ -659,7 +656,7 @@ const Editor = () => {
                 </td>
                 <td>
                           <ButtonGroup
-                          
+
                               className="btn-group-toggle"
                               data-toggle="buttons"
                           >
@@ -671,7 +668,7 @@ const Editor = () => {
                                   onClick={handleList}
                                   style={{height:"auto", "padding-top": "10px", "padding-bottom": "10px"}}
                                   size="sm"
-                                  
+
                               >
                                   <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
                                       List View
@@ -697,13 +694,13 @@ const Editor = () => {
                                   </span>
                               </Button>
                           </ButtonGroup>
-       
+
                     </td>
             </tr>
           </table>
           </div>
           {myProfile &&
-            (showBlockTheme ? 
+            (showBlockTheme ?
               <GridContextProvider onChange={onChange}>
               <GridDropZone
                 id="items"
@@ -723,23 +720,23 @@ const Editor = () => {
                 ))}
               </GridDropZone>
             </GridContextProvider>
-            : 
+            :
 
             <GridContextProvider onChange={onChange}>
-             
+
                 <GridDropZone
                   id="items"
                   boxesPerRow={1}
                   rowHeight={90}
                   style={{"margin-top":"20px","user-select":"none", height: `${(heightSize / 3) * 270}px`, display:"flex", "justify-content":"center"}}>
-                    
+
                     {myProfile.accounts.map(item => (
                       <GridItem style={{"width":"auto"}} key={item.id}>
-                   
+
                           <div className="siteTd" style={{ backgroundColor: `${siteColor}`, border:`${siteColor}` }}>
-                         
+
                           <Row style={{ "white-space":"nowrap","margin-right":"10px"}}>
-                            
+
                             <Col className="colors" lg="8" style={{display:"inline-block","text-align": "right", "max-width":"120px"}}>
                               <div className="colorsListView">
                               <i className={item.site.logoClass}
@@ -748,7 +745,7 @@ const Editor = () => {
                               </div>
                             </Col>
                             <Col lg="8" style={{display:"inline-block","margin-top":"10px", "font-weight":"600", "text-align": "left", "margin-right":"40px"}}>
-                            
+
                               <div style={{display:"inline-block","font-size":"20px"}}>{item.site.name}:</div>
                               <div style={{display:"inline-block","margin-left":"5px","font-size":"20px", "font-weight":"400"}}>
 
@@ -759,18 +756,18 @@ const Editor = () => {
                                 </a>
 
                               </div>
-                            </Col>     
+                            </Col>
 
                          </Row>
                         </div>
 
-                 
+
                     </GridItem>
                   ))}
                 </GridDropZone>
-             
+
               </GridContextProvider>
-   
+
             )}
         </div>
       </div>
