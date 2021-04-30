@@ -20,10 +20,10 @@ import React from "react";
 
 import Popup from '../components/AddSitePopup/AddSitePopup';
 
-import { ThirdPartyAccount, ClaimedAccount, ManualAccount } from "trace-search";
+import { ClaimedAccount, ManualAccount } from "trace-search";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
 import AccountCardList from "components/AccountCardList/AccountCardList";
+import { Button } from "reactstrap";
 
 function Dashboard(props) {
   const [showPopup, togglePopup] = React.useState(false);
@@ -51,7 +51,6 @@ function Dashboard(props) {
         console.error("Failed to load accounts from the database!");
         console.error(e);
       }
-      console.log(ThirdPartyAccount.accountCache.items);
     }
 
     ClaimedAccount.accountCache.events.on('change', triggerRender);
@@ -79,13 +78,13 @@ function Dashboard(props) {
     <div className={showPopup ? "content blur" : "content"}>
       <div className="header">
         <h3 className="header-title">Claimed Accounts</h3>
-        <Link
+        <Button
           className="btn btn-primary add-site-button"
           color="primary"
           onClick={handleAddClick}
         >
           Add New Site
-        </Link>
+        </Button>
       </div>
 
       <hr></hr>
