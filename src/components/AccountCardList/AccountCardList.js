@@ -1,7 +1,7 @@
 import AccountCard from 'components/AccountCard/AccountCard';
 import { rejectAccount } from 'components/AccountCard/AccountCard';
 import { claimAccount } from 'components/AccountCard/AccountCard';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'reactstrap';
 import { tags } from 'trace-search';
 
@@ -197,7 +197,7 @@ function AccountCardList(props) {
       </div>
       <Row>
         {sortedAccounts.map((account) => (
-          <>
+          <Fragment key={account.id || account}>
           {typeof account !== "string" && (<AccountCard
             key={account.id}
             account={account}
@@ -214,7 +214,7 @@ function AccountCardList(props) {
             <div key={account} className='titled-separator' style={{ marginBottom: '20px' }}>
               <h3>{account}</h3>
             </div>}
-          </>
+          </Fragment>
         ))}
       </Row>
     </>
