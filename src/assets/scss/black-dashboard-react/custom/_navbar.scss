@@ -30,13 +30,14 @@
   }
 
   &.navbar-absolute{
-    position: absolute;
+    position: sticky;
+    top:0;
     z-index: 1050;
   }
 
 
   &.navbar-transparent{
-    background: transparent !important;
+    background: #1e1e2d !important;
   }
 
   &.bg-white{

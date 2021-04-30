@@ -102,11 +102,12 @@
         color: $white;
         text-transform: inherit;
         font-weight: $font-weight-light;
-        margin-bottom: .75rem;
+        margin-bottom: 5px;
 
         &.welcome{
           font-size: xx-large;
           text-align: center;
+          margin-top: -5px;
         }
       }
 
