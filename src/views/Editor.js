@@ -195,7 +195,7 @@ const Editor = () => {
   <link rel="icon" type="image/png" href="https://tracedigital.tk/favicon.png">
   <title>${myProfile.title.replace('</title>', '')}</title>
 </head>
-<body>
+<body style='background-color: ${backgroundColor}; padding: 10px;'}>
   ${renderBaseContent()}
   <script src="https://unpkg.com/axios@0.21.1/dist/axios.min.js" async></script>
   <script>
@@ -503,25 +503,60 @@ const Editor = () => {
 
   /** Make this a function so that publish always sees the latest changes without needing a re-render. */
   const renderBaseContent = () => {
-    return renderToStaticMarkup(
-      <>
-      <div className={`editor-background`} style={{ backgroundColor: `${backgroundColor}` }}>
-        <div className={"editor-title"} style={{ color: `${titleColor}` }}>
-          <h1 style={{ paddingTop: '20px' }}>{title}</h1>
-        </div>
-        <div>
-          <Row>
-            {myProfile &&
-              myProfile.accounts.map(item => (
-                <Col lg="3">
-                  <SiteCard editorColor={siteColor} iconColor={iconColor} account={item} page="editor" />
-                </Col>
-              ))}
-          </Row>
-        </div>
-        </div>
-      </>
-    );
+    if (myProfile && !showBlockTheme) {
+      return renderToStaticMarkup(
+        <>
+          <div className={`editor-background`} style={{ backgroundColor: `${backgroundColor}` }}>
+            <div className={"editor-title"} style={{ color: `${titleColor}`, justifyContent: 'center', textAlign: 'center' }}>
+              <h1 style={{ paddingTop: '20px' }}>{title}</h1>
+            </div>
+            {myProfile.accounts.map(item => (
+              <div className="siteTd" style={{ backgroundColor: `${siteColor}`, border:`${siteColor}`, "justify-content":"center", "max-width": "550px", "border-radius": "15px", "margin-left": "calc(50% - 250px)" }}>    
+                <Row style={{ "white-space":"nowrap","margin-right":"10px", "margin-top":"20px" }}>
+                  <Col className="colors" lg="8" style={{display:"inline-block","text-align": "right", "max-width":"120px"}}>
+                    <div className="colorsListView">
+                    <i className={item.site.logoClass}
+                        style={{"font-size":"50px", "margin-left":"40px", color: (iconColor === "Default") ? item.site.logoColor || null : iconColor}}
+                    ></i>
+                    </div>
+                  </Col>
+                  <Col lg="8" style={{display:"inline-block","margin-top":"10px", "font-weight":"600", "text-align": "left", "margin-right":"40px"}}>
+                    <div style={{display:"inline-block","font-size":"20px"}}>{item.site.name}:</div>
+                    <div style={{display:"inline-block","margin-left":"5px","font-size":"20px", "font-weight":"400"}}>
+                      <a href={item.site.url.replace("{}", item.userName)} target="blank" >
+                        {item.site.prettyUrl ||
+                        item.site.urlMain ||
+                        item.site.url}
+                      </a>
+                    </div>
+                  </Col>     
+                </Row>
+              </div>
+            ))}
+          </div>
+        </>
+      );
+    } else {
+      return renderToStaticMarkup(
+        <>
+        <div className={`editor-background`} style={{ backgroundColor: `${backgroundColor}` }}>
+          <div className={"editor-title"} style={{ color: `${titleColor}` }}>
+            <h1 style={{ paddingTop: '20px' }}>{title}</h1>
+          </div>
+          <div>
+            <Row>
+              {myProfile &&
+                myProfile.accounts.map(item => (
+                  <Col lg="3">
+                    <SiteCard editorColor={siteColor} iconColor={iconColor} account={item} page="editor" />
+                  </Col>
+                ))}
+            </Row>
+          </div>
+          </div>
+        </>
+      );
+    }
   }
 
   let editorContent = (
