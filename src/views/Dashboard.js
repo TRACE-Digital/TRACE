@@ -51,7 +51,6 @@ function Dashboard(props) {
         console.error("Failed to load accounts from the database!");
         console.error(e);
       }
-      console.log(ThirdPartyAccount.accountCache.items);
     }
 
     ClaimedAccount.accountCache.events.on('change', triggerRender);
