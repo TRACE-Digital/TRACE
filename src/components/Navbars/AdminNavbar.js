@@ -161,29 +161,8 @@ function AdminNavbar(props) {
                       </DropdownItem>
                     </a>
                   </NavLink>
-                  <NavLink tag="li">
-                    <DropdownItem className="nav-item" onClick={async () => {
-                      const confirmation = window.confirm('Are you sure? This action is irreversible and will delete ALL your data.');
-                      if (!confirmation) {
-                        return;
-                      }
 
-                      try {
-                        await resetDb();
-                        if (currentUsername) {
-                          await setRemoteUser(await Auth.currentUserPoolUser());
-                          await resetRemoteDb();
-                        }
-                        window.location.reload();
-                      } catch (e) {
-                        console.error(e);
-                      }
-                    }}>Delete my data</DropdownItem>
-                  </NavLink>
-
-                  <DropdownItem divider tag="li" />
-
-                  <NavLink to="/settings" tag={Link}>
+                  <NavLink to="/settings" tag={Link} style={{paddingBottom: 0}}>
                     <DropdownItem className="nav-item">Settings</DropdownItem>
                   </NavLink>
 

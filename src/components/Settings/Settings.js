@@ -1,13 +1,14 @@
 import Auth from "@aws-amplify/auth";
 import { useEffect, useState } from "react";
 import { Badge, Card, CardBody, CardHeader, Col, Row } from "reactstrap";
-import { getDb, getRemoteDb, setRemoteUser, exportToJson, exportToCsv } from "trace-search";
+import { destroyDb, destroyRemoteDb, getDb, getRemoteDb, setRemoteUser, exportToJson, exportToCsv } from "trace-search";
 
 function Settings() {
   const [currentUser, setCurrentUser] = useState(null);
   const [localDbInfo, setLocalDbInfo] = useState(null);
   const [remoteDbInfo, setRemoteDbInfo] = useState(null);
   const [currentSettings, setCurrentSettings] = useState(null);
+  const [refreshData, setRefreshData] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -39,7 +40,7 @@ function Settings() {
         console.error(e);
       }
     })();
-  }, []);
+  }, [refreshData]);
 
   const isChrome = window.navigator.userAgent.includes('Chrome');
   const isFirefox = window.navigator.userAgent.includes('Firefox');
@@ -85,6 +86,66 @@ function Settings() {
     window.open(url, 'blank');
   };
 
+  const closeAccount = async () => {
+    if (!window.confirm('Are you sure you want to permanently close your account? ALL account data will be deleted.')) {
+      return;
+    }
+
+    await destroyDb();
+    await destroyRemoteDb();
+
+    try {
+      const remoteDb = await getRemoteDb();
+      const settings = {
+        _id: 'settings',
+        accountClosed: true
+      };
+      await remoteDb.put(settings);
+    } catch (e) {
+      alert(`Could not close account!\n${e}`);
+    }
+
+    setRefreshData(prev => !prev);
+
+    await Auth.signOut();
+    window.location.href = '/login';
+  };
+
+  const deleteLocalData = async () => {
+    if (!confirmDelete()) {
+      return;
+    }
+
+    try {
+      await destroyDb();
+    } catch (e) {
+      alert(`Could not delete local data!\n${e}`);
+    }
+
+    setRefreshData(prev => !prev);
+  };
+
+  const deleteRemoteData = async () => {
+    if (!confirmDelete()) {
+      return;
+    }
+
+    try {
+      if (currentUser) {
+        await destroyRemoteDb();
+      }
+    } catch (e) {
+      alert(`Could not delete remote data!\n${e}`);
+    }
+
+    setRefreshData(prev => !prev);
+  };
+
+  const confirmDelete = () => {
+    const confirmation = window.confirm('Are you sure? This action is irreversible.');
+    return confirmation;
+  }
+
   return (
     <div className="content" style={{ lineHeight: '2.3' }}>
       <div className="header">
@@ -125,7 +186,7 @@ function Settings() {
           <Row>
             <Col>Local data:</Col>
             <Col>
-              {localDbInfo && localDbInfo.doc_count + ' document' + (localDbInfo.doc_count > 1 ? 's' : '')}
+              {localDbInfo && localDbInfo.doc_count + ' document' + (localDbInfo.doc_count === 1 ? '' : 's')}
             </Col>
           </Row>
           <Row>
@@ -137,16 +198,44 @@ function Settings() {
           <Row>
             <Col>Remote data:</Col>
             <Col>
-              {remoteDbInfo && remoteDbInfo.doc_count + ' document' + (remoteDbInfo.doc_count > 1 ? 's' : '')}
+              {remoteDbInfo && remoteDbInfo.doc_count + ' document' + (remoteDbInfo.doc_count === 1 ? '' : 's')}
             </Col>
           </Row>
           <Row>
             <Col>Export:</Col>
             <Col>
-              <Badge href="#" color="primary" onClick={downloadJson}>Export to JSON</Badge>
-              <Badge href="#" color="primary" onClick={downloadCsv}>Export to CSV</Badge>
+              <Badge href="#" color="info" onClick={downloadJson}>Export to JSON</Badge>
+              <Badge href="#" color="info" onClick={downloadCsv}>Export to CSV</Badge>
             </Col>
           </Row>
+        </CardBody>
+      </Card>
+
+      <Card>
+        <CardHeader>Danger Zone</CardHeader>
+        <CardBody>
+          <Row>
+            <Col>Local data:</Col>
+            <Col>
+              <Badge href="#" color="danger" onClick={deleteLocalData}>Delete local data</Badge>
+            </Col>
+          </Row>
+          {currentUser &&
+          <>
+            <Row>
+              <Col>Remote data:</Col>
+              <Col>
+                <Badge href="#" color="danger" onClick={deleteRemoteData}>Delete remote data</Badge>
+              </Col>
+            </Row>
+            <Row>
+              <Col>Close your account:</Col>
+              <Col>
+                <Badge href="#" color="danger" onClick={closeAccount}>Close account</Badge>
+              </Col>
+            </Row>
+          </>
+          }
         </CardBody>
       </Card>
     </div>

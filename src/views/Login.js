@@ -5,6 +5,7 @@ import { Auth } from 'aws-amplify';
 import { Alert, Card, CardImg, CardBody, CardTitle, Button, Form, FormGroup, Input } from 'reactstrap';
 import { Link } from "react-router-dom";
 import ReactCardFlip from "react-card-flip";
+import { getRemoteDb, setRemoteUser } from 'trace-search';
 
 async function signUp(username, email, password) {
   try {
@@ -34,6 +35,23 @@ async function signUp(username, email, password) {
 async function signIn(username, password) {
     try {
         await Auth.signIn(username, password);
+        const user = await Auth.currentUserPoolUser();
+
+        await setRemoteUser(user);
+        const db = await getRemoteDb();
+
+        let settings = {};
+        try {
+          settings = await db.get('settings');
+        } catch(e) {
+          console.error(e);
+        }
+
+        if (settings.accountClosed) {
+          await Auth.signOut();
+          return 'Your account has been closed! Contract TRACE administrators if you would like to reopen it.';
+        }
+
         return null;
     } catch (error) {
       Auth.error = error;
