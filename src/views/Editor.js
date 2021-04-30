@@ -440,8 +440,9 @@ const Editor = () => {
       });
 
       if (response.status === 200) {
-        toast("Your custom URL has been deleted!", "info");
-        myProfile.customPath = null;
+        toast('Your custom URL has been deleted!', "success");
+        myProfile.customPath = 'null';
+
         await myProfile.save();
         setPlsRender(prev => !prev);
       } else {
@@ -630,11 +631,11 @@ const Editor = () => {
                               </div>
                             }
                             <DropdownItem divider tag="li" />
-                            {myProfile && !myProfile.hasCustomPath &&
+                            {myProfile && (myProfile.customPath == 'null') &&
                             <NavLink tag="li">
                               <DropdownItem className="nav-item" onClick={addCustomURL} style={{color: "black"}}>Customize URL</DropdownItem>
                             </NavLink>
-                            } {myProfile && myProfile.hasCustomPath &&
+                            } {myProfile && (myProfile.customPath != 'null') &&
                               <div>
                                 <NavLink tag="li">
                                   <DropdownItem className="nav-item" onClick={addCustomURL} style={{color: "black"}}>Edit Custom URL</DropdownItem>
