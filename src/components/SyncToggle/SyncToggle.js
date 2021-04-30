@@ -4,6 +4,24 @@ import { getDb, setRemoteUser, enableSync, disableSync, teardownReplication } fr
 import Auth from "@aws-amplify/auth";
 import NotificationAlert from "react-notification-alert";
 
+const getSyncEnabled = async () => {
+  const db = await getDb();
+  const settings = await db.get('settings');
+  return settings.syncEnabled;
+}
+
+const setInitialSync = async (setIsLoggedIn, setSync) => {
+  try {
+    await Auth.currentUserPoolUser();
+
+    setIsLoggedIn(true);
+    setSync(await getSyncEnabled());
+  }
+  catch {
+    setIsLoggedIn(false);
+  }
+};
+
 function SyncToggle() {
   const [sync, setSync] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -31,26 +49,13 @@ function SyncToggle() {
     notificationAlertRef.current.notificationAlert(options);
   }
 
-  const getSyncEnabled = async () => {
-    const db = await getDb();
-    const settings = await db.get('settings');
-    return settings.syncEnabled;
-  }
-
-  // TODO: Check for the user more frequently
-  // This currently doesn't work on first sign in
   useEffect(() => {
-    (async () => {
-      try {
-        await Auth.currentUserPoolUser();
+    setInitialSync(setIsLoggedIn, setSync);
 
-        setIsLoggedIn(true);
-        setSync(await getSyncEnabled());
-      }
-      catch {
-        setIsLoggedIn(false);
-      }
-    })();
+    // Wait for the initial log in to finish and check again
+    setTimeout(() => {
+      setInitialSync(setIsLoggedIn, setSync);
+    }, 2000);
 
     // Prevent a replication error on reload
     const handleUnload = async () => { await teardownReplication(); }
