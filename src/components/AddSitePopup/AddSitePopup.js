@@ -101,19 +101,19 @@ const AddPopup = (props) => {
                     <Col md={6}>
                         <FormGroup>
                             <Label for="siteName">Site Name</Label><span className="asterisk">*</span>
-                            <Input type="text" name="site" id="siteName" placeholder="eg. Instagram" onChange={(e) => onSiteChange(`${e.target.value}`)}/>
+                            <Input type="text" name="site" style={{color: "black"}} id="siteName" placeholder="eg. Instagram" onChange={(e) => onSiteChange(`${e.target.value}`)}/>
                         </FormGroup>
                     </Col>
                     <Col md={6}>
                         <FormGroup>
                             <Label for="username">Username</Label><span className="asterisk">*</span>
-                            <Input type="text" name="username" id="username" placeholder="eg. coraychan" onChange={(e) => onUsernameChange(`${e.target.value}`)}/>
+                            <Input type="text" name="username" style={{color: "black"}} id="username" placeholder="eg. coraychan" onChange={(e) => onUsernameChange(`${e.target.value}`)}/>
                         </FormGroup>
                     </Col>
                 </Row>
                 <FormGroup>
                     <Label for="siteUrl">Account URL</Label><span className="asterisk">*</span>
-                    <Input type="text" name="url" id="siteUrl" placeholder="eg. http://www.instagram.com/coraychan" onChange={(e) => onUrlChange(`${e.target.value}`)}/>
+                    <Input type="text" name="url" id="siteUrl" style={{color: "black"}} placeholder="eg. http://www.instagram.com/coraychan" onChange={(e) => onUrlChange(`${e.target.value}`)}/>
                 </FormGroup>
                 <Label for="tags">Tags</Label>
                 <Row>
