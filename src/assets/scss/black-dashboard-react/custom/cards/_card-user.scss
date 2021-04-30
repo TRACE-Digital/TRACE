@@ -592,7 +592,7 @@
     }
 
     .button-container {
-        margin-bottom: 6psx;
+        margin-bottom: 6px;
         text-align: center;
     }
 
@@ -612,9 +612,16 @@
 }
 
 .confidence {
+  display: inline-block;
   font-size: 1rem;
   color:#ffffff;
   text-align: center;
+  width: 90%;
+}
+
+.card-back-bottom {
+  display: flex;
+  justify-content: space-between;
 }
 
 .progressBar {
@@ -622,14 +629,14 @@
 }
 
 .card-user.editing:hover {
-    background-color:#ff9900;
+  background-color:#ff9900;
 }
 
 .flip-button {
-  float: right;
+  float: center;
   position: absolute;
-  bottom: 10px;
-  right: 10px;
+  bottom: 1%;
+  right: 1%;
 }
 
 .privacyBadge {

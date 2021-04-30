@@ -301,7 +301,7 @@ const AccountCard = (props) => {
                 {props.flippable && (
                   <div className="flip-button">
                     <IconButton onClick={(e) => { e.stopPropagation(); setFlipped(true) }}>
-                      <i className="tim-icons icon-refresh-01" style={{ color: "#DDDDDD", transform: "scaleX(-1)" }}></i>
+                      <i className="tim-icons icon-refresh-01" style={{ color: "#DDDDDD", transform: "scale(0.75) scaleX(-1)" }}></i>
                     </IconButton>
                   </div>)}
               </CardBody>
@@ -347,6 +347,8 @@ const AccountCard = (props) => {
 
                   {/* CONFIDENCE LEVEL */}
                   <br />
+
+                  <div className="card-back-bottom">
                   {props.account.confidence > 0 && (
                     <div className="confidence">
                       CONFIDENCE
@@ -358,6 +360,7 @@ const AccountCard = (props) => {
                     <IconButton onClick={(e) => { e.stopPropagation(); setFlipped(false) }}>
                       <i className="tim-icons icon-refresh-01" style={{ color: "#DDDDDD", transform: "scale(0.75) scaleX(-1)" }}></i>
                     </IconButton>
+                  </div>
                   </div>
 
                 </CardBody>
