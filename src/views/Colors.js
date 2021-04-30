@@ -33,7 +33,7 @@ function Colors(props) {
     var options = {};
     options = {
         place: "bc",
-        message: (<span>{message}</span>),
+        message: (<pre>{message}</pre>),
         type: type,
         autoDismiss: 7,
     };
@@ -100,7 +100,7 @@ function Colors(props) {
         for (const value of values) {
             if (filter.isProfane(value)) {
                 const cleaned = filter.clean(value);
-                toast(`Could not add ${item.site.name} - @${item.userName}!\n\nThe following field contains content not allowed on public pages:\n    '${value}'\n    '${cleaned}'`, "danger");
+                toast(`Could not add ${item.site.name} - @${item.userName}!\n\nThe following field contains content not allowed\non public pages:\n    '${value}'\n    '${cleaned}'`, "danger");
                 return;
             }
         }

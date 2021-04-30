@@ -14,11 +14,23 @@ function NowPlayingSearch() {
 
   useEffect(() => {
     const triggerRender = () => setPlsRender(prev => !prev);
+    const handleUnload = (e) => {
+      if (getInProgressSearches().length > 0) {
+        console.warn('Leaving page with searches in progress!');
+        const msg = 'There are searches in progress! Are you sure you want to leave the page?';
+        (e || window.event).returnValue = msg;
+        return msg;
+      }
+    }
+
+    window.addEventListener('beforeunload', handleUnload);
 
     Search.cache.events.on('change', triggerRender);
     ThirdPartyAccount.resultCache.events.on('change', triggerRender);
     const interval = setInterval(triggerRender, 60 * 1000);
+
     return () => {
+      window.removeEventListener('beforeunload', handleUnload);
       Search.cache.events.removeListener('change', triggerRender);
       ThirdPartyAccount.resultCache.events.removeListener('change', triggerRender);
       clearInterval(interval);
@@ -30,7 +42,7 @@ function NowPlayingSearch() {
   return (
     <div style={{ position: 'absolute', width: '100%', bottom: '0', margin: 'auto' }}>
       {!onSearchPage && getInProgressSearches().slice(0, 2).map(search => (
-        <div style={{ width: '90%', margin: 'auto' }}>
+        <div key={search.id} style={{ width: '90%', margin: 'auto' }}>
           <Link to={`/search#${search.id}`} style={{ color: 'inherit' }}>
             <Card>
               <CardBody>

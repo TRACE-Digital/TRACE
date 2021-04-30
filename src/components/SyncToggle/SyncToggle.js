@@ -37,6 +37,8 @@ function SyncToggle() {
     return settings.syncEnabled;
   }
 
+  // TODO: Check for the user more frequently
+  // This currently doesn't work on first sign in
   useEffect(() => {
     (async () => {
       try {
@@ -72,7 +74,7 @@ function SyncToggle() {
       try {
         console.log('Disabling sync');
         await disableSync();
-        permaToast(`CAUTION: You are now editing locally. You're change will not be synced!`, 'danger')
+        permaToast(`CAUTION: You are now editing locally. Your changes will not be synced!`, 'danger')
       } catch (e) {
         console.error(e);
         return;
