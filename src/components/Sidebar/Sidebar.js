@@ -79,6 +79,7 @@ function Sidebar(props) {
           href={logo.outterLink}
           className="simple-text logo-normal"
           target="blank"
+          style={{fontSize: 30}}
           onClick={props.toggleSidebar}
         >
           {logo.text}
@@ -89,6 +90,7 @@ function Sidebar(props) {
         <Link
           to={logo.innerLink}
           className="simple-text logo-mini"
+          style={{fontSize: 30}}
           onClick={props.toggleSidebar}
         >
           <div className="logo-img">
@@ -132,6 +134,7 @@ function Sidebar(props) {
                       to={prop.layout + prop.path}
                       className="nav-link"
                       activeClassName="active"
+                      style={{fontSize: 14}}
                       onClick={props.toggleSidebar}
                     >
                       <i className={prop.icon} />
