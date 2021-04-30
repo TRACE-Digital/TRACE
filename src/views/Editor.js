@@ -442,9 +442,9 @@ const Editor = () => {
       });
 
       if (response.status === 200) {
-        alert("Your custom URL has been deleted!");
+        toast('Your custom URL has been deleted!', "success");
         myProfile.customPath = 'null';
-        
+
         await myProfile.save();
         setPlsRender(prev => !prev);
       } else {
