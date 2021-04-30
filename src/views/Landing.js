@@ -3,7 +3,7 @@
 
 import { Button, Container, Row, Col } from 'reactstrap';
 import { Navbar } from 'react-bootstrap';
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 import { supportedSites } from 'trace-search';
 
@@ -39,7 +39,7 @@ function Landing() {
             <img src={mainLogo} alt="trace-logo" width="150"></img>
           </div>
           <p>Find your digital footprint. Manage your online presence. <br /> Sync your information or work locally.</p>
-          <NavLink to="/search">
+          <Link to="/search">
             <Button
               className="start-button"
               block
@@ -47,7 +47,10 @@ function Landing() {
             >
               Get Started
           </Button>
-          </NavLink>
+          </Link>
+          <Link to="/login">
+            Log In
+          </Link>
         </div>
 
         <img src={landingImg} alt="landing-img" width="100%"></img>

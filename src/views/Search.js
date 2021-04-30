@@ -37,6 +37,15 @@ function SearchComponent() {
   const showClear = [SearchState.PAUSED, SearchState.COMPLETED, SearchState.CANCELLED, SearchState.FAILED].includes(currentSearch?.state);
   const showSearchIcon = currentSearch === null || [SearchState.CREATED, SearchState.COMPLETED, SearchState.FAILED].includes(currentSearch?.state);
 
+  const extensionInstalled = window.__TRACE_EXTENSION_HOOK__ !== undefined;
+
+  const isChrome = window.navigator.userAgent.includes('Chrome');
+  const isFirefox = window.navigator.userAgent.includes('Firefox');
+
+  let extensionUrl = 'https://github.com/TRACE-Digital/TRACE-ext';
+  if (isChrome) extensionUrl = 'https://chrome.google.com/webstore/detail/trace/klhmocgplcpemcdfeefpaikihedmikgk';
+  if (isFirefox) extensionUrl = 'https://addons.mozilla.org/en-US/firefox/addon/trace-digital/';
+
   // Load the search from the ID in the URL
   useEffect(() => {
     let idToRestore;
@@ -265,6 +274,11 @@ function SearchComponent() {
           </div>
         </>
       )}
+
+      <div className={!extensionInstalled ? "error-message-visible" : "error-not-visible"} style={{ width: '50%', marginBottom: '30px', padding: '10px' }}>
+        A compatible version of the browser extension is not installed.<br/>
+        Search results may be severely limited. <a href={extensionUrl} target="blank">Install the extension here.</a>
+      </div>
 
       <div className="one">
         <div className="three">

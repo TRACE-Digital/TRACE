@@ -177,7 +177,7 @@ function AdminNavbar(props) {
                   {currentUsername &&
                     <NavLink onClick={async () => {
                       await signOut();
-                      window.location.href = "/landing";
+                      window.location.href = "/login";
                     }} tag="li">
                     <DropdownItem className="nav-item">
                       Log Out - {currentUsername}
