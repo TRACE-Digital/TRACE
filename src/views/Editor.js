@@ -154,12 +154,9 @@ const Editor = () => {
         fetch(url, { method: 'GET' })
           .then(response => response.json())
           .then(data => {
-            console.log(`customPath before status: ${myProfile.customPath}`);
-            console.log(myProfile);
             myProfile.published = (data.page_is_published === "yes");
             myProfile.hasPassword = (data.password_required === "yes");
             myProfile.customPath = String(data.customurl);
-            console.log(`customPath from status: ${myProfile.customPath}`);
             myProfile.save();
           }).then(() => {
             setPlsRender(prev => !prev);
@@ -424,7 +421,7 @@ const Editor = () => {
 
       if (response.status === 200) {
         alert("Your custom URL has been deleted!");
-        myProfile.customPath = null;
+        myProfile.customPath = 'null';
         await myProfile.save();
         setPlsRender(prev => !prev);
       } else {
@@ -611,11 +608,11 @@ const Editor = () => {
                               </div>
                             }
                             <DropdownItem divider tag="li" />
-                            {myProfile && !myProfile.hasCustomPath &&
+                            {myProfile && (myProfile.customPath == 'null') &&
                             <NavLink tag="li">
                               <DropdownItem className="nav-item" onClick={addCustomURL} style={{color: "black"}}>Customize URL</DropdownItem>
                             </NavLink>
-                            } {myProfile && myProfile.hasCustomPath &&
+                            } {myProfile && (myProfile.customPath != 'null') &&
                               <div>
                                 <NavLink tag="li">
                                   <DropdownItem className="nav-item" onClick={addCustomURL} style={{color: "black"}}>Edit Custom URL</DropdownItem>
