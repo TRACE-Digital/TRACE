@@ -50,22 +50,38 @@ function Settings() {
 
   const downloadJson = async () => {
     const text = await exportToJson();
-    openBlob(text);
+    openBlob(text, '.json', 'application/json');
   };
 
   const downloadCsv = async () => {
     const text = await exportToCsv();
-    openBlob(text);
+    openBlob(text, '.csv', 'text/plain');
   };
 
-  const openBlob = (text) => {
-    const blob = new Blob([text], {
-      type: "application/json;charset=utf-8"
-    });
+  const openBlob = (text, extension, contentType) => {
+    const fileName = `trace-${new Date().toJSON()}${extension}`;
+    const props = { type: contentType };
+
+    let blob;
+    try {
+      // Use File in newer browsers so we can specify a name
+      blob = new File([text], fileName, props);
+    } catch (e) {
+      console.log(e);
+      blob = new Blob([text], props);
+    }
 
     const url = URL.createObjectURL(blob);
     console.log(url);
 
+    // Trigger the download
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    link.target = 'blank';
+    link.click();
+
+    // Also show the content
     window.open(url, 'blank');
   };
 
@@ -78,12 +94,12 @@ function Settings() {
         <CardHeader>TRACE</CardHeader>
         <CardBody>
           <Row>
-            <Col>Account ID:</Col>
-            <Col>{currentUser ? currentUser.attributes.sub : 'None (local only)'}</Col>
-          </Row>
-          <Row>
             <Col>Account name:</Col>
             <Col>{currentUser ? currentUser.attributes.email : 'None (local only)'}</Col>
+          </Row>
+          <Row>
+            <Col>Account ID:</Col>
+            <Col>{currentUser ? currentUser.attributes.sub : 'None (local only)'}</Col>
           </Row>
           <Row>
             <Col>Version:</Col>
