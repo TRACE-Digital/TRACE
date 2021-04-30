@@ -53,14 +53,15 @@ async function signIn(username, password) {
           console.error(e);
         }
 
+        // Before a user signs in, we must clear the current local database
+        await destroyLocalDb();
+
         if (settings.accountClosed) {
           await Auth.signOut();
           return 'Your account has been closed! Contract TRACE administrators if you would like to reopen it.';
         }
 
-        // Before a user signs in, we must clear the current local database
         // We also must generate a new encryption key based off of their password
-        await destroyLocalDb();
         await generateEncryptionKey(password, user.attributes.sub);
         return null;
     } catch (error) {
