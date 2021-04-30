@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Row, Col } from "reactstrap";
 import { ChromePicker } from 'react-color'
 import { Button, ButtonGroup } from "reactstrap";
 import classNames from "classnames";
+import NotificationAlert from "react-notification-alert";
 
 import { ThirdPartyAccount,  ClaimedAccount, ManualAccount } from "trace-search";
 import BadWordsFilter from 'bad-words';
@@ -29,9 +30,17 @@ function Colors(props) {
         "iconColor": "Default"
     }])
 
-
-
-
+    const notificationAlertRef = useRef(null);
+    const toast = (message, type) => {
+    var options = {};
+    options = {
+        place: "bc",
+        message: (<span>{message}</span>),
+        type: type,
+        autoDismiss: 7,
+    };
+    notificationAlertRef.current.notificationAlert(options);
+    }
 
     // const [claimedAccounts, setClaimedAccounts] = useState({});
     // const [onProfile, setOnProfile] = useState(false);
@@ -129,7 +138,7 @@ function Colors(props) {
         for (const value of values) {
             if (filter.isProfane(value)) {
                 const cleaned = filter.clean(value);
-                alert(`Could not add ${item.site.name} - @${item.userName}!\n\nThe following field contains content not allowed on public pages:\n    '${value}'\n    '${cleaned}'`);
+                toast(`Could not add ${item.site.name} - @${item.userName}!\n\nThe following field contains content not allowed on public pages:\n    '${value}'\n    '${cleaned}'`, "danger");
                 return;
             }
         }
@@ -217,6 +226,9 @@ function Colors(props) {
 
     return (
         <>
+            <div className="react-notification-alert-container">
+                <NotificationAlert ref={notificationAlertRef} />
+            </div>
             <div className="popup">
                 <div className="icon-wrap">
                     <i className="tim-icons icon-simple-remove icon" onClick={props.closePopup}>

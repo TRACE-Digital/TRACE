@@ -1,11 +1,24 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import ToggleButton from 'react-toggle-button';
 import { setRemoteUser, setupReplication, teardownReplication } from 'trace-search';
 import Auth from "@aws-amplify/auth";
+import NotificationAlert from "react-notification-alert";
 
 function SyncToggle() {
   const [replicate, setReplicate] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const notificationAlertRef = useRef(null);
+  const toast = (message, type) => {
+    var options = {};
+    options = {
+      place: "bc",
+      message: (<span>{message}</span>),
+      type: type,
+      autoDismiss: 7,
+    };
+    notificationAlertRef.current.notificationAlert(options);
+  }
 
   useEffect(() => {
     (async () => {
@@ -23,7 +36,7 @@ function SyncToggle() {
   useEffect(() => {
     async function handleReplication() {
       if (!isLoggedIn && replicate) {
-        alert('You must sign in to use sync!');
+        toast('You must sign in to use sync!', "danger");
         setReplicate(false);
         return;
       }
@@ -36,12 +49,12 @@ function SyncToggle() {
           const replicator = obj.TODO_replication;
 
           replicator.on('error', (e) => {
-            alert(`Replication error: ${e.message || e}`);
+            toast(`Replication error: ${e.message || e}`, "danger");
             console.error(e);
             setReplicate(false);
           });
         } catch(e) {
-          alert(`Replication error: ${e.message || e}`);
+          toast(`Replication error: ${e.message || e}`, "danger");
           console.error(e);
           setReplicate(false);
           return;
@@ -59,15 +72,20 @@ function SyncToggle() {
   }, [replicate, isLoggedIn]);
 
   return(
-    <div style={{ textAlign: 'center' }}>
-      Sync
-        <ToggleButton
-          inactiveLabel={<span>Off</span>}
-          activeLabel={<span>On</span>}
-          value={replicate || false}
-          onToggle={() => setReplicate(prev => !prev) }
-          />
-    </div>
+    <>
+      <div className="react-notification-alert-container">
+        <NotificationAlert ref={notificationAlertRef} />
+      </div>
+      <div style={{ textAlign: 'center' }}>
+        Sync
+          <ToggleButton
+            inactiveLabel={<span>Off</span>}
+            activeLabel={<span>On</span>}
+            value={replicate || false}
+            onToggle={() => setReplicate(prev => !prev) }
+            />
+      </div>
+    </>
   );
 }
 
