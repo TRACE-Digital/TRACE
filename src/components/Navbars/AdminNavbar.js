@@ -19,7 +19,7 @@ import { useEffect, useState } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 
-import { resetDb, resetRemoteDb, setRemoteUser, destroyLocalDb } from 'trace-search';
+import { setRemoteUser, destroyDb } from 'trace-search';
 
 import SyncToggle from 'components/SyncToggle/SyncToggle';
 
@@ -52,8 +52,8 @@ function AdminNavbar(props) {
   const isChrome = window.navigator.userAgent.includes('Chrome');
   const isFirefox = window.navigator.userAgent.includes('Firefox');
 
-  let extensionUrl = 'https://addons.mozilla.org/en-US/firefox/addon/trace-digital/';
-  if (isChrome) extensionUrl = 'https://chrome.google.com/webstore/detail/TRACE/klhmocgplcpemcdfeefpaikihedmikgk';
+  let extensionUrl = 'https://github.com/TRACE-Digital/TRACE-ext';
+  if (isChrome) extensionUrl = 'https://chrome.google.com/webstore/detail/trace/klhmocgplcpemcdfeefpaikihedmikgk';
   if (isFirefox) extensionUrl = 'https://addons.mozilla.org/en-US/firefox/addon/trace-digital/';
 
   useEffect(() => {
@@ -80,7 +80,8 @@ function AdminNavbar(props) {
     try {
       await Auth.signOut();
       // When a user signs out, we must clear the current local database
-      await destroyLocalDb();
+      await setRemoteUser(null);
+      await destroyDb();
     } catch (error) {
       console.log('error signing out: ', error);
     }
@@ -153,18 +154,6 @@ function AdminNavbar(props) {
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-navbar" right tag="ul">
                   <NavLink tag="li">
-                    <DropdownItem className="nav-item">Profile</DropdownItem>
-                  </NavLink>
-                  <DropdownItem divider tag="li" />
-
-                  <NavLink tag="li">
-                    <DropdownItem className="nav-item">Settings</DropdownItem>
-                  </NavLink>
-                  <DropdownItem tag="li" className="">
-
-                  </DropdownItem>
-                  <DropdownItem divider tag="li" />
-                  <NavLink tag="li">
                     <a href={extensionUrl} target='blank'>
                       <DropdownItem className="nav-item">
                         {window.__TRACE_EXTENSION_HOOK__ ?
@@ -174,33 +163,20 @@ function AdminNavbar(props) {
                       </DropdownItem>
                     </a>
                   </NavLink>
-                  <NavLink tag="li">
-                    <DropdownItem className="nav-item" onClick={async () => {
-                      const confirmation = window.confirm('Are you sure? This action is irreversible and will delete ALL your data.');
-                      if (!confirmation) {
-                        return;
-                      }
 
-                      try {
-                        await resetDb();
-                        if (currentUsername) {
-                          await setRemoteUser(await Auth.currentUserPoolUser());
-                          await resetRemoteDb();
-                        }
-                        window.location.reload();
-                      } catch (e) {
-                        console.error(e);
-                      }
-                    }}>Delete my data</DropdownItem>
+                  <NavLink to="/settings" tag={Link} style={{paddingBottom: 0}}>
+                    <DropdownItem className="nav-item">Settings</DropdownItem>
                   </NavLink>
+
                   <DropdownItem divider tag="li" />
+
                   {!currentUsername &&
                     <NavLink to="/login" tag={Link}>
                       <DropdownItem className="nav-item">Log In</DropdownItem>
                     </NavLink>}
                   {currentUsername &&
-                    <NavLink onClick={() => {
-                      signOut();
+                    <NavLink onClick={async () => {
+                      await signOut();
                       window.location.href = "/landing";
                     }} tag="li">
                     <DropdownItem className="nav-item">

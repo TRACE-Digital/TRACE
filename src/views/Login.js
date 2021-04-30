@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Auth } from 'aws-amplify';
-import { destroyLocalDb, generateEncryptionKey } from 'trace-search'
+import { destroyDb, generateEncryptionKey } from 'trace-search'
 
 // reactstrap components
 import { Alert, Card, CardImg, CardBody, CardTitle, Button, Form, FormGroup, Input } from 'reactstrap';
 import { Link } from "react-router-dom";
 import ReactCardFlip from "react-card-flip";
+import { getRemoteDb, setRemoteUser } from 'trace-search';
 
 async function signUp(username, email, password) {
   try {
@@ -17,8 +18,10 @@ async function signUp(username, email, password) {
           }
       });
       // Before a user signs up, we must clear the current local database
+      await setRemoteUser(null);
+      await destroyDb();
+
       // We also must generate a new encryption key based off of their password
-      await destroyLocalDb();
       const user = await Auth.currentUserPoolUser();
       await generateEncryptionKey(password, user.attributes.sub);
       return null;
@@ -40,11 +43,30 @@ async function signUp(username, email, password) {
 async function signIn(username, password) {
     try {
         await Auth.signIn(username, password);
-        // Before a user signs in, we must clear the current local database
-        // We also must generate a new encryption key based off of their password
-        await destroyLocalDb();
         const user = await Auth.currentUserPoolUser();
+
+        // Before a user signs in, we must clear the current local database
+        await setRemoteUser(null);
+        await destroyDb();
+
+        // We also must generate a new encryption key based off of their password
+        await setRemoteUser(user);
         await generateEncryptionKey(password, user.attributes.sub);
+        const db = await getRemoteDb();
+
+        let settings = {};
+        try {
+          settings = await db.get('settings');
+        } catch(e) {
+          console.error(e);
+        }
+
+        if (settings.accountClosed) {
+          await Auth.signOut();
+          await setRemoteUser(null);
+          return 'Your account has been closed! Contract TRACE administrators if you would like to reopen it.';
+        }
+
         return null;
     } catch (error) {
       Auth.error = error;

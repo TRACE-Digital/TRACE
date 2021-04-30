@@ -163,12 +163,9 @@ const Editor = () => {
         fetch(url, { method: 'GET' })
           .then(response => response.json())
           .then(data => {
-            console.log(`customPath before status: ${myProfile.customPath}`);
-            console.log(myProfile);
             myProfile.published = (data.page_is_published === "yes");
             myProfile.hasPassword = (data.password_required === "yes");
             myProfile.customPath = String(data.customurl);
-            console.log(`customPath from status: ${myProfile.customPath}`);
             myProfile.save();
           }).then(() => {
             setPlsRender(prev => !prev);
@@ -252,7 +249,6 @@ const Editor = () => {
         axios.get('${matomoIngestUrl.toString()}&rand=' + Math.random().toString(36).substr(2))
         .then(function(resp) {
           console.log('Recorded page visit');
-          console.log(resp);
         })
         .catch(function(e) {
           console.error(e);
@@ -271,7 +267,6 @@ const Editor = () => {
           axios.get(apiUrl + '&rand=' + Math.random().toString(36).substr(2))
           .then(function(resp) {
             console.log('Recorded link click for ' + siteName + '/' + userName);
-            console.log(resp);
           })
           .catch(function(e) {
             console.error(e);
@@ -442,8 +437,9 @@ const Editor = () => {
       });
 
       if (response.status === 200) {
-        toast("Your custom URL has been deleted!", "info");
-        myProfile.customPath = null;
+        toast('Your custom URL has been deleted!', "success");
+        myProfile.customPath = 'null';
+
         await myProfile.save();
         setPlsRender(prev => !prev);
       } else {
@@ -502,11 +498,10 @@ const Editor = () => {
       return;
     }
 
-    console.debug(`Checking profile page for deleted accounts`);
-
     let accountRemoved = false;
     for (const account of myProfile.accounts) {
       if (!ThirdPartyAccount.accountCache.has(account.id)) {
+        console.debug(`Removing ${account.id} from ${myProfile.title}`)
         myProfile.removeAccount(account.id);
         accountRemoved = true;
       }
@@ -633,11 +628,11 @@ const Editor = () => {
                               </div>
                             }
                             <DropdownItem divider tag="li" />
-                            {myProfile && !myProfile.hasCustomPath &&
+                            {myProfile && (myProfile.customPath == 'null') &&
                             <NavLink tag="li">
                               <DropdownItem className="nav-item" onClick={addCustomURL} style={{color: "black"}}>Customize URL</DropdownItem>
                             </NavLink>
-                            } {myProfile && myProfile.hasCustomPath &&
+                            } {myProfile && (myProfile.customPath != 'null') &&
                               <div>
                                 <NavLink tag="li">
                                   <DropdownItem className="nav-item" onClick={addCustomURL} style={{color: "black"}}>Edit Custom URL</DropdownItem>

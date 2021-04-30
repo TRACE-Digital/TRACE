@@ -30,6 +30,7 @@ import {
   BackgroundColorContext,
   backgroundColors,
 } from "contexts/BackgroundColorContext";
+import NowPlayingSearch from "components/NowPlayingSearch/NowPlayinSearch";
 
 var ps;
 
@@ -144,6 +145,7 @@ function Sidebar(props) {
                 );
               })}
             </Nav>
+            <NowPlayingSearch />
           </div>
         </div>
       )}

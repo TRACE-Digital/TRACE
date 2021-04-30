@@ -1,7 +1,7 @@
 import AccountCard from 'components/AccountCard/AccountCard';
 import { rejectAccount } from 'components/AccountCard/AccountCard';
 import { claimAccount } from 'components/AccountCard/AccountCard';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'reactstrap';
 import { tags } from 'trace-search';
 import NotificationAlert from "react-notification-alert";
@@ -123,9 +123,9 @@ function AccountCardList(props) {
         // sort by confidence level, highest first
         sorted.sort((a, b) => {
           return a.confidence < b.confidence
-            ? -1
-            : a.confidence > b.confidence
             ? 1
+            : a.confidence > b.confidence
+            ? -1
             : 0;
         });
       } else if (sortMethod === "category") {
@@ -213,7 +213,8 @@ function AccountCardList(props) {
       </div>
       <Row>
         {sortedAccounts.map((account) => (
-          <>
+          // <Fragment key={account.id || account}> // This has duplicate IDs right now and causes some real weird stuff
+          <Fragment>
           {typeof account !== "string" && (<AccountCard
             key={account.id}
             account={account}
@@ -230,7 +231,7 @@ function AccountCardList(props) {
             <div key={account} className='titled-separator' style={{ marginBottom: '20px' }}>
               <h3>{account}</h3>
             </div>}
-          </>
+          </Fragment>
         ))}
       </Row>
     </>
