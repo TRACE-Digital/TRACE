@@ -397,7 +397,7 @@ const Editor = () => {
             method: 'PUT'
           }).then(async (value) => {
             if (value.status === 401) {
-              toast('Sorry, this URL is already taken. Please choose a new one.', "warning");
+              toast('Sorry, this URL is already taken. Please choose a new one.', "danger");
             } else if (value.status < 203) {
               toast('Your custom URL has been created!', "success");
               toast('You can visit your page at https://public.tracedigital.tk/u/' + customurl, "info");
@@ -411,7 +411,7 @@ const Editor = () => {
         }
       });
     } else {
-      toast("Please publish your page before customizing your URL.", "warning")
+      toast("Please publish your page before customizing your URL.", "danger")
     }
   }
 
@@ -421,7 +421,7 @@ const Editor = () => {
         let url_ending = myProfile.customPath;
         window.open('https://public.tracedigital.tk/u/' + url_ending, '_blank');
       } else {
-        toast('Please create a custom URL before navigating to it.', "warning");
+        toast('Please create a custom URL before navigating to it.', "danger");
       }
     } else {
       toast('Please publish your page before navigating to it.', "warning");
@@ -628,11 +628,11 @@ const Editor = () => {
                               </div>
                             }
                             <DropdownItem divider tag="li" />
-                            {myProfile && (myProfile.customPath == 'null') &&
+                            {myProfile && (myProfile.customPath === 'null') &&
                             <NavLink tag="li">
                               <DropdownItem className="nav-item" onClick={addCustomURL} style={{color: "black"}}>Customize URL</DropdownItem>
                             </NavLink>
-                            } {myProfile && (myProfile.customPath != 'null') &&
+                            } {myProfile && (myProfile.customPath !== 'null') &&
                               <div>
                                 <NavLink tag="li">
                                   <DropdownItem className="nav-item" onClick={addCustomURL} style={{color: "black"}}>Edit Custom URL</DropdownItem>
