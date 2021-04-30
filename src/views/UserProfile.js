@@ -33,31 +33,33 @@ import Jakob from '../assets/img/BabyPics/Jakob.jpeg';
 
 function UserProfile() {
   var images = [
-    {image : Charlene, label : 'Charlene Orr'},
-    {image : Chris, label : 'Chris Cohen'},
-    {image : Cora, label : 'Cora Chan'},
-    {image : Isabel, label : 'Isabel Battaglioli'},
-    {image : Jack, label : 'Jack McKernan'},
-    {image : Jakob, label : 'Jakob Molskness'},
+    { image: Charlene, label: 'Charlene Orr', ghName: 'charlorr' },
+    { image: Chris, label: 'Chris Cohen', ghName: 'cohenchris' },
+    { image: Cora, label: 'Cora Chan', ghName: 'cchan207' },
+    { image: Isabel, label: 'Isabel Battaglioli', ghName: 'isabelbattag' },
+    { image: Jack, label: 'Jack McKernan', ghName: 'jmcker' },
+    { image: Jakob, label: 'Jakob Molskness', ghName: 'jlmolskness' },
   ];
 
   function getPicture(item) {
     return (
-        <Col md={3}>
-            <img className="baby-pics" alt="" src={`${item.image}`}></img>
-            <div className="dev-name">
-                <text>{item.label} </text>
-            </div>
-        </Col>
+      <Col xl={4}>
+        <img className="baby-pics" alt="" src={`${item.image}`}></img>
+        <div className="dev-name">
+          <a href={`https://github.com/${item.ghName}`} target="blank">
+            {item.label}
+          </a>
+        </div>
+      </Col>
     );
-}
+  }
 
   return (
     <>
       <div className="content">
-        <h3 className="header">Meet the Developers</h3>
-        <Row>
-          { images.map(getPicture) }
+        <h3>Meet the Developers</h3>
+        <Row style={{ marginLeft: '15%', marginRight: '15%' }}>
+          {images.map(getPicture)}
         </Row>
       </div>
     </>
