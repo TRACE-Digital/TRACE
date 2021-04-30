@@ -1,9 +1,10 @@
 import PrivacyBadge from "components/PrivacyBadge/PrivacyBadge";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import ReactCardFlip from "react-card-flip";
 import { Card, CardBody, Button } from "reactstrap";
 import { IconButton } from "@material-ui/core";
 import { AccountType } from "trace-search";
+import NotificationAlert from "react-notification-alert";
 
 /**
  * Displays a Card with information about the account passed in
@@ -24,7 +25,18 @@ const SiteCard = (props) => {
   const editorColor = props.editorColor;
   const iconColor = props.iconColor;
 
-  
+  const notificationAlertRef = useRef(null);
+  const toast = (message, type) => {
+    var options = {};
+    options = {
+      place: "bc",
+      message: (<span>{message}</span>),
+      type: type,
+      autoDismiss: 7,
+    };
+    notificationAlertRef.current.notificationAlert(options);
+  }
+
   if (!search && !dashboard && !editor) {
     console.warn(
       'WARNING - invalid type passed to SiteCard component. Needs to be "search", "dashboard", or "editor"'
@@ -52,9 +64,9 @@ const SiteCard = (props) => {
     //   async function claimAccount(account) {
     try {
       await account.claim();
-      alert("Account successfully claimed!");
+      toast("Account successfully claimed!", "success");
     } catch (e) {
-      alert("Account has already been claimed!");
+      toast("Account has already been claimed!", "warning");
       console.error(e);
     }
   };
@@ -66,7 +78,7 @@ const SiteCard = (props) => {
     //   async function deleteAccount(account) {
     try {
       await account.reject();
-      alert("Account successfully removed!");
+      toast("Account successfully removed!");
     } catch (e) {
       console.error(e);
     }
@@ -74,6 +86,10 @@ const SiteCard = (props) => {
 
   return (
     //<Col lg="3" key={account.id}>
+      <>
+      <div className="react-notification-alert-container">
+        <NotificationAlert ref={notificationAlertRef} />
+      </div>
       <ReactCardFlip
         isFlipped={flipped}
         flipSpeedBackToFront=".8"
@@ -86,7 +102,7 @@ const SiteCard = (props) => {
             {/* ICON */}
             <div className="editor">
               {" "}
-              
+
               <i
                 className={account.site.logoClass || 'fas fa-question fa-sm'}
                 style={{ color: (iconColor === "Default") ? account.site.logoColor || null : iconColor }}
@@ -201,6 +217,7 @@ const SiteCard = (props) => {
           <div />
         )}
       </ReactCardFlip>
+      </>
     //</Col>
   );
 };
