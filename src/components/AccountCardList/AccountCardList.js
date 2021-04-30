@@ -1,9 +1,10 @@
 import AccountCard from 'components/AccountCard/AccountCard';
 import { rejectAccount } from 'components/AccountCard/AccountCard';
 import { claimAccount } from 'components/AccountCard/AccountCard';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'reactstrap';
 import { tags } from 'trace-search';
+import NotificationAlert from "react-notification-alert";
 
 function AccountCardList(props) {
   const [sortMethod, setSortMethod] = useState("new");
@@ -18,6 +19,18 @@ function AccountCardList(props) {
   const selectAll = () => setSelection(props.accounts.map(account => account.id));
   const deselectAll = () => setSelection([]);
 
+  const notificationAlertRef = useRef(null);
+  const toast = (message, type) => {
+    var options = {};
+    options = {
+      place: "bc",
+      message: (<span>{message}</span>),
+      type: type,
+      autoDismiss: 7,
+    };
+    notificationAlertRef.current.notificationAlert(options);
+  }
+
   const claimSelected = async () => {
     let count = 0;
     const selectedAccounts = props.accounts.filter(account => selection.includes(account.id));
@@ -27,7 +40,7 @@ function AccountCardList(props) {
         count++;
       }
     }
-    alert(`Claimed ${count} accounts.`);
+    toast(`Claimed ${count} accounts.`, "success");
     return count;
   };
 
@@ -40,7 +53,7 @@ function AccountCardList(props) {
         count++;
       }
     }
-    alert(`Rejected ${count} accounts.`);
+    toast(`Rejected ${count} accounts.`, "danger");
     return count;
   };
 
@@ -132,6 +145,9 @@ function AccountCardList(props) {
 
   return (
     <>
+      <div className="react-notification-alert-container">
+        <NotificationAlert ref={notificationAlertRef} />
+      </div>
       <span style={{display: "inline", float: "right"}}>
         {/* SORT DROPDOWN */}
         <Dropdown isOpen={sortDropdownOpen} toggle={toggleSortDropdown} style={{display: "inline", marginRight: "10px"}}>

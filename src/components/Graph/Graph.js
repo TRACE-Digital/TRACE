@@ -7,6 +7,7 @@ function Graph(props) {
 
   const [data, setData] = useState([]);
   const [labels, setLabels] = useState([]);
+  const [totalData, setTotalData] = useState(0);
 
   var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   var days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
@@ -65,6 +66,7 @@ function Graph(props) {
   // Add label logic in here
   const tempLabels = [];
   let count = 0;
+  let total = 0;
   for (const key in analyticsData) {
 
     if (analyticsData.hasOwnProperty(key)) {
@@ -87,7 +89,9 @@ function Graph(props) {
 
 
       if (analyticsData[key].length !== 0) {
-        data.push(analyticsData[key][0].nb_hits);
+        let hits = analyticsData[key][0].nb_hits;
+        data.push(hits);
+        total += hits;
       }
       else {
         data.push(0);
@@ -97,6 +101,7 @@ function Graph(props) {
   }
 
     setLabels(tempLabels);
+    setTotalData(total);
     return data;
   }
 
@@ -152,6 +157,16 @@ function Graph(props) {
 
   return (
     <>
+      {props.dataLabel === "Visitors" && (
+        <h2 style={{position: "absolute", fontWeight: "100", transform: "translate(10px, -57px)"}}>
+          {totalData} Visitors
+        </h2>
+      )}
+      {props.dataLabel === "Clicks" && (
+        <h4 style={{position: "absolute", fontWeight: "100", transform: "translate(10px, -50px)"}}>
+          {totalData} Clicks
+        </h4>
+      )}
       <Line
         data={chart.visitorData}
         options={chart.options}
@@ -195,7 +210,7 @@ let defaultOptions = {
         },
         ticks: {
           suggestedMin: 0,
-          suggestedMax: 5,
+          suggestedMax: 6,
           padding: 20,
           fontColor: "#9a9a9a",
         },

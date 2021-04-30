@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Colors from "views/Colors.js";
 import { ProfilePage, ThirdPartyAccount } from "trace-search";
 import SiteCard from "components/SiteCard/SiteCard";
@@ -20,9 +20,21 @@ import {
   Row,
 } from "reactstrap";
 
+import NotificationAlert from "react-notification-alert";
 
 
 const Editor = () => {
+  const notificationAlertRef = useRef(null);
+  const toast = (message, type) => {
+    var options = {};
+    options = {
+      place: "bc",
+      message: (<span>{message}</span>),
+      type: type,
+      autoDismiss: 7,
+    };
+    notificationAlertRef.current.notificationAlert(options);
+  }
 
   /**
    * Initialize constants
@@ -282,15 +294,25 @@ const Editor = () => {
         body: fetchbody
       });
 
-      const tellEm = quiet ? console.warn : alert;
       if (response.status > 202) {
-        tellEm('Oops, something went wrong! Please try again.')
+        const message = 'Oops, something went wrong! Please try again.';
+
+        if (quiet) {
+          console.warn(message);
+        } else {
+          toast(message, "warning")
+        }
       } else {
         myProfile.published = true;
         await myProfile.save();
         setPlsRender(prev => !prev);
 
-        tellEm("Your page has been published!");
+        const message = "Profile page published!";
+        if (quiet) {
+          console.log(message);
+        } else {
+          toast(message, "success")
+        }
       }
     });
   }
@@ -305,13 +327,13 @@ const Editor = () => {
       });
 
       if (response.status === 200) {
-        alert("Your page has been unpublished!");
+        toast("Your page has been unpublished!", "info");
         myProfile.published = false;
         myProfile.hasPassword = false;
         await myProfile.save();
         setPlsRender(prev => !prev);
       } else {
-        alert("Oops, something went wrong! Please try again.")
+        toast("Oops, something went wrong! Please try again.", "danger")
       }
     });
   }
@@ -324,7 +346,7 @@ const Editor = () => {
           + value.attributes.sub, '_blank');
       });
     } else {
-      alert('Please publish your page before navigating to it.')
+      toast('Please publish your page before navigating to it.', "warning")
     }
   }
 
@@ -340,7 +362,7 @@ const Editor = () => {
           method: 'PUT'
         });
 
-        alert('Your new password has been set!');
+        toast('Your new password has been set!', "success");
 
         myProfile.hasPassword = true;
         await myProfile.save();
@@ -357,7 +379,7 @@ const Editor = () => {
         method: 'DELETE'
       });
 
-      alert('Your password has been removed!');
+      toast('Your password has been removed!', "success");
 
       myProfile.hasPassword = false;
       await myProfile.save();
@@ -380,21 +402,21 @@ const Editor = () => {
             method: 'PUT'
           }).then(async (value) => {
             if (value.status === 401) {
-              alert('Sorry, this URL is already taken. Please choose a new one.');
+              toast('Sorry, this URL is already taken. Please choose a new one.', "warning");
             } else if (value.status < 203) {
-              alert('Your custom URL has been created!');
-              alert('You can visit your page at https://public.tracedigital.tk/u/' + customurl);
+              toast('Your custom URL has been created!', "success");
+              toast('You can visit your page at https://public.tracedigital.tk/u/' + customurl, "info");
               myProfile.customPath = customurl;
               await myProfile.save();
               setPlsRender(prev => !prev);
             } else {
-              alert('Oops, something went wrong! Please try again.')
+              toast('Oops, something went wrong! Please try again.', "danger")
             }
           });
         }
       });
     } else {
-      alert("Please publish your page before customizing your URL.")
+      toast("Please publish your page before customizing your URL.", "warning")
     }
   }
 
@@ -404,10 +426,10 @@ const Editor = () => {
         let url_ending = myProfile.customPath;
         window.open('https://public.tracedigital.tk/u/' + url_ending, '_blank');
       } else {
-        alert('Please create a custom URL before navigating to it.');
+        toast('Please create a custom URL before navigating to it.', "warning");
       }
     } else {
-      alert('Please publish your page before navigating to it.');
+      toast('Please publish your page before navigating to it.', "warning");
     }
   }
 
@@ -422,10 +444,11 @@ const Editor = () => {
       if (response.status === 200) {
         alert("Your custom URL has been deleted!");
         myProfile.customPath = 'null';
+        
         await myProfile.save();
         setPlsRender(prev => !prev);
       } else {
-        alert("Oops, something went wrong! Please try again.")
+        toast("Oops, something went wrong! Please try again.", "danger")
       }
     });
   }
@@ -558,6 +581,9 @@ const Editor = () => {
 
   let editorContent = (
     <>
+      <div className="react-notification-alert-container">
+        <NotificationAlert ref={notificationAlertRef} />
+      </div>
       {isOpen ? <Colors onSelectLanguage={handleLanguage} closePopup={handleAddClick} onUpdatePage={updatePage} page={myProfile} /> : null}
       <div className={isOpen ? `content blur` : `content`}>
         <div className={`editor-background`} style={{ backgroundColor: `${backgroundColor}` }}>
