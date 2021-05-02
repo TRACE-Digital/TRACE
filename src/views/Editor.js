@@ -537,7 +537,12 @@ const Editor = () => {
                   <Col lg="8" style={{display:"inline-block","margin-top":"10px", "font-weight":"600", "text-align": "left", "margin-right":"40px"}}>
                     <div style={{display:"inline-block","font-size":"20px"}}>{item.site.name}:</div>
                     <div style={{display:"inline-block","margin-left":"5px","font-size":"20px", "font-weight":"400"}}>
-                      <a href={item.site.url.replace("{}", item.userName)} target="blank" >
+                      <a href={item.url}
+                        target="blank"
+                        className="analytics-link"
+                        data-site-name={item.site.name}
+                        data-username={item.userName}
+                      >
                         {item.site.prettyUrl ||
                         item.site.urlMain ||
                         item.site.url}
