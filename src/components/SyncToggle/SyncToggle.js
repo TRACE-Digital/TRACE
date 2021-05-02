@@ -1,21 +1,29 @@
 import { useEffect, useState, useRef } from 'react';
 import ToggleButton from 'react-toggle-button';
-import { getDb, setRemoteUser, enableSync, disableSync, teardownReplication } from 'trace-search';
+import { getRemoteDb, closeRemoteDb, setRemoteUser, enableSync, disableSync, teardownReplication } from 'trace-search';
 import Auth from "@aws-amplify/auth";
 import NotificationAlert from "react-notification-alert";
 
-const getSyncEnabled = async () => {
-  const db = await getDb();
-  const settings = await db.get('settings');
-  return settings.syncEnabled;
-}
-
 const setInitialSync = async (setIsLoggedIn, setSync) => {
   try {
-    await Auth.currentUserPoolUser();
+    const user = await Auth.currentUserPoolUser();
 
     setIsLoggedIn(true);
-    setSync(await getSyncEnabled());
+
+    try {
+      setRemoteUser(user);
+      const db = await getRemoteDb();
+      const settings = await db.get('settings');
+
+      if (!settings.syncEnabled) {
+        await closeRemoteDb();
+      }
+
+      setSync(settings.syncEnabled);
+    } catch(e) {
+      console.debug('Could not get sync status from remote DB!')
+      console.debug(e);
+    }
   }
   catch {
     setIsLoggedIn(false);
